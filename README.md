@@ -19,15 +19,20 @@ enable the [Remote Debugging Protocol][1] on the specified port, for example:
 Sample usage
 ------------
 
+The following snippet loads `https://github.com` and dumps every request made.
+
 ```javascript
 var Chrome = require('chrome-remote-interface');
 Chrome(function (chrome) {
+    chrome.on('Network.requestWillBeSent', function (message) {
+        console.log(message.request.url);
+    });
     chrome.on('Page.loadEventFired', function (message) {
-        console.log('Finished at ' + message.timestamp);
         chrome.close();
     });
+    chrome.send('Network.enable');
     chrome.send('Page.enable');
-    chrome.send('Page.navigate', {'url': 'http://google.com'});
+    chrome.send('Page.navigate', {'url': 'https://github.com'});
 }).on('error', function () {
     console.log('Cannot connect to Chrome');
 });
