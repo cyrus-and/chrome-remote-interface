@@ -1,0 +1,18 @@
+{
+    "name": "chrome-remote-interface",
+    "author": "Andrea Cardaci <cyrus.and@gmail.com>",
+    "description": "Chrome Remote Debugging Protocol interface",
+    "keywords": ["chrome", "remote", "debug", "interface"],
+    "homepage": "https://github.com/cyrus-and/chrome-remote-interface",
+    "version": "0.0.0",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/cyrus-and/chrome-remote-interface.git"
+    },
+    "bugs" : {
+        "url" : "http://github.com/cyrus-and/chrome-remote-interface/issues"
+    },
+    "dependencies": {
+        "ws": "0.4.x"
+    }
+}
