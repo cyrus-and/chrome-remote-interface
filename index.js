@@ -2,7 +2,7 @@ var events = require('events');
 var Chrome = require('./lib/chrome.js');
 
 module.exports = function (options, callback) {
-    if (typeof callback == 'undefined') {
+    if (typeof options == 'function') {
         callback = options;
         options = undefined;
     }
