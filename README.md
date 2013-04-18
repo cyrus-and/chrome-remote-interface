@@ -14,7 +14,7 @@ Chrome setup
 Chrome needs to be started with the `--remote-debugging-port=<port>` option to
 enable the [Remote Debugging Protocol][1] on the specified port, for example:
 
-    google-chrome --remote-debugging-port=9222 --enable-benchmarking
+    google-chrome --remote-debugging-port=9222
 
 Sample usage
 ------------
