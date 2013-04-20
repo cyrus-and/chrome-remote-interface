@@ -75,6 +75,8 @@ Emitted when the connection to Chrome is established.
 Emitted if `http://host:port/json` can't be reached or if it's not possible to
 connect to Chrome's remote debugging WebSocket.
 
+`error` is an instance of `Error`.
+
 ### Class: Chrome
 
 #### Event: 'event'
