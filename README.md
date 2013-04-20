@@ -119,6 +119,9 @@ following arguments:
 - `response`: an object containing either the response sent from Chrome or the
   indication of the error.
 
+Note that the field `id` mentioned in the [Remote Debugging Protocol
+specifications][1] is managed internally and it's not exposed to the user.
+
 #### chrome.close()
 
 Close the connection to Chrome.
