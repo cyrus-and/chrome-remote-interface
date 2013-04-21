@@ -1,7 +1,9 @@
 chrome-remote-interface
 =======================
 
-Chrome [Remote Debugging Protocol][1] interface.
+[Remote Debugging Protocol][1] interface that helps to instrument Chrome by
+providing a simple abstraction of the two main objects exposed by the protocol
+in a Node.js fashion: commands and notifications.
 
 Installation
 ------------
@@ -12,7 +14,7 @@ Chrome setup
 ------------
 
 Chrome needs to be started with the `--remote-debugging-port=<port>` option to
-enable the [Remote Debugging Protocol][1] on the specified port, for example:
+enable the [Remote Debugging Protocol][1], for example:
 
     google-chrome --remote-debugging-port=9222
 
@@ -27,14 +29,14 @@ Chrome(function (chrome) {
     chrome.on('Network.requestWillBeSent', function (message) {
         console.log(message.request.url);
     });
-    chrome.on('Page.loadEventFired', function (message) {
+    chrome.on('Page.loadEventFired', function () {
         chrome.close();
     });
     chrome.send('Network.enable');
     chrome.send('Page.enable');
     chrome.send('Page.navigate', {'url': 'https://github.com'});
 }).on('error', function () {
-    console.log('Cannot connect to Chrome');
+    console.error('Cannot connect to Chrome');
 });
 ```
 
