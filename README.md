@@ -104,7 +104,9 @@ WebSocket.
 `params` is an object containing the payload.
 
 This is just a utility event that allows to easily filter out specific
-notifications (see the documentation of `event`).
+notifications (see the documentation of `event`), for example:
+
+    chrome.on('Network.requestWillBeSent', console.log);
 
 #### chrome.send(method, [params], [callback])
 
