@@ -26,15 +26,15 @@ The following snippet loads `https://github.com` and dumps every request made.
 ```javascript
 var Chrome = require('chrome-remote-interface');
 Chrome(function (chrome) {
-    chrome.on('Network.requestWillBeSent', function (message) {
-        console.log(message.request.url);
-    });
-    chrome.on('Page.loadEventFired', function () {
-        chrome.close();
-    });
-    chrome.Network.enable();
-    chrome.Page.enable();
-    chrome.Page.navigate({'url': 'https://github.com'});
+    with (chrome) {
+        on('Network.requestWillBeSent', function (message) {
+            console.log(message.request.url);
+        });
+        on('Page.loadEventFired', close);
+        Network.enable();
+        Page.enable();
+        Page.navigate({'url': 'https://github.com'});
+    }
 }).on('error', function () {
     console.error('Cannot connect to Chrome');
 });
