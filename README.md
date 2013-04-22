@@ -32,9 +32,9 @@ Chrome(function (chrome) {
     chrome.on('Page.loadEventFired', function () {
         chrome.close();
     });
-    chrome.send('Network.enable');
-    chrome.send('Page.enable');
-    chrome.send('Page.navigate', {'url': 'https://github.com'});
+    chrome.Network.enable();
+    chrome.Page.enable();
+    chrome.Page.navigate({'url': 'https://github.com'});
 }).on('error', function () {
     console.error('Cannot connect to Chrome');
 });
@@ -125,6 +125,16 @@ following arguments:
 
 Note that the field `id` mentioned in the [Remote Debugging Protocol
 specifications][1] is managed internally and it's not exposed to the user.
+
+#### chrome.Domain.method([params], [callback])
+
+Just a shorthand for:
+
+    chrome.send('Domain.method', params, callback)
+
+For example:
+
+    chrome.Page.navigate({'url': 'https://github.com'})
 
 #### chrome.close()
 
