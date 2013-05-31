@@ -4,7 +4,7 @@
     "description": "Chrome Remote Debugging Protocol interface",
     "keywords": ["chrome", "remote", "debug", "interface"],
     "homepage": "https://github.com/cyrus-and/chrome-remote-interface",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "repository": {
         "type": "git",
         "url": "git://github.com/cyrus-and/chrome-remote-interface.git"
