@@ -1,6 +1,12 @@
 {
     "name": "chrome-remote-interface",
     "author": "Andrea Cardaci <cyrus.and@gmail.com>",
+    "contributors": [
+        {
+            "name": "Andrey Sidorov",
+            "email": "sidoares@yandex.ru"
+        }
+    ],
     "description": "Chrome Remote Debugging Protocol interface",
     "keywords": ["chrome", "remote", "debug", "interface"],
     "homepage": "https://github.com/cyrus-and/chrome-remote-interface",
