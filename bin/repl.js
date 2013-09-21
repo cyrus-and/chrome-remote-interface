@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var ChromeInterface = require('../index.js');
 ChromeInterface(function(chrome) {
 
