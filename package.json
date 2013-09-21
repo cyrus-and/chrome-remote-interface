@@ -16,7 +16,7 @@
         "ws": "0.4.x"
     },
     "bin": {
-        "webkit-repl": "./bin/repl.js"
+        "chrome-repl": "./bin/repl.js"
     },
     "devDependencies": {
         "mocha": "*"
