@@ -9,7 +9,5 @@ ChromeInterface(function(chrome) {
 
   for (domain in chrome)
     c[domain] = chrome[domain];
-  
-   console.log(chrome);
 
 });
