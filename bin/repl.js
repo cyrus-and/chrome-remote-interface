@@ -1,15 +1,14 @@
 #!/usr/bin/env node
 
-var ChromeInterface = require('../index.js');
-ChromeInterface(function(chrome) {
+var repl = require('repl');
+var ChromeInterface = require('../');
 
-  var repl = require('repl');
+ChromeInterface(function (chrome) {
+    var context = repl.start({
+        'prompt': 'chrome> '
+    }).context;
 
-  var c = repl.start({
-    prompt: 'chrome> '
-  }).context;
-
-  for (domain in chrome)
-    c[domain] = chrome[domain];
-
+    for (var domain in chrome) {
+        context[domain] = chrome[domain];
+    }
 });

@@ -27,7 +27,7 @@ describe('connecting to Chrome', function () {
                 done();
             }).on('error', function () {
                 assert(false);
-            });;
+            });
         });
         it('should succeed with "connect" callback registered later', function (done) {
             Chrome({'host': 'localhost', 'port': 9222}).on('connect', function(chrome) {
