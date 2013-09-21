@@ -3,4 +3,7 @@ test:
 	{ echo 'Start Chrome with "--remote-debugging-port=9222"'; false; }
 	@./node_modules/.bin/mocha -b
 
-.PHONY: test
+update-protocol:
+	cd ./lib/; svn export https://svn.webkit.org/repository/webkit/trunk/Source/WebCore/inspector/Inspector.json
+
+.PHONY: test update-protocol
