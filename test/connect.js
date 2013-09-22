@@ -4,7 +4,7 @@ var assert = require('assert');
 describe('connecting to Chrome', function () {
     describe('with default parameters', function () {
         it('should succeed with "connect" callback passed as an argument', function (done) {
-            Chrome(function(chrome) {
+            Chrome(function (chrome) {
                 chrome.close();
                 done();
             }).on('error', function () {
@@ -12,7 +12,7 @@ describe('connecting to Chrome', function () {
             });
         });
         it('should succeed with "connect" callback registered later', function (done) {
-            Chrome().on('connect', function(chrome) {
+            Chrome().on('connect', function (chrome) {
                 chrome.close();
                 done();
             }).on('error', function () {
@@ -22,7 +22,7 @@ describe('connecting to Chrome', function () {
     });
     describe('with custom parameters', function () {
         it('should succeed with "connect" callback passed as an argument', function (done) {
-            Chrome({'host': 'localhost', 'port': 9222}, function(chrome) {
+            Chrome({'host': 'localhost', 'port': 9222}, function (chrome) {
                 chrome.close();
                 done();
             }).on('error', function () {
@@ -30,7 +30,7 @@ describe('connecting to Chrome', function () {
             });
         });
         it('should succeed with "connect" callback registered later', function (done) {
-            Chrome({'host': 'localhost', 'port': 9222}).on('connect', function(chrome) {
+            Chrome({'host': 'localhost', 'port': 9222}).on('connect', function (chrome) {
                 chrome.close();
                 done();
             }).on('error', function () {

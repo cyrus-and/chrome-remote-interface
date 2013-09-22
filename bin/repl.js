@@ -8,7 +8,7 @@ ChromeInterface(function (chrome) {
         'prompt': 'chrome> '
     });
 
-    chromeRepl.on('exit', function() {
+    chromeRepl.on('exit', function () {
         chrome.close();
     });
 

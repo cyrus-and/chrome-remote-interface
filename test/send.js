@@ -4,8 +4,8 @@ var assert = require('assert');
 describe('sending a command', function () {
     describe('without checking the result and without specifyng parameters', function () {
         it('should succeed', function (done) {
-            Chrome(function(chrome) {
-                chrome.once('Network.requestWillBeSent', function() {
+            Chrome(function (chrome) {
+                chrome.once('Network.requestWillBeSent', function () {
                     chrome.close();
                     done();
                 });
@@ -16,7 +16,7 @@ describe('sending a command', function () {
     });
     describe('checking the result and without specifyng parameters', function () {
         it('should succeed', function (done) {
-            Chrome(function(chrome) {
+            Chrome(function (chrome) {
                 chrome.send('Page.enable', function (error, response) {
                     chrome.close();
                     assert(!error);
@@ -27,7 +27,7 @@ describe('sending a command', function () {
     });
     describe('checking the result and specifyng parameters', function () {
         it('should succeed', function (done) {
-            Chrome(function(chrome) {
+            Chrome(function (chrome) {
                 chrome.send('Network.setCacheDisabled', {'cacheDisabled': true}, function (error, response) {
                     chrome.close();
                     assert(!error);
@@ -38,8 +38,8 @@ describe('sending a command', function () {
     });
     describe('without checking the result and without specifyng parameters (shorthand)', function () {
         it('should succeed', function (done) {
-            Chrome(function(chrome) {
-                chrome.once('Network.requestWillBeSent', function() {
+            Chrome(function (chrome) {
+                chrome.once('Network.requestWillBeSent', function () {
                     chrome.close();
                     done();
                 });
@@ -50,7 +50,7 @@ describe('sending a command', function () {
     });
     describe('checking the result and without specifyng parameters (shorthand)', function () {
         it('should succeed', function (done) {
-            Chrome(function(chrome) {
+            Chrome(function (chrome) {
                 chrome.Page.enable(function (error, response) {
                     chrome.close();
                     assert(!error);
@@ -61,7 +61,7 @@ describe('sending a command', function () {
     });
     describe('checking the result and specifyng parameters (shorthand)', function () {
         it('should succeed', function (done) {
-            Chrome(function(chrome) {
+            Chrome(function (chrome) {
                 chrome.Network.setCacheDisabled({'cacheDisabled': true}, function (error, response) {
                     chrome.close();
                     assert(!error);

@@ -19,7 +19,7 @@ module.exports = function (options, callback) {
         // the default listener just disconnects from Chrome, this can be used
         // to simply check the connection
         if (notifier.listeners('connect').length === 0) {
-            notifier.on('connect', function(chrome) {
+            notifier.on('connect', function (chrome) {
                 chrome.close();
             });
         }
