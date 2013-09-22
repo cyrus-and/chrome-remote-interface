@@ -18,8 +18,8 @@ enable the [Remote Debugging Protocol][1], for example:
 
     google-chrome --remote-debugging-port=9222
 
-Sample usage
-------------
+Sample API usage
+----------------
 
 The following snippet loads `https://github.com` and dumps every request made.
 
@@ -38,6 +38,34 @@ Chrome(function (chrome) {
 }).on('error', function () {
     console.error('Cannot connect to Chrome');
 });
+```
+
+REPL interface and embedded documentation
+-----------------------------------------
+
+This module comes with a REPL interface that can be used to interactively
+control Chrome. The context is set to the `chrome` object so any issued command
+operates on it, just like the statements contained in the `with` block in the
+above example. Here's a sample session:
+
+```javascript
+chrome> Network.enable()
+chrome> Network.requestWillBeSent(console.log)
+chrome> Page.navigate({url: 'https://github.com'})
+```
+
+Using the provided `help` field it's possible to obtain information on the
+events and methods available through the [Remote Debugging Protocol][1]. For
+example to learn how to call `Page.navigate` type:
+
+```javascript
+chrome> Page.navigate.help
+{ name: 'navigate',
+  parameters:
+   [ { name: 'url',
+       type: 'string',
+       description: 'URL to navigate the page to.' } ],
+  description: 'Navigates current page to the given URL.' }
 ```
 
 API
