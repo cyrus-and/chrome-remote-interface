@@ -15,17 +15,26 @@ describe('registering event', function () {
             });
         });
     });
-    describe('"Console.messagesCleared"', function () {
-        it('should give the payload ony', function (done) {
-            Chrome(function(chrome) {
-                chrome.once('Network.requestWillBeSent', function(message) {
-                    chrome.close();
-                    assert(!message.method);
-                    done();
-                });
-                chrome.send('Network.enable');
-                chrome.send('Page.reload');
+    it('should give the payload ony', function (done) {
+        Chrome(function(chrome) {
+            chrome.once('Network.requestWillBeSent', function(message) {
+                chrome.close();
+                assert(!message.method);
+                done();
             });
+            chrome.send('Network.enable');
+            chrome.send('Page.reload');
+        });
+    });
+    it('should give the payload ony (alternate syntax)', function (done) {
+        Chrome(function(chrome) {
+            chrome.Network.requestWillBeSent(function(message) {
+                chrome.close();
+                assert(!message.method);
+                done();
+            });
+            chrome.send('Network.enable');
+            chrome.send('Page.reload');
         });
     });
 });
