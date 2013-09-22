@@ -15,7 +15,7 @@ describe('registering event', function () {
             });
         });
     });
-    it('should give the payload ony', function (done) {
+    it('should give the payload only', function (done) {
         Chrome(function (chrome) {
             chrome.once('Network.requestWillBeSent', function (message) {
                 chrome.close();
@@ -26,7 +26,7 @@ describe('registering event', function () {
             chrome.send('Page.reload');
         });
     });
-    it('should give the payload ony (alternate syntax)', function (done) {
+    it('should give the payload only (alternate syntax)', function (done) {
         Chrome(function (chrome) {
             chrome.Network.requestWillBeSent(function (message) {
                 chrome.close();
