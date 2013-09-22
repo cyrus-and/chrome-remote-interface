@@ -136,6 +136,16 @@ For example:
 
     chrome.Page.navigate({'url': 'https://github.com'})
 
+#### chrome.Domain.event(callback)
+
+Just a shorthand for:
+
+    chrome.on('Domain.event', callback)
+
+For example:
+
+    chrome.Network.requestWillBeSent(console.log)
+
 #### chrome.close()
 
 Close the connection to Chrome.
