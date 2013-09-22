@@ -4,11 +4,15 @@ var repl = require('repl');
 var ChromeInterface = require('../');
 
 ChromeInterface(function (chrome) {
-    var context = repl.start({
+    var chromeRepl = repl.start({
         'prompt': 'chrome> '
-    }).context;
+    });
+
+    chromeRepl.on('exit', function() {
+        chrome.close();
+    });
 
     for (var domain in chrome) {
-        context[domain] = chrome[domain];
+        chromeRepl.context[domain] = chrome[domain];
     }
 });
