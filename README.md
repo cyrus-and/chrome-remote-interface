@@ -68,6 +68,15 @@ chrome> Page.navigate.help
   description: 'Navigates current page to the given URL.' }
 ```
 
+For what concerns the types instead, just type its name:
+
+```javascript
+chrome> Network.Timestamp
+{ id: 'Timestamp',
+  type: 'number',
+  description: 'Number of seconds since epoch.' }
+```
+
 API
 ---
 
