@@ -187,6 +187,11 @@ For example:
 
 Close the connection to Chrome.
 
+Contributors
+------------
+
+* [Andrey Sidorov](https://github.com/sidorares)
+
 Resources
 ---------
 
