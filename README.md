@@ -130,21 +130,21 @@ specifications][1] is managed internally and it's not exposed to the user.
 
 Just a shorthand for:
 
-    chrome.send('Domain.method', params, callback)
+    chrome.send('Domain.method', params, callback);
 
 For example:
 
-    chrome.Page.navigate({'url': 'https://github.com'})
+    chrome.Page.navigate({'url': 'https://github.com'});
 
 #### chrome.Domain.event(callback)
 
 Just a shorthand for:
 
-    chrome.on('Domain.event', callback)
+    chrome.on('Domain.event', callback);
 
 For example:
 
-    chrome.Network.requestWillBeSent(console.log)
+    chrome.Network.requestWillBeSent(console.log);
 
 #### chrome.close()
 
