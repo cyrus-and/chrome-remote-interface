@@ -90,9 +90,9 @@ Protocol][1].
 - `host`: [Remote Debugging Protocol][1] host. Defaults to `localhost`;
 - `port`: [Remote Debugging Protocol][1] port. Defaults to `9222`;
 - `chooseTab`: callback used to determine which remote tab attach to. Takes the
-  JSON array returned by `http://host:port/json` containing the tab list and
-  must return the numeric index of a tab. Defaults to a function that returns
-  the active one (`function (tabs) { return 0; }`).
+  array returned by `http://host:port/json` containing the tab list and must
+  return the numeric index of a tab. Defaults to a function that returns the
+  active one (`function (tabs) { return 0; }`).
 
 `callback` is a listener automatically added to the `connect` event of the
 returned `EventEmitter`.
