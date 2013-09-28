@@ -109,12 +109,12 @@ Emitted when the connection to Chrome is established.
 
 #### Event: 'error'
 
-    function (error) {}
+    function (err) {}
 
 Emitted if `http://host:port/json` can't be reached or if it's not possible to
 connect to Chrome's remote debugging WebSocket.
 
-`error` is an instance of `Error`.
+`err` is an instance of `Error`.
 
 ### Class: Chrome
 

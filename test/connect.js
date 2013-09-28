@@ -42,24 +42,24 @@ describe('connecting to Chrome', function () {
         it('should fail (wrong port)', function (done) {
             Chrome({'port': 1}, function () {
                 assert(false);
-            }).on('error', function (error) {
-                assert(error instanceof Error);
+            }).on('error', function (err) {
+                assert(err instanceof Error);
                 done();
             });
         });
         it('should fail (wrong host)', function (done) {
             Chrome({'host': '255.255.255.255'}, function () {
                 assert(false);
-            }).on('error', function (error) {
-                assert(error instanceof Error);
+            }).on('error', function (err) {
+                assert(err instanceof Error);
                 done();
             });
         });
         it('should fail (wrong tab)', function (done) {
             Chrome({'chooseTab': function () { return -1; }}, function () {
                 assert(false);
-            }).on('error', function (error) {
-                assert(error instanceof Error);
+            }).on('error', function (err) {
+                assert(err instanceof Error);
                 done();
             });
         });
@@ -69,9 +69,9 @@ describe('connecting to Chrome', function () {
             Chrome(function (chrome) {
                 Chrome(function () {
                     assert(false);
-                }).on('error', function (error) {
+                }).on('error', function (err) {
                     chrome.close();
-                    assert(error instanceof Error);
+                    assert(err instanceof Error);
                     done();
                 });
             }).on('error', function () {

@@ -8,7 +8,7 @@ describe('closing a connection', function () {
             Chrome(function (chrome) {
                 chrome.close();
                 done();
-            }).on('error', function (error) {
+            }).on('error', function () {
                 assert(false);
             });
         }).on('error', function () {
