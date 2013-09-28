@@ -183,6 +183,16 @@ For example:
 
     chrome.Network.requestWillBeSent(console.log);
 
+#### chrome.listTabs(callback)
+
+Request the list of the available open tabs.
+
+`callback` is executed when the list is correctly received, it gets the
+following arguments:
+
+- `err`: a `Error` object indicating the success status;
+- `tabs`: the array returned by http://host:port/json containing the tab list.
+
 #### chrome.close()
 
 Close the connection to Chrome.
