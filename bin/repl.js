@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 var repl = require('repl');
-var ChromeInterface = require('../');
+var Chrome = require('../');
 
-ChromeInterface(function (chrome) {
+Chrome(function (chrome) {
     var chromeRepl = repl.start({
         'prompt': 'chrome> '
     });
