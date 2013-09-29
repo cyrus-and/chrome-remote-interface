@@ -27,3 +27,5 @@ module.exports = function (options, callback) {
     });
     return notifier;
 };
+
+module.exports.listTabs = Chrome.listTabs;

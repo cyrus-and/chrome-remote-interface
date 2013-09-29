@@ -116,6 +116,32 @@ connect to Chrome's remote debugging WebSocket.
 
 `err` is an instance of `Error`.
 
+### module.listTabs([options], callback)
+
+Request the list of the available open tabs of the remote Chrome instance.
+
+`options` is an object with the following optional properties:
+
+- `host`: [Remote Debugging Protocol][1] host. Defaults to `localhost`;
+- `port`: [Remote Debugging Protocol][1] port. Defaults to `9222`.
+
+`callback` is executed when the list is correctly received, it gets the
+following arguments:
+
+- `err`: a `Error` object indicating the success status;
+- `tabs`: the array returned by http://host:port/json containing the tab list.
+
+For example:
+
+```javascript
+var Chrome = require('chrome-remote-interface');
+Chrome.listTabs(function (err, tabs) {
+    if (!err) {
+        console.log(tabs);
+    }
+});
+```
+
 ### Class: Chrome
 
 #### Event: 'event'
@@ -182,16 +208,6 @@ Just a shorthand for:
 For example:
 
     chrome.Network.requestWillBeSent(console.log);
-
-#### chrome.listTabs(callback)
-
-Request the list of the available open tabs.
-
-`callback` is executed when the list is correctly received, it gets the
-following arguments:
-
-- `err`: a `Error` object indicating the success status;
-- `tabs`: the array returned by http://host:port/json containing the tab list.
 
 #### chrome.close()
 
