@@ -44,9 +44,9 @@ REPL interface and embedded documentation
 -----------------------------------------
 
 This module comes with a REPL interface that can be used to interactively
-control Chrome. The context is set to the `chrome` object so any issued command
-operates on it, just like the statements contained in the `with` block in the
-above example. Here's a sample session:
+control Chrome. It supports command execution and event binding, see the
+documentation for `chrome.Domain.method([params], [callback])` and
+`chrome.Domain.event(callback)`. Here's a sample session:
 
 ```javascript
 chrome> Network.enable()
