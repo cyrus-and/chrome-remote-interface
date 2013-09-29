@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var repl = require('repl');
+var protocol = require('../lib/Inspector.json');
 var Chrome = require('../');
 
 Chrome(function (chrome) {
@@ -12,7 +13,8 @@ Chrome(function (chrome) {
         chrome.close();
     });
 
-    for (var domain in chrome) {
-        chromeRepl.context[domain] = chrome[domain];
+    for (var domainIdx in protocol.domains) {
+        var domainName = protocol.domains[domainIdx].domain;
+        chromeRepl.context[domainName] = chrome[domainName];
     }
 });
