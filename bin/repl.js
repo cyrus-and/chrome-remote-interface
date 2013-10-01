@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var repl = require('repl');
-var protocol = require('../lib/Inspector.json');
+var protocol = require('../lib/protocol.json');
 var Chrome = require('../');
 
 Chrome(function (chrome) {
