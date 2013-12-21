@@ -221,6 +221,6 @@ Contributors
 Resources
 ---------
 
-- [Chrome Developer Tools: Remote Debugging Protocol v1.0][1]
+- [Chrome Developer Tools: Remote Debugging Protocol v1.1][1]
 
-[1]: https://developers.google.com/chrome-developer-tools/docs/protocol/1.0/
+[1]: https://developers.google.com/chrome-developer-tools/docs/protocol/1.1/
