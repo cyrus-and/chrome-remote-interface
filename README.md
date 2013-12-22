@@ -182,9 +182,10 @@ Issue a command to Chrome.
 `callback` is executed when Chrome sends a response to this command, it gets the
 following arguments:
 
-- `error`: a boolean value indicating the success status;
-- `response`: an object containing either the response sent from Chrome or the
-  indication of the error.
+- `error`: a boolean value indicating the success status, as reported by Chrome;
+- `response`: an object containing either the response sent from Chrome
+  (`result` field, if `error === false`) or the indication of the error (`error`
+  field, if `error === true`).
 
 Note that the field `id` mentioned in the [Remote Debugging Protocol
 specifications][1] is managed internally and it's not exposed to the user.
