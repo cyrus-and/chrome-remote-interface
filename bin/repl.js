@@ -19,4 +19,6 @@ Chrome(function (chrome) {
         var domainName = protocol.domains[domainIdx].domain;
         chromeRepl.context[domainName] = chrome[domainName];
     }
+}).on('error', function () {
+    console.error('Cannot connect to Chrome');
 });
