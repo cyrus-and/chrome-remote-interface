@@ -16,7 +16,8 @@
         "url" : "http://github.com/cyrus-and/chrome-remote-interface/issues"
     },
     "dependencies": {
-        "ws": "0.4.x"
+        "ws": "0.4.x",
+        "commander": "2.1.x"
     },
     "bin": {
         "chrome-repl": "./bin/repl.js"
