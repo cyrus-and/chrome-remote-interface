@@ -44,8 +44,9 @@ REPL interface and embedded documentation
 -----------------------------------------
 
 This module comes with a REPL interface that can be used to interactively
-control Chrome. It supports command execution and event binding, see the
-documentation for `chrome.Domain.method([params], [callback])` and
+control Chrome (run with `--help` to display the list of available options). It
+supports command execution and event binding, see the documentation for
+`chrome.Domain.method([params], [callback])` and
 `chrome.Domain.event(callback)`. Here's a sample session:
 
 ```javascript
