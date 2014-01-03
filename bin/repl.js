@@ -17,7 +17,8 @@ var options = {
 
 Chrome(options, function (chrome) {
     var chromeRepl = repl.start({
-        'prompt': 'chrome> '
+        'prompt': 'chrome> ',
+        'ignoreUndefined': true
     });
 
     // disconnect on exit
