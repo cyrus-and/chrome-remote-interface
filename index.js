@@ -7,8 +7,6 @@ module.exports = function (options, callback) {
         options = undefined;
     }
     options = options || {};
-    options.host = options.host || 'localhost';
-    options.port = options.port || 9222;
     options.chooseTab = options.chooseTab || function () { return 0; };
     var notifier = new events.EventEmitter();
     if (typeof callback === 'function') {
