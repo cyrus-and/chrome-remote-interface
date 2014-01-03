@@ -8,7 +8,7 @@ var Chrome = require('../');
 program
     .option('-h, --host <host>', 'Remote Debugging Protocol host', 'localhost')
     .option('-p, --port <port>', 'Remote Debugging Protocol port', '9222')
-    .parse(process.argv)
+    .parse(process.argv);
 
 var options = {
     'host': program.host,
