@@ -69,7 +69,7 @@
             {
                 "id": "ResourceType",
                 "type": "string",
-                "enum": ["Document", "Stylesheet", "Image", "Font", "Script", "XHR", "WebSocket", "Other"],
+                "enum": ["Document", "Stylesheet", "Image", "Media", "Font", "Script", "TextTrack", "XHR", "WebSocket", "Other"],
                 "description": "Resource type as it was perceived by the rendering engine."
             },
             {
@@ -190,6 +190,19 @@
                 "hidden": true
             },
             {
+                "id": "Viewport",
+                "type": "object",
+                "description": "Visible page viewport",
+                "properties": [
+                    { "name": "scrollX", "type": "number", "description": "X scroll offset in CSS pixels." },
+                    { "name": "scrollY", "type": "number", "description": "Y scroll offset in CSS pixels." },
+                    { "name": "contentsWidth", "type": "number", "description": "Contents width in CSS pixels." },
+                    { "name": "contentsHeight", "type": "number", "description": "Contents height in CSS pixels." },
+                    { "name": "pageScaleFactor", "type": "number", "description": "Page scale factor." }
+                ],
+                "hidden": true
+            },
+            {
                 "id": "ScreencastFrameMetadata",
                 "type": "object",
                 "description": "Screencast frame metadata",
@@ -200,7 +213,11 @@
                     { "name": "offsetBottom", "type": "number", "hidden": true, "optional": true, "description": "Bottom offset in DIP." },
                     { "name": "pageScaleFactor", "type": "number", "hidden": true, "description": "Page scale factor." },
                     { "name": "pageScaleFactorMin", "type": "number", "hidden": true, "description": "Page scale factor min." },
-                    { "name": "pageScaleFactorMax", "type": "number", "hidden": true, "description": "Page scale factor max." }
+                    { "name": "pageScaleFactorMax", "type": "number", "hidden": true, "description": "Page scale factor max." },
+                    { "name": "deviceWidth", "type": "number", "hidden": true, "description": "Device screen width in DIP." },
+                    { "name": "deviceHeight", "type": "number", "hidden": true, "description": "Device screen height in DIP." },
+                    { "name": "scrollOffsetX", "type": "number", "hidden": true, "description": "Position of horizontal scroll in CSS pixels." },
+                    { "name": "scrollOffsetY", "type": "number", "hidden": true, "description": "Position of vertical scroll in CSS pixels." }
                 ],
                 "hidden": true
             }
@@ -247,8 +264,11 @@
                 "parameters": [
                     { "name": "url", "type": "string", "description": "URL to navigate the page to." }
                 ],
+                "returns": [
+                    { "name": "frameId", "$ref": "FrameId", "hidden": true, "description": "Frame id that will be navigated." }
+                ],
                 "description": "Navigates current page to the given URL.",
-                "handlers": ["browser"]
+                "handlers": ["browser", "renderer"]
             },
             {
               "name": "getNavigationHistory",
@@ -297,6 +317,7 @@
             },
             {
                 "name": "getResourceContent",
+                "async": true,
                 "description": "Returns content of the given resource.",
                 "parameters": [
                     { "name": "frameId", "$ref": "FrameId", "description": "Frame id to get resource for." },
@@ -334,16 +355,27 @@
             },
             {
                 "name": "setDeviceMetricsOverride",
-                "description": "Overrides the values of device screen dimensions (window.screen.width, window.screen.height, window.innerWidth, window.innerHeight, and \"device-width\"/\"device-height\"-related CSS media query results) and the font scale factor.",
+                "description": "Overrides the values of device screen dimensions (window.screen.width, window.screen.height, window.innerWidth, window.innerHeight, and \"device-width\"/\"device-height\"-related CSS media query results).",
                 "parameters": [
                     { "name": "width", "type": "integer", "description": "Overriding width value in pixels (minimum 0, maximum 10000000). 0 disables the override." },
                     { "name": "height", "type": "integer", "description": "Overriding height value in pixels (minimum 0, maximum 10000000). 0 disables the override." },
-                    { "name": "deviceScaleFactor", "type": "number", "description": "Overriding device scale factor value (must be positive)." },
+                    { "name": "deviceScaleFactor", "type": "number", "description": "Overriding device scale factor value. 0 disables the override." },
                     { "name": "emulateViewport", "type": "boolean", "description": "Whether viewport meta tag should be respected." },
                     { "name": "fitWindow", "type": "boolean", "description": "Whether a view that exceeds the available browser window area should be scaled down to fit." },
-                    { "name": "textAutosizing", "type": "boolean", "optional": true, "description": "Whether to override the text autosizing feature." },
-                    { "name": "fontScaleFactor", "type": "number", "optional": true, "description": "Overriding system font scale factor (must be positive)." }
+                    { "name": "scale", "type": "number", "optional": true, "description": "Scale to apply to resulting view image. Ignored in |fitWindow| mode." },
+                    { "name": "offsetX", "type": "number", "optional": true, "description": "X offset to shift resulting view image by. Ignored in |fitWindow| mode." },
+                    { "name": "offsetY", "type": "number", "optional": true, "description": "Y offset to shift resulting view image by. Ignored in |fitWindow| mode." }
                 ],
+                "hidden": true
+            },
+            {
+                "name": "clearDeviceMetricsOverride",
+                "description": "Clears the overriden device metrics.",
+                "hidden": true
+            },
+            {
+                "name": "resetScrollAndPageScaleFactor",
+                "description": "Requests that scroll offsets and page scale factor are reset to initial values.",
                 "hidden": true
             },
             {
@@ -409,11 +441,13 @@
                     { "name": "latitude", "type": "number", "optional": true, "description": "Mock latitude"},
                     { "name": "longitude", "type": "number", "optional": true, "description": "Mock longitude"},
                     { "name": "accuracy", "type": "number", "optional": true, "description": "Mock accuracy"}
-                ]
+                ],
+                "redirect": "Geolocation"
             },
             {
                 "name": "clearGeolocationOverride",
-                "description": "Clears the overriden Geolocation Position and Error."
+                "description": "Clears the overriden Geolocation Position and Error.",
+                "redirect": "Geolocation"
             },
             {
                 "name": "setDeviceOrientationOverride",
@@ -423,11 +457,21 @@
                     { "name": "beta", "type": "number", "description": "Mock beta"},
                     { "name": "gamma", "type": "number", "description": "Mock gamma"}
                 ],
+                "redirect": "DeviceOrientation",
                 "hidden": true
             },
             {
                 "name": "clearDeviceOrientationOverride",
                 "description": "Clears the overridden Device Orientation.",
+                "redirect": "DeviceOrientation",
+                "hidden": true
+            },
+            {
+                "name": "hasTouchInputs",
+                "description": "Tells whether touch inputs are present.",
+                "returns": [
+                    { "name": "result", "type": "boolean", "description": "True if touch inputs are present." }
+                ],
                 "hidden": true
             },
             {
@@ -449,15 +493,9 @@
             {
                 "name": "captureScreenshot",
                 "description": "Capture page screenshot.",
-                "parameters": [
-                    { "name": "format", "type": "string", "optional": true, "enum": ["jpeg", "png"], "description": "Image compression format." },
-                    { "name": "quality", "type": "integer", "hidden": true, "optional": true, "description": "Compression quality from range [0..100]." },
-                    { "name": "maxWidth", "type": "integer", "hidden": true, "optional": true, "description": "Maximum screenshot width." },
-                    { "name": "maxHeight", "type": "integer", "hidden": true, "optional": true, "description": "Maximum screenshot height." }
-                ],
+                "parameters": [],
                 "returns": [
-                    { "name": "data", "type": "string", "description": "Base64-encoded image data (PNG)." },
-                    { "name": "metadata", "$ref": "ScreencastFrameMetadata", "description": "Screencast frame metadata"}
+                    { "name": "data", "type": "string", "description": "Base64-encoded image data (PNG)." }
                 ],
                 "hidden": true,
                 "handlers": ["browser"]
@@ -633,6 +671,14 @@
                 ],
                 "hidden": true,
                 "handlers": ["browser"]
+            },
+            {
+                "name": "viewportChanged",
+                "description": "Fired when a visible page viewport has changed.",
+                "parameters": [
+                    { "name": "viewport", "$ref": "Viewport", "description": "Viewport description." }
+                ],
+                "hidden": true
             }
         ]
     },
@@ -650,10 +696,10 @@
                 "type": "object",
                 "description": "Mirror object referencing original JavaScript object.",
                 "properties": [
-                    { "name": "type", "type": "string", "enum": ["object", "function", "undefined", "string", "number", "boolean"], "description": "Object type." },
+                    { "name": "type", "type": "string", "enum": ["object", "function", "undefined", "string", "number", "boolean", "symbol"], "description": "Object type." },
                     { "name": "subtype", "type": "string", "optional": true, "enum": ["array", "null", "node", "regexp", "date"], "description": "Object subtype hint. Specified for <code>object</code> type values only." },
                     { "name": "className", "type": "string", "optional": true, "description": "Object class (constructor) name. Specified for <code>object</code> type values only." },
-                    { "name": "value", "type": "any", "optional": true, "description": "Remote object value (in case of primitive values or JSON values if it was requested)." },
+                    { "name": "value", "type": "any", "optional": true, "description": "Remote object value in case of primitive values or JSON values (if it was requested), or description string if the value can not be JSON-stringified (like NaN, Infinity, -Infinity, -0)." },
                     { "name": "description", "type": "string", "optional": true, "description": "String representation of the object." },
                     { "name": "objectId", "$ref": "RemoteObjectId", "optional": true, "description": "Unique object identifier (for non-primitive values)." },
                     { "name": "preview", "$ref": "ObjectPreview", "optional": true, "description": "Preview containing abbreviated property values.", "hidden": true }
@@ -676,10 +722,10 @@
                 "hidden": true,
                 "properties": [
                     { "name": "name", "type": "string", "description": "Property name." },
-	                { "name": "type", "type": "string", "enum": ["object", "function", "undefined", "string", "number", "boolean", "accessor"], "description": "Object type. Accessor means that the property itself is an accessor property." },
-	                { "name": "value", "type": "string", "optional": true, "description": "User-friendly property value string." },
-	                { "name": "valuePreview", "$ref": "ObjectPreview", "optional": true, "description": "Nested value preview." },
-	                { "name": "subtype", "type": "string", "optional": true, "enum": ["array", "null", "node", "regexp", "date"], "description": "Object subtype hint. Specified for <code>object</code> type values only." }
+                    { "name": "type", "type": "string", "enum": ["object", "function", "undefined", "string", "number", "boolean", "symbol", "accessor"], "description": "Object type. Accessor means that the property itself is an accessor property." },
+                    { "name": "value", "type": "string", "optional": true, "description": "User-friendly property value string." },
+                    { "name": "valuePreview", "$ref": "ObjectPreview", "optional": true, "description": "Nested value preview." },
+                    { "name": "subtype", "type": "string", "optional": true, "enum": ["array", "null", "node", "regexp", "date"], "description": "Object subtype hint. Specified for <code>object</code> type values only." }
                 ]
             },
             {
@@ -687,7 +733,7 @@
                 "type": "object",
                 "description": "Object property descriptor.",
                 "properties": [
-                    { "name": "name", "type": "string", "description": "Property name." },
+                    { "name": "name", "type": "string", "description": "Property name or symbol description." },
                     { "name": "value", "$ref": "RemoteObject", "optional": true, "description": "The value associated with the property." },
                     { "name": "writable", "type": "boolean", "optional": true, "description": "True if the value associated with the property may be changed (data descriptors only)." },
                     { "name": "get", "$ref": "RemoteObject", "optional": true, "description": "A function which serves as a getter for the property, or <code>undefined</code> if there is no getter (accessor descriptors only)." },
@@ -695,8 +741,8 @@
                     { "name": "configurable", "type": "boolean", "description": "True if the type of this property descriptor may be changed and if the property may be deleted from the corresponding object." },
                     { "name": "enumerable", "type": "boolean", "description": "True if this property shows up during enumeration of the properties on the corresponding object." },
                     { "name": "wasThrown", "type": "boolean", "optional": true, "description": "True if the result was thrown during the evaluation." },
-                    { "name": "isOwn", "optional": true, "type": "boolean", "description": "True if the property is owned for the object.", "hidden": true }
-
+                    { "name": "isOwn", "optional": true, "type": "boolean", "description": "True if the property is owned for the object.", "hidden": true },
+                    { "name": "symbol", "$ref": "RemoteObject", "optional": true, "description": "Property symbol object, if the property is of the <code>symbol</code> type.", "hidden": true }
                 ]
             },
             {
@@ -714,8 +760,9 @@
                 "type": "object",
                 "description": "Represents function call argument. Either remote object id <code>objectId</code> or primitive <code>value</code> or neither of (for undefined) them should be specified.",
                 "properties": [
-                    { "name": "value", "type": "any", "optional": true, "description": "Primitive value." },
-                    { "name": "objectId", "$ref": "RemoteObjectId", "optional": true, "description": "Remote object handle." }
+                    { "name": "value", "type": "any", "optional": true, "description": "Primitive value, or description string if the value can not be JSON-stringified (like NaN, Infinity, -Infinity, -0)." },
+                    { "name": "objectId", "$ref": "RemoteObjectId", "optional": true, "description": "Remote object handle." },
+                    { "name": "type", "optional": true, "hidden": true, "type": "string", "enum": ["object", "function", "undefined", "string", "number", "boolean", "symbol"], "description": "Object type." }
                 ]
             },
             {
@@ -810,6 +857,13 @@
                 "name": "disable",
                 "hidden": true,
                 "description": "Disables reporting of execution contexts creation."
+            },
+            {
+                "name": "isRunRequired",
+                "returns": [
+                    { "name": "result", "type": "boolean", "description": "True if the Runtime is in paused on start state." }
+                ],
+                "hidden": true
             }
         ],
         "events": [
@@ -819,6 +873,17 @@
                     { "name": "context", "$ref": "ExecutionContextDescription", "description": "A newly created execution contex." }
                 ],
                 "description": "Issued when new execution context is created."
+            },
+            {
+                "name": "executionContextDestroyed",
+                "parameters": [
+                    { "name": "executionContextId", "$ref": "ExecutionContextId", "description": "Id of the destroyed context" }
+                ],
+                "description": "Issued when execution context is destroyed."
+            },
+            {
+                "name": "executionContextsCleared",
+                "description": "Issued when all executionContexts were cleared in browser"
             }
         ]
     },
@@ -848,7 +913,8 @@
                     { "name": "parameters", "type": "array", "items": { "$ref": "Runtime.RemoteObject" }, "optional": true, "description": "Message parameters in case of the formatted message." },
                     { "name": "stackTrace", "$ref": "StackTrace", "optional": true, "description": "JavaScript stack trace for assertions and error messages." },
                     { "name": "networkRequestId", "$ref": "Network.RequestId", "optional": true, "description": "Identifier of the network request associated with this message." },
-                    { "name": "timestamp", "$ref": "Timestamp", "description": "Timestamp, when this message was fired.", "hidden": true }
+                    { "name": "timestamp", "$ref": "Timestamp", "description": "Timestamp, when this message was fired.", "hidden": true },
+                    {"name": "executionContextId", "$ref": "Runtime.ExecutionContextId",  "optional": true, "description": "identifier of the context where message was created", "hidden": true }
                 ]
             },
             {
@@ -921,7 +987,8 @@
                     { "name": "count", "type": "integer", "description": "New repeat count value." },
                     { "name": "timestamp", "$ref": "Timestamp", "description": "Timestamp of most recent message in batch.", "hidden": true }
                 ],
-                "description": "Issued when subsequent message(s) are equal to the previous one(s)."
+                "description": "Is not issued. Will be gone in the future versions of the protocol.",
+                "deprecated": true
             },
             {
                 "name": "messagesCleared",
@@ -998,7 +1065,10 @@
                     { "name": "requestHeadersText", "type": "string", "optional": true, "description": "HTTP request headers text." },
                     { "name": "connectionReused", "type": "boolean", "description": "Specifies whether physical connection was actually reused for this request." },
                     { "name": "connectionId", "type": "number", "description": "Physical connection id that was actually used for this request." },
+                    { "name": "remoteIPAddress", "type": "string", "optional": true, "hidden": true, "description": "Remote IP address." },
+                    { "name": "remotePort", "type": "integer", "optional": true, "hidden": true, "description": "Remote port."},
                     { "name": "fromDiskCache", "type": "boolean", "optional": true, "description": "Specifies that the request was served from the disk cache." },
+                    { "name": "encodedDataLength", "type": "number", "optional": false, "description": "Total number of bytes received for this request so far." },
                     { "name": "timing", "$ref": "ResourceTiming", "optional": true, "description": "Timing information for the given request." }
                 ]
             },
@@ -1008,7 +1078,7 @@
                 "description": "WebSocket request data.",
                 "hidden": true,
                 "properties": [
-                    { "name": "headers", "$ref": "Headers", "description": "HTTP response headers." }
+                    { "name": "headers", "$ref": "Headers", "description": "HTTP request headers." }
                 ]
             },
             {
@@ -1019,7 +1089,10 @@
                 "properties": [
                     { "name": "status", "type": "number", "description": "HTTP response status code." },
                     { "name": "statusText", "type": "string", "description": "HTTP response status text." },
-                    { "name": "headers", "$ref": "Headers", "description": "HTTP response headers." }
+                    { "name": "headers", "$ref": "Headers", "description": "HTTP response headers." },
+                    { "name": "headersText", "type": "string", "optional": true, "description": "HTTP response headers text." },
+                    { "name": "requestHeaders", "$ref": "Headers", "optional": true, "description": "HTTP request headers." },
+                    { "name": "requestHeadersText", "type": "string", "optional": true, "description": "HTTP request headers text." }
                 ]
             },
             {
@@ -1107,7 +1180,8 @@
             },
             {
                 "name": "clearBrowserCache",
-                "description": "Clears browser cache."
+                "description": "Clears browser cache.",
+                "handlers": ["browser"]
             },
             {
                 "name": "canClearBrowserCookies",
@@ -1118,7 +1192,20 @@
             },
             {
                 "name": "clearBrowserCookies",
-                "description": "Clears browser cookies."
+                "description": "Clears browser cookies.",
+                "handlers": ["browser"]
+            },
+            {
+                "name": "emulateNetworkConditions",
+                "description": "Activates emulation of network conditions.",
+                "parameters": [
+                    { "name": "offline", "type": "boolean", "description": "True to emulate internet disconnection." },
+                    { "name": "latency", "type": "number", "description": "Additional latency (ms)." },
+                    { "name": "downloadThroughput", "type": "number", "description": "Maximal aggregated download throughput." },
+                    { "name": "uploadThroughput", "type": "number", "description": "Maximal aggregated upload throughput." }
+                ],
+                "hidden": true,
+                "handlers": ["browser", "renderer"]
             },
             {
                 "name": "setCacheDisabled",
@@ -1193,7 +1280,8 @@
                 "description": "Fired when HTTP request has finished loading.",
                 "parameters": [
                     { "name": "requestId", "$ref": "RequestId", "description": "Request identifier." },
-                    { "name": "timestamp", "$ref": "Timestamp", "description": "Timestamp." }
+                    { "name": "timestamp", "$ref": "Timestamp", "description": "Timestamp." },
+                    { "name": "encodedDataLength", "type": "number", "description": "Total number of bytes received for this request." }
                 ]
             },
             {
@@ -1202,6 +1290,7 @@
                 "parameters": [
                     { "name": "requestId", "$ref": "RequestId", "description": "Request identifier." },
                     { "name": "timestamp", "$ref": "Timestamp", "description": "Timestamp." },
+                    { "name": "type", "$ref": "Page.ResourceType", "description": "Resource type." },
                     { "name": "errorText", "type": "string", "description": "User friendly error message." },
                     { "name": "canceled", "type": "boolean", "optional": true, "description": "True if loading was canceled." }
                 ]
@@ -1414,9 +1503,9 @@
                 "type": "object",
                 "description": "Data entry.",
                 "properties": [
-                    { "name": "key", "$ref": "Runtime.RemoteObject", "description": "Key." },
-                    { "name": "primaryKey", "$ref": "Runtime.RemoteObject", "description": "Primary key." },
-                    { "name": "value", "$ref": "Runtime.RemoteObject", "description": "Value." }
+                    { "name": "key", "type": "string", "description": "JSON-stringified key object." },
+                    { "name": "primaryKey", "type": "string", "description": "JSON-stringified primary key object." },
+                    { "name": "value", "type": "string", "description": "JSON-stringified value object." }
                 ]
             },
             {
@@ -1827,7 +1916,8 @@
                     { "name": "contentDocument", "$ref": "Node", "optional": true, "description": "Content document for frame owner elements." },
                     { "name": "shadowRoots", "type": "array", "optional": true, "items": { "$ref": "Node" }, "description": "Shadow root list for given element host.", "hidden": true },
                     { "name": "templateContent", "$ref": "Node", "optional": true, "description": "Content document fragment for template elements.", "hidden": true },
-                    { "name": "pseudoElements", "type": "array", "items": { "$ref": "Node" }, "optional": true, "description": "Pseudo elements associated with this node.", "hidden": true }
+                    { "name": "pseudoElements", "type": "array", "items": { "$ref": "Node" }, "optional": true, "description": "Pseudo elements associated with this node.", "hidden": true },
+                    { "name": "importedDocument", "$ref": "Node", "optional": true, "description": "Import document for the HTMLImport links." }
                 ],
                 "description": "DOM interaction is implemented in terms of mirror objects that represent the actual DOM nodes. DOMNode is a base node mirror type."
             },
@@ -1841,7 +1931,7 @@
                     { "name": "isAttribute", "type": "boolean", "description": "<code>EventListener</code>'s isAttribute." },
                     { "name": "nodeId", "$ref": "NodeId", "description": "Target <code>DOMNode</code> id." },
                     { "name": "handlerBody", "type": "string", "description": "Event handler function body." },
-                    { "name": "location", "$ref": "Debugger.Location", "optional": true, "description": "Handler code location." },
+                    { "name": "location", "$ref": "Debugger.Location", "description": "Handler code location." },
                     { "name": "sourceName", "type": "string", "optional": true, "description": "Source script URL." },
                     { "name": "handler", "$ref": "Runtime.RemoteObject", "optional": true, "description": "Event handler function value." }
                 ],
@@ -1877,9 +1967,21 @@
                     { "name": "border", "$ref": "Quad", "description": "Border box" },
                     { "name": "margin", "$ref": "Quad", "description": "Margin box" },
                     { "name": "width", "type": "integer", "description": "Node width" },
-                    { "name": "height", "type": "integer", "description": "Node height" }
+                    { "name": "height", "type": "integer", "description": "Node height" },
+                    { "name": "shapeOutside", "$ref": "ShapeOutsideInfo", "optional": true, "description": "Shape outside coordinates" }
                 ],
                 "description": "Box model."
+            },
+            {
+                "id": "ShapeOutsideInfo",
+                "type": "object",
+                "hidden": true,
+                "properties": [
+                    { "name": "bounds", "$ref": "Quad", "description": "Shape bounds" },
+                    { "name": "shape", "type": "array", "items": { "type": "any"}, "description": "Shape coordinate details" },
+                    { "name": "marginShape", "type": "array", "items": { "type": "any"}, "description": "Margin shape bounds" }
+                ],
+                "description": "CSS Shape Outside details."
             },
             {
                 "id": "Rect",
@@ -1898,6 +2000,8 @@
                 "type": "object",
                 "properties": [
                     { "name": "showInfo", "type": "boolean", "optional": true, "description": "Whether the node info tooltip should be shown (default: false)." },
+                    { "name": "showRulers", "type": "boolean", "optional": true, "description": "Whether the rulers should be shown (default: false)." },
+                    { "name": "showExtensionLines", "type": "boolean", "optional": true, "description": "Whether the extension lines from node to the rulers should be shown (default: false)." },
                     { "name": "contentColor", "$ref": "RGBA", "optional": true, "description": "The content box highlight fill color (default: transparent)." },
                     { "name": "paddingColor", "$ref": "RGBA", "optional": true, "description": "The padding highlight fill color (default: transparent)." },
                     { "name": "borderColor", "$ref": "RGBA", "optional": true, "description": "The border highlight fill color (default: transparent)." },
@@ -1908,6 +2012,14 @@
             }
         ],
         "commands": [
+            {
+                "name": "enable",
+                "description": "Enables DOM agent for the given page."
+            },
+            {
+                "name": "disable",
+                "description": "Disables DOM agent for the given page."
+            },
             {
                 "name": "getDocument",
                 "returns": [
@@ -2075,7 +2187,7 @@
                 "hidden": true,
                 "parameters": [
                     { "name": "enabled", "type": "boolean", "description": "True to enable inspection mode, false to disable it." },
-                    { "name": "inspectShadowDOM", "type": "boolean", "optional": true, "description": "True to enable inspection mode for shadow DOM." },
+                    { "name": "inspectUAShadowDOM", "type": "boolean", "optional": true, "description": "True to enable inspection mode for user agent shadow DOM." },
                     { "name": "highlightConfig", "$ref": "HighlightConfig", "optional": true, "description": "A descriptor for the highlight appearance of hovered-over nodes. May be omitted if <code>enabled == false</code>." }
                 ],
                 "description": "Enters the 'inspect' mode. In this mode, elements that user is hovering over are highlighted. Backend then generates 'inspectNodeRequested' event upon element selection."
@@ -2137,22 +2249,14 @@
                 "hidden": true
             },
             {
-                "name": "pushNodeByBackendIdToFrontend",
+                "name": "pushNodesByBackendIdsToFrontend",
                 "parameters": [
-                    { "name": "backendNodeId", "$ref": "BackendNodeId", "description": "The backend node id of the node." }
+                    { "name": "backendNodeIds", "type": "array", "items": {"$ref": "BackendNodeId"}, "description": "The array of backend node ids." }
                 ],
                 "returns": [
-                    { "name": "nodeId", "$ref": "NodeId", "description": "The pushed node's id." }
+                    { "name": "nodeIds", "type": "array", "items": {"$ref": "NodeId"}, "description": "The array of ids of pushed nodes that correspond to the backend ids specified in backendNodeIds." }
                 ],
-                "description": "Requests that the node is sent to the caller given its backend node id.",
-                "hidden": true
-            },
-            {
-                "name": "releaseBackendNodeIds",
-                "parameters": [
-                    { "name": "nodeGroup", "type": "string", "description": "The backend node ids group name." }
-                ],
-                "description": "Requests that group of <code>BackendNodeIds</code> is released.",
+                "description": "Requests that a batch of nodes is sent to the caller given their backend node ids.",
                 "hidden": true
             },
             {
@@ -2383,28 +2487,10 @@
                 "type": "string"
             },
             {
-                "id": "CSSStyleId",
-                "type": "object",
-                "properties": [
-                    { "name": "styleSheetId", "$ref": "StyleSheetId", "description": "Enclosing stylesheet identifier." },
-                    { "name": "ordinal", "type": "integer", "description": "The style ordinal within the stylesheet." }
-                ],
-                "description": "This object identifies a CSS style in a unique way."
-            },
-            {
                 "id": "StyleSheetOrigin",
                 "type": "string",
                 "enum": ["user", "user-agent", "inspector", "regular"],
                 "description": "Stylesheet type: \"user\" for user stylesheets, \"user-agent\" for user-agent stylesheets, \"inspector\" for stylesheets created by the inspector (i.e. those holding the \"via inspector\" rules), \"regular\" for regular stylesheets."
-            },
-            {
-                "id": "CSSRuleId",
-                "type": "object",
-                "properties": [
-                    { "name": "styleSheetId", "$ref": "StyleSheetId", "description": "Enclosing stylesheet identifier." },
-                    { "name": "ordinal", "type": "integer", "description": "The rule ordinal within the stylesheet." }
-                ],
-                "description": "This object identifies a CSS rule in a unique way."
             },
             {
                 "id": "PseudoIdMatches",
@@ -2422,7 +2508,7 @@
                     { "name": "inlineStyle", "$ref": "CSSStyle", "optional": true, "description": "The ancestor node's inline style, if any, in the style inheritance chain." },
                     { "name": "matchedCSSRules", "type": "array", "items": { "$ref": "RuleMatch" }, "description": "Matches of CSS rules matching the ancestor node in the style inheritance chain." }
                 ],
-                "description": "CSS rule collection for a single pseudo style."
+                "description": "Inherited CSS rule collection from ancestor node."
             },
             {
                 "id": "RuleMatch",
@@ -2452,15 +2538,6 @@
                 "description": "Selector list data."
             },
             {
-                "id": "CSSStyleAttribute",
-                "type": "object",
-                "properties": [
-                    { "name": "name", "type": "string", "description": "DOM attribute name (e.g. \"width\")."},
-                    { "name": "style", "$ref": "CSSStyle", "description": "CSS style generated by the respective DOM attribute."}
-                ],
-                "description": "CSS style information for a DOM style attribute."
-            },
-            {
                 "id": "CSSStyleSheetHeader",
                 "type": "object",
                 "properties": [
@@ -2479,22 +2556,11 @@
                 "description": "CSS stylesheet metainformation."
             },
             {
-                "id": "CSSStyleSheetBody",
-                "type": "object",
-                "properties": [
-                    { "name": "styleSheetId", "$ref": "StyleSheetId", "description": "The stylesheet identifier."},
-                    { "name": "rules", "type": "array", "items": { "$ref": "CSSRule" }, "description": "Stylesheet resource URL."},
-                    { "name": "text", "type": "string", "optional": true, "description": "Stylesheet resource contents (if available)."}
-                ],
-                "description": "CSS stylesheet contents."
-            },
-            {
                 "id": "CSSRule",
                 "type": "object",
                 "properties": [
-                    { "name": "ruleId", "$ref": "CSSRuleId", "optional": true, "description": "The CSS rule identifier (absent for user agent stylesheet and user-specified stylesheet rules)."},
+                    { "name": "styleSheetId", "$ref": "StyleSheetId", "optional": true, "description": "The css style sheet identifier (absent for user agent stylesheet and user-specified stylesheet rules) this rule came from." },
                     { "name": "selectorList", "$ref": "SelectorList", "description": "Rule selector data." },
-                    { "name": "sourceURL", "type": "string", "optional": true, "description": "Parent stylesheet resource URL (for regular rules)."},
                     { "name": "origin", "$ref": "StyleSheetOrigin", "description": "Parent stylesheet's origin."},
                     { "name": "style", "$ref": "CSSStyle", "description": "Associated style declaration." },
                     { "name": "media", "type": "array", "items": { "$ref": "CSSMedia" }, "optional": true, "description": "Media list array (for rules involving media queries). The array enumerates media queries starting with the innermost one, going outwards." }
@@ -2521,14 +2587,6 @@
                 ]
             },
             {
-                "id": "CSSPropertyInfo",
-                "type": "object",
-                "properties": [
-                    { "name": "name", "type": "string", "description": "Property name." },
-                    { "name": "longhands", "type": "array", "optional": true, "items": { "type": "string" }, "description": "Longhand property names." }
-                ]
-            },
-            {
                 "id": "CSSComputedStyleProperty",
                 "type": "object",
                 "properties": [
@@ -2540,13 +2598,11 @@
                 "id": "CSSStyle",
                 "type": "object",
                 "properties": [
-                    { "name": "styleId", "$ref": "CSSStyleId", "optional": true, "description": "The CSS style identifier (absent for attribute styles)." },
+                    { "name": "styleSheetId", "$ref": "StyleSheetId", "optional": true, "description": "The css style sheet identifier (absent for user agent stylesheet and user-specified stylesheet rules) this rule came from." },
                     { "name": "cssProperties", "type": "array", "items": { "$ref": "CSSProperty" }, "description": "CSS properties in the style." },
                     { "name": "shorthandEntries", "type": "array", "items": { "$ref": "ShorthandEntry" }, "description": "Computed values for all shorthands found in the style." },
                     { "name": "cssText", "type": "string", "optional": true, "description": "Style declaration text (if available)." },
-                    { "name": "range", "$ref": "SourceRange", "optional": true, "description": "Style declaration range in the enclosing stylesheet (if available)." },
-                    { "name": "width", "type": "string", "optional": true, "description": "The effective \"width\" property value from this style." },
-                    { "name": "height", "type": "string", "optional": true, "description": "The effective \"height\" property value from this style." }
+                    { "name": "range", "$ref": "SourceRange", "optional": true, "description": "Style declaration range in the enclosing stylesheet (if available)." }
                 ],
                 "description": "CSS style representation."
             },
@@ -2556,11 +2612,11 @@
                 "properties": [
                     { "name": "name", "type": "string", "description": "The property name." },
                     { "name": "value", "type": "string", "description": "The property value." },
-                    { "name": "priority", "type": "string", "optional": true, "description": "The property priority (implies \"\" if absent)." },
+                    { "name": "important", "type": "boolean", "optional": true, "description": "Whether the property has \"!important\" annotation (implies <code>false</code> if absent)." },
                     { "name": "implicit", "type": "boolean", "optional": true, "description": "Whether the property is implicit (implies <code>false</code> if absent)." },
                     { "name": "text", "type": "string", "optional": true, "description": "The full property text as specified in the style." },
                     { "name": "parsedOk", "type": "boolean", "optional": true, "description": "Whether the property is understood by the browser (implies <code>true</code> if absent)." },
-                    { "name": "status", "type": "string", "enum": ["active", "inactive", "disabled", "style"], "optional": true, "description": "The property status: \"active\" if the property is effective in the style, \"inactive\" if the property is overridden by a same-named property in this style later on, \"disabled\" if the property is disabled by the user, \"style\" (implied if absent) if the property is reported by the browser rather than by the CSS source parser." },
+                    { "name": "disabled", "type": "boolean", "optional": true, "description": "Whether the property is disabled by the user (present for source-based properties only)." },
                     { "name": "range", "$ref": "SourceRange", "optional": true, "description": "The entire property range in the enclosing style declaration (if available)." }
                 ],
                 "description": "CSS property declaration data."
@@ -2573,31 +2629,28 @@
                     { "name": "source", "type": "string", "enum": ["mediaRule", "importRule", "linkedSheet", "inlineSheet"], "description": "Source of the media query: \"mediaRule\" if specified by a @media rule, \"importRule\" if specified by an @import rule, \"linkedSheet\" if specified by a \"media\" attribute in a linked stylesheet's LINK tag, \"inlineSheet\" if specified by a \"media\" attribute in an inline stylesheet's STYLE tag." },
                     { "name": "sourceURL", "type": "string", "optional": true, "description": "URL of the document containing the media query description." },
                     { "name": "range", "$ref": "SourceRange", "optional": true, "description": "The associated rule (@media or @import) header range in the enclosing stylesheet (if available)." },
-                    { "name": "parentStyleSheetId", "$ref": "StyleSheetId", "optional": true, "description": "Identifier of the stylesheet containing this object (if exists)." }
+                    { "name": "parentStyleSheetId", "$ref": "StyleSheetId", "optional": true, "description": "Identifier of the stylesheet containing this object (if exists)." },
+                    { "name": "mediaList", "type": "array", "items": { "$ref": "MediaQuery" }, "optional": true, "hidden": true, "description": "Array of media queries." }
                 ],
                 "description": "CSS media query descriptor."
             },
             {
-                "id": "Region",
-                "type": "object",
-                "properties": [
-                    { "name": "regionOverset", "type": "string", "enum": ["overset", "fit", "empty"], "description": "The \"overset\" attribute of a Named Flow." },
-                    { "name": "nodeId", "$ref": "DOM.NodeId", "description": "The corresponding DOM node id." }
-                ],
-                "description": "This object represents a region that flows from a Named Flow.",
+                "id": "MediaQuery",
+                "type": "array",
+                "items": { "$ref": "MediaQueryExpression" },
+                "description": "An array of media query expressions.",
                 "hidden": true
             },
             {
-                "id": "NamedFlow",
+                "id": "MediaQueryExpression",
                 "type": "object",
                 "properties": [
-                    { "name": "documentNodeId", "$ref": "DOM.NodeId", "description": "The document node id." },
-                    { "name": "name", "type": "string", "description": "Named Flow identifier." },
-                    { "name": "overset", "type": "boolean", "description": "The \"overset\" attribute of a Named Flow." },
-                    { "name": "content", "type": "array", "items": { "$ref": "DOM.NodeId" }, "description": "An array of nodes that flow into the Named Flow." },
-                    { "name": "regions", "type": "array", "items": { "$ref": "Region" }, "description": "An array of regions associated with the Named Flow." }
+                    { "name": "value", "type": "number", "description": "Media query expression value."},
+                    { "name": "unit", "type": "string", "description": "Media query expression units."},
+                    { "name": "feature", "type": "string", "description": "Media query expression feature."},
+                    { "name": "computedLength", "type": "number", "optional": true, "description": "Computed length of media query expression (if applicable)."}
                 ],
-                "description": "This object represents a Named Flow.",
+                "description": "Media query expression data.",
                 "hidden": true
             },
             {
@@ -2607,7 +2660,8 @@
                     { "name": "familyName", "type": "string", "description": "Font's family name reported by platform."},
                     { "name": "glyphCount", "type": "number", "description": "Amount of glyphs that were rendered with this font."}
                 ],
-                "description": "Information about amount of glyphs that were rendered with given font."
+                "description": "Information about amount of glyphs that were rendered with given font.",
+                "hidden": true
             }
         ],
         "commands": [
@@ -2668,23 +2722,6 @@
                 "hidden": true
             },
             {
-                "name": "getAllStyleSheets",
-                "returns": [
-                    { "name": "headers", "type": "array", "items": { "$ref": "CSSStyleSheetHeader" }, "description": "Descriptor entries for all available stylesheets." }
-                ],
-                "description": "Returns metainfo entries for all known stylesheets."
-            },
-            {
-                "name": "getStyleSheet",
-                "parameters": [
-                    { "name": "styleSheetId", "$ref": "StyleSheetId" }
-                ],
-                "returns": [
-                    { "name": "styleSheet", "$ref": "CSSStyleSheetBody", "description": "Stylesheet contents for the specified <code>styleSheetId</code>." }
-                ],
-                "description": "Returns stylesheet data for the specified <code>styleSheetId</code>."
-            },
-            {
                 "name": "getStyleSheetText",
                 "parameters": [
                     { "name": "styleSheetId", "$ref": "StyleSheetId" }
@@ -2700,48 +2737,25 @@
                     { "name": "styleSheetId", "$ref": "StyleSheetId" },
                     { "name": "text", "type": "string" }
                 ],
-                "description": "Sets the new stylesheet text, thereby invalidating all existing <code>CSSStyleId</code>'s and <code>CSSRuleId</code>'s contained by this stylesheet."
-            },
-            {
-                "name": "setStyleText",
-                "parameters": [
-                    { "name": "styleId", "$ref": "CSSStyleId" },
-                    { "name": "text", "type": "string" }
-                ],
-                "returns": [
-                    { "name": "style", "$ref": "CSSStyle", "description": "The resulting style after the text modification." }
-                ],
-                "description": "Updates the CSSStyleDeclaration text."
+                "description": "Sets the new stylesheet text."
             },
             {
                 "name": "setPropertyText",
                 "parameters": [
-                    { "name": "styleId", "$ref": "CSSStyleId" },
-                    { "name": "propertyIndex", "type": "integer" },
-                    { "name": "text", "type": "string" },
-                    { "name": "overwrite", "type": "boolean" }
+                    { "name": "styleSheetId", "$ref": "StyleSheetId" },
+                    { "name": "range", "$ref": "SourceRange", "description": "Either a source range of the property to be edited or an empty range representing a position for the property insertion." },
+                    { "name": "text", "type": "string" }
                 ],
                 "returns": [
                     { "name": "style", "$ref": "CSSStyle", "description": "The resulting style after the property text modification." }
                 ],
-                "description": "Sets the new <code>text</code> for a property in the respective style, at offset <code>propertyIndex</code>. If <code>overwrite</code> is <code>true</code>, a property at the given offset is overwritten, otherwise inserted. <code>text</code> entirely replaces the property <code>name: value</code>."
-            },
-            {
-                "name": "toggleProperty",
-                "parameters": [
-                    { "name": "styleId", "$ref": "CSSStyleId" },
-                    { "name": "propertyIndex", "type": "integer" },
-                    { "name": "disable", "type": "boolean" }
-                ],
-                "returns": [
-                    { "name": "style", "$ref": "CSSStyle", "description": "The resulting style after the property toggling." }
-                ],
-                "description": "Toggles the property in the respective style, at offset <code>propertyIndex</code>. The <code>disable</code> parameter denotes whether the property should be disabled (i.e. removed from the style declaration). If <code>disable == false</code>, the property gets put back into its original place in the style declaration."
+                "description": "Either replaces a property identified by <code>styleSheetId</code> and <code>range</code> with <code>text</code> or inserts a new property <code>text</code> at the position identified by an empty <code>range</code>."
             },
             {
                 "name": "setRuleSelector",
                 "parameters": [
-                    { "name": "ruleId", "$ref": "CSSRuleId" },
+                    { "name": "styleSheetId", "$ref": "StyleSheetId" },
+                    { "name": "range", "$ref": "SourceRange" },
                     { "name": "selector", "type": "string" }
                 ],
                 "returns": [
@@ -2750,22 +2764,25 @@
                 "description": "Modifies the rule selector."
             },
             {
+                "name": "createStyleSheet",
+                "parameters": [
+                    { "name": "frameId", "$ref": "Page.FrameId", "description": "Identifier of the frame where \"via-inspector\" stylesheet should be created."}
+                ],
+                "returns": [
+                    { "name": "styleSheetId", "$ref": "StyleSheetId", "description": "Identifier of the created \"via-inspector\" stylesheet." }
+                ],
+                "description": "Creates a new special \"via-inspector\" stylesheet in the frame with given <code>frameId</code>."
+            },
+            {
                 "name": "addRule",
                 "parameters": [
-                    { "name": "contextNodeId", "$ref": "DOM.NodeId" },
+                    { "name": "styleSheetId", "$ref": "StyleSheetId" },
                     { "name": "selector", "type": "string" }
                 ],
                 "returns": [
                     { "name": "rule", "$ref": "CSSRule", "description": "The newly created rule." }
                 ],
-                "description": "Creates a new empty rule with the given <code>selector</code> in a special \"inspector\" stylesheet in the owner document of the context node."
-            },
-            {
-                "name": "getSupportedCSSProperties",
-                "returns": [
-                    { "name": "cssProperties", "type": "array", "items": { "$ref": "CSSPropertyInfo" }, "description": "Supported property metainfo." }
-                ],
-                "description": "Returns all supported CSS property names."
+                "description": "Creates a new empty rule with the given <code>selector</code> in a stylesheet with given <code>styleSheetId</code>."
             },
             {
                 "name": "forcePseudoState",
@@ -2776,14 +2793,11 @@
                 "description": "Ensures that the given node will have specified pseudo-classes whenever its style is computed by the browser."
             },
             {
-                "name": "getNamedFlowCollection",
-                "parameters": [
-                    { "name": "documentNodeId", "$ref": "DOM.NodeId", "description": "The document node id for which to get the Named Flow Collection." }
-                ],
+                "name": "getMediaQueries",
                 "returns": [
-                    { "name": "namedFlows", "type": "array", "items": { "$ref": "NamedFlow" }, "description": "An array containing the Named Flows in the document." }
+                    { "name": "medias", "type": "array", "items": { "$ref": "CSSMedia" } }
                 ],
-                "description": "Returns the Named Flows from the document.",
+                "description": "Returns all media queries parsed by the rendering engine.",
                 "hidden": true
             }
         ],
@@ -2812,39 +2826,6 @@
                     { "name": "styleSheetId", "$ref": "StyleSheetId", "description": "Identifier of the removed stylesheet." }
                 ],
                 "description": "Fired whenever an active document stylesheet is removed."
-            },
-            {
-                "name": "namedFlowCreated",
-                "parameters": [
-                    { "name": "namedFlow", "$ref": "NamedFlow", "description": "The new Named Flow." }
-                ],
-                "description": "Fires when a Named Flow is created.",
-                "hidden": true
-            },
-            {
-                "name": "namedFlowRemoved",
-                "parameters": [
-                    { "name": "documentNodeId", "$ref": "DOM.NodeId", "description": "The document node id." },
-                    { "name": "flowName", "type": "string", "description": "Identifier of the removed Named Flow." }
-                ],
-                "description": "Fires when a Named Flow is removed: has no associated content nodes and regions.",
-                "hidden": true
-            },
-            {
-                "name": "regionLayoutUpdated",
-                "parameters": [
-                    { "name": "namedFlow", "$ref": "NamedFlow", "description": "The Named Flow whose layout may have changed." }
-                ],
-                "description": "Fires when a Named Flow's layout may have changed.",
-                "hidden": true
-            },
-            {
-                "name": "regionOversetChanged",
-                "parameters": [
-                    { "name": "namedFlow", "$ref": "NamedFlow", "description": "The Named Flow containing the regions whose regionOverset values changed." }
-                ],
-                "description": "Fires if any of the regionOverset values changed in a Named Flow's region chain.",
-                "hidden": true
             }
         ]
     },
@@ -2853,14 +2834,17 @@
         "description": "Timeline provides its clients with instrumentation records that are generated during the page runtime. Timeline instrumentation can be started and stopped using corresponding commands. While timeline is started, it is generating timeline event records.",
         "types": [
             {
-                "id": "DOMCounters",
+                "id": "Counters",
                 "type": "object",
                 "properties": [
-                    { "name": "documents", "type": "integer" },
-                    { "name": "nodes", "type": "integer" },
-                    { "name": "jsEventListeners", "type": "integer" }
+                    { "name": "documents", "type": "integer", "optional": true },
+                    { "name": "nodes", "type": "integer", "optional": true },
+                    { "name": "jsEventListeners", "type": "integer", "optional": true },
+                    { "name": "jsHeapSizeUsed", "type": "number", "optional": true, "description": "Currently used size of JS heap." },
+                    { "name": "gpuMemoryUsedKB", "type": "number", "optional": true, "description": "Current GPU memory usage in kilobytes." },
+                    { "name": "gpuMemoryLimitKB", "type": "number", "optional": true, "description": "Current GPU memory limit in kilobytes." }
                 ],
-                "description": "Current values of DOM counters.",
+                "description": "Current values of counters.",
                 "hidden": true
             },
             {
@@ -2868,11 +2852,13 @@
                 "type": "object",
                 "properties": [
                     { "name": "type", "type": "string", "description": "Event type." },
-                    { "name": "thread", "type": "string", "optional": true, "description": "If present, identifies the thread that produced the event.", "hidden": true },
                     { "name": "data", "type": "object", "description": "Event data." },
+                    { "name": "startTime", "type": "number", "description": "Start time." },
+                    { "name": "endTime", "type": "number", "optional": true, "description": "End time." },
                     { "name": "children", "type": "array", "optional": true, "items": { "$ref": "TimelineEvent" }, "description": "Nested records." },
-                    { "name": "counters", "$ref": "DOMCounters", "optional": true, "hidden": true, "description": "Current values of DOM counters." },
-                    { "name": "usedHeapSize", "type": "integer", "optional": true, "hidden": true, "description": "Current size of JS heap." }
+                    { "name": "thread", "type": "string", "optional": true, "hidden": true, "description": "If present, identifies the thread that produced the event." },
+                    { "name": "stackTrace", "$ref": "Console.StackTrace", "optional": true, "hidden": true, "description": "Stack trace." },
+                    { "name": "frameId", "type": "string", "optional": true, "hidden": true, "description": "Unique identifier of the frame within the page that the event relates to." }
                 ],
                 "description": "Timeline record contains information about the recorded activity."
             }
@@ -2891,7 +2877,8 @@
                 "parameters": [
                     { "name": "maxCallStackDepth", "optional": true, "type": "integer", "description": "Samples JavaScript stack traces up to <code>maxCallStackDepth</code>, defaults to 5." },
                     { "name": "bufferEvents", "optional": true, "type": "boolean", "hidden": true, "description": "Whether instrumentation events should be buffered and returned upon <code>stop</code> call." },
-                    { "name": "includeDomCounters", "optional": true, "type": "boolean", "hidden": true, "description": "Whether DOM counters data should be included into timeline events." },
+                    { "name": "liveEvents", "optional": true, "type": "string", "hidden": true, "description": "Coma separated event types to issue although bufferEvents is set."},
+                    { "name": "includeCounters", "optional": true, "type": "boolean", "hidden": true, "description": "Whether counters data should be included into timeline events." },
                     { "name": "includeGPUEvents", "optional": true, "type": "boolean", "hidden": true, "description": "Whether events from GPU process should be collected." }
                 ],
                 "description": "Starts capturing instrumentation events."
@@ -2911,6 +2898,13 @@
                     { "name": "record", "$ref": "TimelineEvent", "description": "Timeline event record data." }
                 ],
                 "description": "Fired for every instrumentation event while timeline is started."
+            },
+            {
+                "name": "progress",
+                "parameters": [
+                    { "name": "count", "type": "number" }
+                ],
+                "hidden": true
             },
             {
                 "name": "started",
@@ -3004,6 +2998,18 @@
                 "description": "Scope description."
             },
             {
+                "id": "ExceptionDetails",
+                "type": "object",
+                "description": "Detailed information on exception (or error) that was thrown during script compilation or execution.",
+                "properties": [
+                    { "name": "text", "type": "string", "description": "Exception text." },
+                    { "name": "url", "type": "string", "optional": true, "description": "URL of the message origin." },
+                    { "name": "line", "type": "integer", "optional": true, "description": "Line number in the resource that generated this message." },
+                    { "name": "column", "type": "integer", "optional": true, "description": "Column number in the resource that generated this message." },
+                    { "name": "stackTrace", "$ref": "Console.StackTrace", "optional": true, "description": "JavaScript stack trace for assertions and error messages." }
+                ]
+            },
+            {
                 "id": "SetScriptSourceError",
                 "type": "object",
                 "properties": [
@@ -3089,10 +3095,7 @@
             },
             {
                 "name": "stepOver",
-                "parameters": [
-                    { "name": "callFrameId", "optional": true, "$ref": "CallFrameId", "description": "A frame where the step must be performed." }
-                ],
-                "description": "Steps over the statement. Moves execution to the next statement in the top call frame or in the specified one."
+                "description": "Steps over the statement."
             },
             {
                 "name": "stepInto",
@@ -3100,10 +3103,7 @@
             },
             {
                 "name": "stepOut",
-                "parameters": [
-                    { "name": "callFrameId", "optional": true, "$ref": "CallFrameId", "description": "A frame where the step must be performed." }
-                ],
-                "description": "Steps out of the top call frame or the specified one."
+                "description": "Steps out of the function call."
             },
             {
                 "name": "pause",
@@ -3213,11 +3213,12 @@
                 "hidden": true,
                 "parameters": [
                     { "name": "expression", "type": "string", "description": "Expression to compile." },
-                    { "name": "sourceURL", "type": "string", "description": "Source url to be set for the script." }
+                    { "name": "sourceURL", "type": "string", "description": "Source url to be set for the script." },
+                    { "name": "executionContextId", "$ref": "Runtime.ExecutionContextId", "optional": true, "description": "Specifies in which isolated context to perform script run. Each content script lives in an isolated context and this parameter may be used to specify one of those contexts. If the parameter is omitted or 0 the evaluation will be performed in the context of the inspected page." }
                 ],
                 "returns": [
                     { "name": "scriptId", "$ref": "ScriptId", "optional": true, "description": "Id of the script." },
-                    { "name": "syntaxErrorMessage", "type": "string", "optional": true, "description": "Syntax error message if compilation failed." }
+                    { "name": "exceptionDetails", "$ref": "ExceptionDetails", "optional": true, "description": "Exception details."}
                 ],
                 "description": "Compiles expression."
             },
@@ -3226,13 +3227,13 @@
                 "hidden": true,
                 "parameters": [
                     { "name": "scriptId", "$ref": "ScriptId", "description": "Id of the script to run." },
-                    { "name": "contextId", "$ref": "Runtime.ExecutionContextId", "optional": true, "description": "Specifies in which isolated context to perform script run. Each content script lives in an isolated context and this parameter may be used to specify one of those contexts. If the parameter is omitted or 0 the evaluation will be performed in the context of the inspected page." },
+                    { "name": "executionContextId", "$ref": "Runtime.ExecutionContextId", "optional": true, "description": "Specifies in which isolated context to perform script run. Each content script lives in an isolated context and this parameter may be used to specify one of those contexts. If the parameter is omitted or 0 the evaluation will be performed in the context of the inspected page." },
                     { "name": "objectGroup", "type": "string", "optional": true, "description": "Symbolic group name that can be used to release multiple objects." },
                     { "name": "doNotPauseOnExceptionsAndMuteConsole", "type": "boolean", "optional": true, "description": "Specifies whether script run should stop on exceptions and mute console. Overrides setPauseOnException state." }
                 ],
                 "returns": [
                     { "name": "result", "$ref": "Runtime.RemoteObject", "description": "Run result." },
-                    { "name": "wasThrown", "type": "boolean", "optional": true, "description": "True if the result was thrown during the script run." }
+                    { "name": "exceptionDetails", "$ref": "ExceptionDetails", "optional": true, "description": "Exception details."}
                 ],
                 "description": "Runs script with given id in a given context."
             },
@@ -3380,14 +3381,16 @@
             {
                 "name": "setEventListenerBreakpoint",
                 "parameters": [
-                    { "name": "eventName", "type": "string", "description": "DOM Event name to stop on (any DOM event will do)." }
+                    { "name": "eventName", "type": "string", "description": "DOM Event name to stop on (any DOM event will do)." },
+                    { "name": "targetName", "type": "string", "optional": true, "description": "EventTarget interface name to stop on. If equal to <code>\"*\"</code> or not provided, will stop on any EventTarget.", "hidden": true }
                 ],
                 "description": "Sets breakpoint on particular DOM event."
             },
             {
                 "name": "removeEventListenerBreakpoint",
                 "parameters": [
-                    { "name": "eventName", "type": "string", "description": "Event name." }
+                    { "name": "eventName", "type": "string", "description": "Event name." },
+                    { "name": "targetName", "type": "string", "optional": true, "description": "EventTarget interface name.", "hidden": true }
                 ],
                 "description": "Removes breakpoint on particular DOM event."
             },
@@ -3441,7 +3444,7 @@
                     { "name": "callUID", "type": "number", "description": "Call UID." },
                     { "name": "children", "type": "array", "items": { "$ref": "CPUProfileNode" }, "description": "Child nodes." },
                     { "name": "deoptReason", "type": "string", "description": "The reason of being not optimized. The function may be deoptimized or marked as don't optimize."},
-                    { "name": "id", "optional": true, "type": "integer", "description": "Unique id of the node." }
+                    { "name": "id", "type": "integer", "description": "Unique id of the node." }
                 ]
             },
             {
@@ -3452,7 +3455,8 @@
                     { "name": "head", "$ref": "CPUProfileNode" },
                     { "name": "startTime", "type": "number", "description": "Profiling start time in seconds." },
                     { "name": "endTime", "type": "number", "description": "Profiling end time in seconds." },
-                    { "name": "samples", "optional": true, "type": "array", "items": { "type": "integer" }, "description": "Ids of samples top nodes." }
+                    { "name": "samples", "optional": true, "type": "array", "items": { "type": "integer" }, "description": "Ids of samples top nodes." },
+                    { "name": "timestamps", "optional": true, "type": "array", "items": { "type": "number" }, "description": "Timestamps of the samples in microseconds." }
                 ]
             }
         ],
@@ -3507,19 +3511,9 @@
         "hidden": true,
         "types": [
             {
-                "id": "ProfileHeader",
-                "type": "object",
-                "description": "Profile header.",
-                "properties": [
-                    { "name": "title", "type": "string", "description": "Profile title." },
-                    { "name": "uid", "type": "integer", "description": "Unique identifier of the profile." },
-                    { "name": "maxJSObjectId", "type": "integer", "optional": true, "description": "Last seen JS object Id." }
-                ]
-            },
-            {
                 "id": "HeapSnapshotObjectId",
                 "type": "string",
-                "description": "Heap snashot object id."
+                "description": "Heap snapshot object id."
             }
         ],
         "commands": [
@@ -3530,7 +3524,10 @@
                 "name": "disable"
             },
             {
-                "name": "startTrackingHeapObjects"
+                "name": "startTrackingHeapObjects",
+                "parameters": [
+                    { "name": "trackAllocations", "type": "boolean", "optional": true }
+                ]
             },
             {
                 "name": "stopTrackingHeapObjects",
@@ -3538,21 +3535,6 @@
                     { "name": "reportProgress", "type": "boolean", "optional": true, "description": "If true 'reportHeapSnapshotProgress' events will be generated while snapshot is being taken when the tracking is stopped." }
                 ]
 
-            },
-            {
-                "name": "getHeapSnapshot",
-                "parameters": [
-                    { "name": "uid", "type": "integer" }
-                ]
-            },
-            {
-                "name": "removeProfile",
-                "parameters": [
-                    { "name": "uid", "type": "integer" }
-                ]
-            },
-            {
-                "name": "clearProfiles"
             },
             {
                 "name": "takeHeapSnapshot",
@@ -3585,15 +3567,8 @@
         ],
         "events": [
             {
-                "name": "addProfileHeader",
-                "parameters": [
-                    { "name": "header", "$ref": "ProfileHeader" }
-                ]
-            },
-            {
                 "name": "addHeapSnapshotChunk",
                 "parameters": [
-                    { "name": "uid", "type": "integer" },
                     { "name": "chunk", "type": "string" }
                 ]
             },
@@ -3604,7 +3579,8 @@
                 "name": "reportHeapSnapshotProgress",
                 "parameters": [
                     { "name": "done", "type": "integer" },
-                    { "name": "total", "type": "integer" }
+                    { "name": "total", "type": "integer" },
+                    { "name": "finished", "type": "boolean", "optional": true }
                 ]
             },
             {
@@ -3660,7 +3636,7 @@
                 "parameters": [
                     { "name": "workerId", "type": "integer" }
                 ],
-                "handlers": ["browser"]
+                "handlers": ["browser", "renderer"]
             },
             {
                 "name": "setAutoconnectToWorkers",
@@ -3920,7 +3896,6 @@
                     { "name": "keyIdentifier", "type": "string", "optional": true, "description": "Unique key identifier (e.g., 'U+0041') (default: \"\")." },
                     { "name": "windowsVirtualKeyCode", "type": "integer", "optional": true, "description": "Windows virtual key code (default: 0)." },
                     { "name": "nativeVirtualKeyCode", "type": "integer", "optional": true, "description": "Native virtual key code (default: 0)." },
-                    { "name": "macCharCode", "type": "integer", "optional": true, "description": "Mac character code (default: 0)." },
                     { "name": "autoRepeat", "type": "boolean", "optional": true, "description": "Whether the event was generated from auto repeat (default: false)." },
                     { "name": "isKeypad", "type": "boolean", "optional": true, "description": "Whether the event was generated from the keypad (default: false)." },
                     { "name": "isSystemKey", "type": "boolean", "optional": true, "description": "Whether the event was a system key event (default: false)." }
@@ -3986,13 +3961,22 @@
                 "description": "Unique snapshot identifier."
             },
             {
+                "id": "ScrollRect",
+                "type": "object",
+                "description": "Rectangle where scrolling happens on the main thread.",
+                "properties": [
+                    { "name": "rect", "$ref": "DOM.Rect", "description": "Rectangle itself." },
+                    { "name": "type", "type": "string", "enum": ["RepaintsOnScroll", "TouchEventHandler", "WheelEventHandler"], "description": "Reason for rectangle to force scrolling on the main thread" }
+                ]
+            },
+            {
                 "id": "Layer",
                 "type": "object",
                 "description": "Information about a compositing layer.",
                 "properties": [
                     { "name": "layerId", "$ref": "LayerId", "description": "The unique id for this layer." },
                     { "name": "parentLayerId", "$ref": "LayerId", "optional": true, "description": "The id of parent (not present for root)." },
-                    { "name": "nodeId", "$ref": "DOM.NodeId", "optional": true, "description": "The id for the node associated with this layer." },
+                    { "name": "backendNodeId", "$ref": "DOM.BackendNodeId", "optional": true, "description": "The backend id for the node associated with this layer." },
                     { "name": "offsetX", "type": "number", "description": "Offset from parent layer, X coordinate." },
                     { "name": "offsetY", "type": "number", "description": "Offset from parent layer, X coordinate." },
                     { "name": "width", "type": "number", "description": "Layer width." },
@@ -4002,7 +3986,8 @@
                     { "name": "anchorY", "type": "number", "optional": true, "description": "Transform anchor point Y, absent if no transform specified" },
                     { "name": "anchorZ", "type": "number", "optional": true, "description": "Transform anchor point Z, absent if no transform specified" },
                     { "name": "paintCount", "type": "integer", "description": "Indicates how many time this layer has painted." },
-                    { "name": "invisible", "type": "boolean", "optional": true, "description": "Set if layer is not visible." }
+                    { "name": "invisible", "type": "boolean", "optional": true, "description": "Set if layer is not visible." },
+                    { "name": "scrollRects", "type": "array", "items": { "$ref": "ScrollRect"}, "optional": true, "description": "Rectangles scrolling on main thread only."}
                 ]
             },
             {
@@ -4045,6 +4030,16 @@
                 ]
             },
             {
+                "name": "loadSnapshot",
+                "parameters": [
+                    { "name": "data", "type": "string", "description": "Base64-encoded snapshot data." }
+                ],
+                "description": "Returns the snapshot identifier.",
+                "returns": [
+                    { "name": "snapshotId", "$ref": "SnapshotId", "description": "The id of the snapshot." }
+                ]
+            },
+            {
                 "name": "releaseSnapshot",
                 "parameters": [
                     { "name": "snapshotId", "$ref": "SnapshotId", "description": "The id of the layer snapshot." }
@@ -4073,6 +4068,16 @@
                 "returns": [
                     { "name": "dataURL", "type": "string", "description": "A data: URL for resulting image." }
                 ]
+            },
+            {
+                "name": "snapshotCommandLog",
+                "parameters": [
+                    { "name": "snapshotId", "$ref": "SnapshotId", "description": "The id of the layer snapshot." }
+                ],
+                "description": "Replays the layer snapshot and returns canvas log.",
+                "returns": [
+                    { "name": "commandLog", "type": "array", "items": { "type": "object" }, "description": "The array of canvas function calls." }
+                ]
             }
         ],
         "events": [
@@ -4092,6 +4097,44 @@
         ]
     },
     {
+        "domain": "Geolocation",
+        "hidden": true,
+        "commands": [
+            {
+                "name": "setGeolocationOverride",
+                "description": "Overrides the Geolocation Position or Error.",
+                "parameters": [
+                    { "name": "latitude", "type": "number", "optional": true, "description": "Mock latitude"},
+                    { "name": "longitude", "type": "number", "optional": true, "description": "Mock longitude"},
+                    { "name": "accuracy", "type": "number", "optional": true, "description": "Mock accuracy"}
+                ]
+            },
+            {
+                "name": "clearGeolocationOverride",
+                "description": "Clears the overriden Geolocation Position and Error."
+            }
+        ]
+    },
+    {
+        "domain": "DeviceOrientation",
+        "hidden": true,
+        "commands": [
+            {
+                "name": "setDeviceOrientationOverride",
+                "description": "Overrides the Device Orientation.",
+                "parameters": [
+                    { "name": "alpha", "type": "number", "description": "Mock alpha"},
+                    { "name": "beta", "type": "number", "description": "Mock beta"},
+                    { "name": "gamma", "type": "number", "description": "Mock gamma"}
+                ]
+            },
+            {
+                "name": "clearDeviceOrientationOverride",
+                "description": "Clears the overridden Device Orientation."
+            }
+        ]
+    },
+    {
         "domain": "Tracing",
         "hidden": true,
         "commands": [
@@ -4100,13 +4143,25 @@
                 "description": "Start trace events collection.",
                 "parameters": [
                     { "name": "categories", "type": "string", "description": "Category/tag filter" },
-                    { "name": "options", "type": "string", "description": "Tracing options" }
+                    { "name": "options", "type": "string", "description": "Tracing options" },
+                    { "name": "bufferUsageReportingInterval", "type": "number", "optional": true, "description": "If set, the agent will issue bufferUsage events at this interval, specified in milliseconds" }
                 ],
-                "handlers": ["browser", "frontend"]
+                "returns": [
+                    { "name": "sessionId", "type": "string", "description": "A system-unique identifier of the tracing session that allows associating of some of the trace events with the inspected page" }
+                ],
+                "handlers": ["browser", "renderer", "frontend"]
             },
             {
                 "name": "end",
                 "description": "Stop trace events collection.",
+                "handlers": ["browser", "frontend"]
+            },
+            {
+                "name": "getCategories",
+                "description": "Gets supported tracing categories.",
+                "returns": [
+                    { "name": "categories", "type": "array", "items": { "type": "string" }, "description": "A list of supported tracing categories." }
+                ],
                 "handlers": ["browser", "frontend"]
             }
         ],
@@ -4116,10 +4171,75 @@
                 "parameters": [
                     { "name": "value", "type": "array", "items": { "type": "object" } }
                 ],
+                "description": "Contains an bucket of collected trace events.",
                 "handlers": ["browser", "frontend"]
             },
             {
                 "name": "tracingComplete",
+                "description": "Signals that tracing is stopped and there is no trace buffers pending flush, all data were delivered via dataCollected events.",
+                "handlers": ["browser", "frontend"]
+            },
+            {
+                "name": "bufferUsage",
+                "parameters": [
+                    { "name": "value", "type": "number", "description": "A number in range [0..1] that indicates the used size of event buffer as a fraction of its total size." }
+                ],
+                "handlers": ["browser", "frontend"]
+            }
+        ]
+    },
+    {
+        "domain": "Power",
+        "hidden": true,
+        "types": [
+            {
+                "id": "PowerEvent",
+                "type": "object",
+                "properties": [
+                    { "name": "type", "type": "string", "description": "Power Event Type." },
+                    { "name": "timestamp", "type": "number", "description": "Power Event Time, in milliseconds." },
+                    { "name": "value", "type": "number", "description": "Power Event Value." }
+                ],
+            "description": "PowerEvent item"
+            }
+        ],
+        "commands": [
+            {
+                "name": "start",
+                "description": "Start power events collection.",
+                "parameters": [],
+                "handlers": ["browser", "frontend"]
+            },
+            {
+                "name": "end",
+                "description": "Stop power events collection.",
+                "parameters": [],
+                "handlers": ["browser", "frontend"]
+            },
+            {
+                "name": "canProfilePower",
+                "description": "Tells whether power profiling is supported.",
+                "returns": [
+                  { "name": "result", "type": "boolean", "description": "True if power profiling is supported." }
+                ],
+                "hidden": true,
+                "handlers": ["browser", "frontend"]
+            },
+            {
+                "name": "getAccuracyLevel",
+                "description": "Describes the accuracy level of the data provider.",
+                "returns": [
+                    { "name": "result", "type": "string", "enum": ["high", "moderate", "low"] }
+                ],
+                "handlers": ["browser", "frontend"]
+            }
+        ],
+        "events": [
+            {
+                "name": "dataAvailable",
+                "parameters": [
+                    {"name": "value", "type": "array", "items": { "$ref": "PowerEvent" }, "description": "List of power events." }
+                ],
                 "handlers": ["browser", "frontend"]
             }
         ]
