@@ -61,14 +61,18 @@ example to learn how to call `Page.navigate` type:
 
 ```javascript
 chrome> Page.navigate.help
-{ description: 'Navigates current page to the given URL.',
+{ type: 'command',
+  description: 'Navigates current page to the given URL.',
   parameters:
    [ { name: 'url',
        type: 'string',
        description: 'URL to navigate the page to.' } ] }
 ```
 
-For what concerns the types instead, just type its name:
+The field `type` determines whether this member is a command or an event.
+
+For what concerns the types instead (they usually start with an upper case
+letter), just type its name:
 
 ```javascript
 chrome> Network.Timestamp
