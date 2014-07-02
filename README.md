@@ -61,12 +61,11 @@ example to learn how to call `Page.navigate` type:
 
 ```javascript
 chrome> Page.navigate.help
-{ name: 'navigate',
+{ description: 'Navigates current page to the given URL.',
   parameters:
    [ { name: 'url',
        type: 'string',
-       description: 'URL to navigate the page to.' } ],
-  description: 'Navigates current page to the given URL.' }
+       description: 'URL to navigate the page to.' } ] }
 ```
 
 For what concerns the types instead, just type its name:
