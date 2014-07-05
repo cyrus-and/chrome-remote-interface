@@ -1,9 +1,12 @@
 chrome-remote-interface
 =======================
 
-[Remote Debugging Protocol][1] interface that helps to instrument Chrome by
+[Remote Debugging Protocol][rdb] interface that helps to instrument Chrome by
 providing a simple abstraction of the two main objects exposed by the protocol
 in a Node.js fashion: commands and notifications.
+
+`chrome-remote-interface` is listed among
+[third-party Chrome debugging protocol clients][clients-cri].
 
 Installation
 ------------
@@ -14,7 +17,7 @@ Chrome setup
 ------------
 
 Chrome needs to be started with the `--remote-debugging-port=<port>` option to
-enable the [Remote Debugging Protocol][1], for example:
+enable the [Remote Debugging Protocol][rdb], for example:
 
     google-chrome --remote-debugging-port=9222
 
@@ -56,7 +59,7 @@ chrome> Page.navigate({url: 'https://github.com'})
 ```
 
 Using the provided `help` field it's possible to obtain information on the
-events and methods available through the [Remote Debugging Protocol][1]. For
+events and methods available through the [Remote Debugging Protocol][rdb]. For
 example to learn how to call `Page.navigate` type:
 
 ```javascript
@@ -87,12 +90,12 @@ API
 ### module([options], [callback])
 
 Connects to a remote instance of Chrome using the [Remote Debugging
-Protocol][1].
+Protocol][rdb].
 
 `options` is an object with the following optional properties:
 
-- `host`: [Remote Debugging Protocol][1] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][1] port. Defaults to `9222`;
+- `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
+- `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`;
 - `chooseTab`: callback used to determine which remote tab attach to. Takes the
   array returned by `http://host:port/json` containing the tab list and must
   return the numeric index of a tab. Defaults to a function that returns the
@@ -126,8 +129,8 @@ Request the list of the available open tabs of the remote Chrome instance.
 
 `options` is an object with the following optional properties:
 
-- `host`: [Remote Debugging Protocol][1] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][1] port. Defaults to `9222`.
+- `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
+- `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`.
 
 `callback` is executed when the list is correctly received, it gets the
 following arguments:
@@ -159,7 +162,7 @@ Emitted when Chrome sends a notification through the WebSocket.
 - `method`: a string describing the message.
 - `params`: an object containing the payload.
 
-Refer to the [Remote Debugging Protocol specifications][1] for more information.
+Refer to the [Remote Debugging Protocol specifications][rdb] for more information.
 
 #### Event: method
 
@@ -192,7 +195,7 @@ following arguments:
   field, if `error === true`).
 
 Note that the field `id` mentioned in the [Remote Debugging Protocol
-specifications][1] is managed internally and it's not exposed to the user.
+specifications][rdb] is managed internally and it's not exposed to the user.
 
 #### chrome.Domain.method([params], [callback])
 
@@ -226,6 +229,9 @@ Contributors
 Resources
 ---------
 
-- [Chrome Developer Tools: Remote Debugging Protocol v1.1][1]
+- [Chrome Developer Tools: Remote Debugging Protocol v1.1][rdb]
+- [Sample Debugging Protocol Clients][clients]
 
-[1]: https://developer.chrome.com/devtools/docs/protocol/1.1/index
+[rdb]: https://developer.chrome.com/devtools/docs/protocol/1.1/index
+[clients-cri]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
+[clients]: https://developer.chrome.com/devtools/docs/debugging-clients
