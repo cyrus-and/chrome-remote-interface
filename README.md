@@ -181,7 +181,7 @@ on('event', function (message) {
 });
 ```
 
-#### Event: '<method>'
+#### Event: '`<method>`'
 
 ```javascript
 function (params) {}
@@ -223,7 +223,7 @@ For example:
 chrome.send('Page.navigate', {'url': 'https://github.com'}, console.log);
 ```
 
-#### chrome.<domain>.<method>([params], [callback])
+#### chrome.`<domain>`.`<method>`([params], [callback])
 
 Just a shorthand for:
 
@@ -237,7 +237,7 @@ For example:
 chrome.Page.navigate({'url': 'https://github.com'}, console.log);
 ```
 
-#### chrome.<domain>.<event>(callback)
+#### chrome.`<domain>`.`<event>`(callback)
 
 Just a shorthand for:
 
