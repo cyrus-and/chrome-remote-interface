@@ -30,8 +30,8 @@ The following snippet loads `https://github.com` and dumps every request made.
 var Chrome = require('chrome-remote-interface');
 Chrome(function (chrome) {
     with (chrome) {
-        on('Network.requestWillBeSent', function (message) {
-            console.log(message.request.url);
+        on('Network.requestWillBeSent', function (params) {
+            console.log(params.request.url);
         });
         on('Page.loadEventFired', close);
         Network.enable();
@@ -98,7 +98,7 @@ Protocol][rdb].
 - `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`;
 - `chooseTab`: callback used to determine which remote tab attach to. Takes the
   array returned by `http://host:port/json` containing the tab list and must
-  return the numeric index of a tab. Defaults to a function that returns the
+  return the numeric index of a tab. Defaults to a function which returns the
   active one (`function (tabs) { return 0; }`).
 
 `callback` is a listener automatically added to the `connect` event of the
@@ -159,22 +159,30 @@ Emitted when Chrome sends a notification through the WebSocket.
 
 `message` is the object received, it has the following properties:
 
-- `method`: a string describing the message.
+- `method`: a string describing the notification (e.g.,
+  `'Network.requestWillBeSent'`).
 - `params`: an object containing the payload.
 
 Refer to the [Remote Debugging Protocol specifications][rdb] for more information.
 
-#### Event: method
+For example:
+
+    on('event', function (message) {
+        if (message.method === 'Network.requestWillBeSent') {
+            console.log(message.params);
+        }
+    });
+
+#### Event: '<method>'
 
     function (params) {}
 
-Emitted when Chrome sends a notification classified as `method` through the
-WebSocket.
+Emitted when Chrome sends a notification for `<method>` through the WebSocket.
 
 `params` is an object containing the payload.
 
-This is just a utility event that allows to easily filter out specific
-notifications (see the documentation of `event`), for example:
+This is just a utility event which allows to easily listen for specific
+notifications (see the above event), for example:
 
     chrome.on('Network.requestWillBeSent', console.log);
 
@@ -182,7 +190,7 @@ notifications (see the documentation of `event`), for example:
 
 Issue a command to Chrome.
 
-`method` is a string describing the message.
+`method` is a string describing the command.
 
 `params` is an object containing the payload.
 
@@ -197,21 +205,25 @@ following arguments:
 Note that the field `id` mentioned in the [Remote Debugging Protocol
 specifications][rdb] is managed internally and it's not exposed to the user.
 
-#### chrome.Domain.method([params], [callback])
+For example:
+
+    chrome.send('Page.navigate', {'url': 'https://github.com'}, console.log);
+
+#### chrome.<domain>.<method>([params], [callback])
 
 Just a shorthand for:
 
-    chrome.send('Domain.method', params, callback);
+    chrome.send('<domain>.<method>', params, callback);
 
 For example:
 
-    chrome.Page.navigate({'url': 'https://github.com'});
+    chrome.Page.navigate({'url': 'https://github.com'}, console.log);
 
-#### chrome.Domain.event(callback)
+#### chrome.<domain>.<event>(callback)
 
 Just a shorthand for:
 
-    chrome.on('Domain.event', callback);
+    chrome.on('<domain>.<event>', callback);
 
 For example:
 
