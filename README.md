@@ -108,7 +108,9 @@ Returns an `EventEmitter` that supports the following events:
 
 #### Event: 'connect'
 
-    function (chrome) {}
+```javascript
+function (chrome) {}
+```
 
 Emitted when the connection to Chrome is established.
 
@@ -116,7 +118,9 @@ Emitted when the connection to Chrome is established.
 
 #### Event: 'error'
 
-    function (err) {}
+```javascript
+function (err) {}
+```
 
 Emitted if `http://host:port/json` can't be reached or if it's not possible to
 connect to Chrome's remote debugging WebSocket.
@@ -153,7 +157,9 @@ Chrome.listTabs(function (err, tabs) {
 
 #### Event: 'event'
 
-    function (message) {}
+```javascript
+function (message) {}
+```
 
 Emitted when Chrome sends a notification through the WebSocket.
 
@@ -167,15 +173,19 @@ Refer to the [Remote Debugging Protocol specifications][rdb] for more informatio
 
 For example:
 
-    on('event', function (message) {
-        if (message.method === 'Network.requestWillBeSent') {
-            console.log(message.params);
-        }
-    });
+```javascript
+on('event', function (message) {
+    if (message.method === 'Network.requestWillBeSent') {
+        console.log(message.params);
+    }
+});
+```
 
 #### Event: '<method>'
 
-    function (params) {}
+```javascript
+function (params) {}
+```
 
 Emitted when Chrome sends a notification for `<method>` through the WebSocket.
 
@@ -184,7 +194,9 @@ Emitted when Chrome sends a notification for `<method>` through the WebSocket.
 This is just a utility event which allows to easily listen for specific
 notifications (see the above event), for example:
 
-    chrome.on('Network.requestWillBeSent', console.log);
+```javascript
+chrome.on('Network.requestWillBeSent', console.log);
+```
 
 #### chrome.send(method, [params], [callback])
 
@@ -207,27 +219,37 @@ specifications][rdb] is managed internally and it's not exposed to the user.
 
 For example:
 
-    chrome.send('Page.navigate', {'url': 'https://github.com'}, console.log);
+```javascript
+chrome.send('Page.navigate', {'url': 'https://github.com'}, console.log);
+```
 
 #### chrome.<domain>.<method>([params], [callback])
 
 Just a shorthand for:
 
-    chrome.send('<domain>.<method>', params, callback);
+```javascript
+chrome.send('<domain>.<method>', params, callback);
+```
 
 For example:
 
-    chrome.Page.navigate({'url': 'https://github.com'}, console.log);
+```javascript
+chrome.Page.navigate({'url': 'https://github.com'}, console.log);
+```
 
 #### chrome.<domain>.<event>(callback)
 
 Just a shorthand for:
 
-    chrome.on('<domain>.<event>', callback);
+```javascript
+chrome.on('<domain>.<event>', callback);
+```
 
 For example:
 
-    chrome.Network.requestWillBeSent(console.log);
+```javascript
+chrome.Network.requestWillBeSent(console.log);
+```
 
 #### chrome.close()
 
