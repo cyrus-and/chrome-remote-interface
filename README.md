@@ -30,10 +30,10 @@ The following snippet loads `https://github.com` and dumps every request made.
 var Chrome = require('chrome-remote-interface');
 Chrome(function (chrome) {
     with (chrome) {
-        on('Network.requestWillBeSent', function (params) {
+        Network.requestWillBeSent(function (params) {
             console.log(params.request.url);
         });
-        on('Page.loadEventFired', close);
+        Page.loadEventFired(close);
         Network.enable();
         Page.enable();
         Page.navigate({'url': 'https://github.com'});
