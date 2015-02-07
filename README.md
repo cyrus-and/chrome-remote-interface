@@ -49,8 +49,8 @@ REPL interface and embedded documentation
 This module comes with a REPL interface that can be used to interactively
 control Chrome (run with `--help` to display the list of available options). It
 supports command execution and event binding, see the documentation for
-`chrome.Domain.method([params], [callback])` and
-`chrome.Domain.event(callback)`. Here's a sample session:
+`chrome.<domain>.<method>([params], [callback])` and
+`chrome.<domain>.<event>(callback)`. Here's a sample session:
 
 ```javascript
 chrome> Network.enable()
@@ -72,7 +72,7 @@ chrome> Page.navigate.help
        description: 'URL to navigate the page to.' } ] }
 ```
 
-The field `type` determines whether this member is a command or an event.
+The `type` field determines whether this member is a `command` or an `event`.
 
 For what concerns the types instead (they usually start with an upper case
 letter), just type its name:
