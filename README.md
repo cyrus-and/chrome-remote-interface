@@ -292,7 +292,7 @@ Resources
 ---------
 
 - [Chrome Developer Tools: Remote Debugging Protocol v1.1][rdb]
-- [Sample Debugging Protocol Clients][clients]
+- [Showcase Chrome Debugging Protocol Clients][clients]
 
 [rdb]: https://developer.chrome.com/devtools/docs/protocol/1.1/index
 [clients-cri]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
