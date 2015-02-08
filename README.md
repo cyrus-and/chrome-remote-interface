@@ -101,7 +101,7 @@ Protocol][rdb].
 - `chooseTab`: callback used to determine which remote tab attach to. Takes the
   array returned by `http://host:port/json` containing the tab list and must
   return the numeric index of a tab. Defaults to a function which returns the
-  active one (`function (tabs) { return 0; }`).
+  currently active tab (`function (tabs) { return 0; }`).
 
 `callback` is a listener automatically added to the `connect` event of the
 returned `EventEmitter`.
