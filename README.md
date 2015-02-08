@@ -36,7 +36,9 @@ Chrome(function (chrome) {
         Page.loadEventFired(close);
         Network.enable();
         Page.enable();
-        Page.navigate({'url': 'https://github.com'});
+        once('ready', function () {
+            Page.navigate({'url': 'https://github.com'});
+        });
     }
 }).on('error', function () {
     console.error('Cannot connect to Chrome');
@@ -197,6 +199,32 @@ notifications (see the above event), for example:
 ```javascript
 chrome.on('Network.requestWillBeSent', console.log);
 ```
+
+#### Event: 'ready'
+
+```javascript
+function () {}
+```
+
+Emitted every time that there are no more pending commands waiting for a
+response from Chrome. Note that the interaction with Chrome is asynchronous so
+the only way to serialize a sequence of commands is to use the callback provided
+by the `chrome.send` method. This event acts as a barrier and it is useful to
+avoid the callback hell in certain simple situations.
+
+For example to load a URL only after having enabled the notifications of both
+`Network` and `Page` domains:
+
+```javascript
+Network.enable();
+Page.enable();
+once('ready', function() {
+    Page.navigate({'url': 'https://github.com'});
+});
+```
+
+In this particular case, not enforcing this kind of serialization may cause that
+Chrome doesn't properly deliver the desired notifications the client.
 
 #### chrome.send(method, [params], [callback])
 
