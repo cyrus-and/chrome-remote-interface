@@ -6,8 +6,6 @@ module.exports = function (options, callback) {
         callback = options;
         options = undefined;
     }
-    options = options || {};
-    options.chooseTab = options.chooseTab || function () { return 0; };
     var notifier = new events.EventEmitter();
     if (typeof callback === 'function') {
         notifier.on('connect', callback);
@@ -21,6 +19,7 @@ module.exports = function (options, callback) {
                 chrome.close();
             });
         }
+        // create the client passing the notifier
         new Chrome(options, notifier);
     });
     return notifier;

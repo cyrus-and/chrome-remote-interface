@@ -2,12 +2,13 @@
 
 var repl = require('repl');
 var program = require('commander');
+var defaults = require('./defaults.js');
 var protocol = require('../lib/protocol.json');
 var Chrome = require('../');
 
 program
-    .option('-h, --host <host>', 'Remote Debugging Protocol host', 'localhost')
-    .option('-p, --port <port>', 'Remote Debugging Protocol port', '9222')
+    .option('-h, --host <host>', 'Remote Debugging Protocol host', defaults.HOST)
+    .option('-p, --port <port>', 'Remote Debugging Protocol port', defaults.PORT)
     .parse(process.argv);
 
 var options = {
