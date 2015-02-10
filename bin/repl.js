@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var repl = require('repl');
+var util = require('util');
 var program = require('commander');
 var defaults = require('../lib/defaults.js');
 var protocol = require('../lib/protocol.json');
@@ -19,7 +20,13 @@ var options = {
 Chrome(options, function (chrome) {
     var chromeRepl = repl.start({
         'prompt': 'chrome> ',
-        'ignoreUndefined': true
+        'ignoreUndefined': true,
+        'writer': function (object) {
+            return util.inspect(object, {
+                'colors': true,
+                'depth': null
+            });
+        }
     });
 
     // disconnect on exit
