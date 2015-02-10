@@ -2,7 +2,7 @@
 
 var repl = require('repl');
 var program = require('commander');
-var defaults = require('./defaults.js');
+var defaults = require('../lib/defaults.js');
 var protocol = require('../lib/protocol.json');
 var Chrome = require('../');
 
