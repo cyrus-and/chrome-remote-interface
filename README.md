@@ -67,11 +67,18 @@ example to learn how to call `Page.navigate` type:
 ```javascript
 chrome> Page.navigate.help
 { type: 'command',
-  description: 'Navigates current page to the given URL.',
+  name: 'navigate',
   parameters:
    [ { name: 'url',
        type: 'string',
-       description: 'URL to navigate the page to.' } ] }
+       description: 'URL to navigate the page to.' } ],
+  returns:
+   [ { name: 'frameId',
+       '$ref': 'FrameId',
+       hidden: true,
+       description: 'Frame id that will be navigated.' } ],
+  description: 'Navigates current page to the given URL.',
+  handlers: [ 'browser', 'renderer' ] }
 ```
 
 The `type` field determines whether this member is a `command` or an `event`.
