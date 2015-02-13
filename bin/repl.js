@@ -7,7 +7,7 @@ var protocol = require('../lib/protocol.json');
 var Chrome = require('../');
 
 program
-    .option('-h, --host <host>', 'Remote Debugging Protocol host')
+    .option('-t, --host <host>', 'Remote Debugging Protocol host')
     .option('-p, --port <port>', 'Remote Debugging Protocol port')
     .parse(process.argv);
 
