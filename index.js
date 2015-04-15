@@ -1,7 +1,7 @@
 var events = require('events');
 var Chrome = require('./lib/chrome.js');
 
-module.exports = function (options, callback) {
+module.exports = function (options, callback, errorCallback) {
     if (typeof options === 'function') {
         callback = options;
         options = undefined;
@@ -10,6 +10,9 @@ module.exports = function (options, callback) {
     if (typeof callback === 'function') {
         notifier.on('connect', callback);
     }
+    notifier.on('error', function onError(err) {
+        errorCallback(err);
+    });
     // allow to register callbacks later
     process.nextTick(function () {
         // the default listener just disconnects from Chrome, this can be used
