@@ -7,7 +7,8 @@
         "commands": [
             {
                 "name": "enable",
-                "description": "Enables inspector domain notifications."
+                "description": "Enables inspector domain notifications.",
+                "handlers": ["browser", "renderer"]
             },
             {
                 "name": "disable",
@@ -800,18 +801,6 @@
                 ]
             },
             {
-                "id": "EventListener",
-                "type": "object",
-                "description": "Object event listener.",
-                "properties": [
-                    { "name": "type", "type": "string", "description": "<code>EventListener</code>'s type." },
-                    { "name": "useCapture", "type": "boolean", "description": "<code>EventListener</code>'s useCapture." },
-                    { "name": "location", "$ref": "Debugger.Location", "description": "Handler code location." },
-                    { "name": "handler", "$ref": "Runtime.RemoteObject", "optional": true, "description": "Event handler function value." }
-                ],
-                "hidden": true
-            },
-            {
                 "id": "InternalPropertyDescriptor",
                 "type": "object",
                 "description": "Object internal property descriptor. This property isn't normally visible in JavaScript code.",
@@ -900,18 +889,6 @@
                 "description": "Returns properties of a given object. Object group of the result is inherited from the target object."
             },
             {
-                "name": "getEventListeners",
-                "hidden": true,
-                "parameters": [
-                    { "name": "objectId", "$ref": "RemoteObjectId", "description": "Identifier of the object to return listeners for." },
-                    { "name": "objectGroup", "type": "string", "optional": true, "description": "Symbolic group name for handler value. Handler value is not returned without this parameter specified." }
-                ],
-                "returns": [
-                    { "name": "listeners", "type": "array", "items": { "$ref": "EventListener" }, "description": "Array of relevant listeners." }
-                ],
-                "description": "Returns event listeners of the given object."
-            },
-            {
                 "name": "releaseObject",
                 "parameters": [
                     { "name": "objectId", "$ref": "RemoteObjectId", "description": "Identifier of the object to release." }
@@ -993,7 +970,7 @@
                 "type": "object",
                 "description": "Console message.",
                 "properties": [
-                    { "name": "source", "type": "string", "enum": ["xml", "javascript", "network", "console-api", "storage", "appcache", "rendering", "css", "security", "other", "deprecation"], "description": "Message source." },
+                    { "name": "source", "type": "string", "enum": ["xml", "javascript", "network", "console-api", "storage", "appcache", "rendering", "security", "other", "deprecation"], "description": "Message source." },
                     { "name": "level", "type": "string", "enum": ["log", "warning", "error", "debug", "info", "revokedError"], "description": "Message severity." },
                     { "name": "text", "type": "string", "description": "Message text." },
                     { "name": "type", "type": "string", "optional": true, "enum": ["log", "dir", "dirxml", "table", "trace", "clear", "startGroup", "startGroupCollapsed", "endGroup", "assert", "profile", "profileEnd"], "description": "Console message type." },
@@ -1117,9 +1094,7 @@
                     { "name": "connectEnd", "type": "number", "description": "Connected to the remote host." },
                     { "name": "sslStart", "type": "number", "description": "Started SSL handshake." },
                     { "name": "sslEnd", "type": "number", "description": "Finished SSL handshake." },
-                    { "name": "serviceWorkerFetchStart", "type": "number", "description": "Started fetching via ServiceWorker.", "hidden": true },
-                    { "name": "serviceWorkerFetchReady", "type": "number", "description": "Prepared a ServiceWorker.", "hidden": true },
-                    { "name": "serviceWorkerFetchEnd", "type": "number", "description": "Finished fetching via ServiceWorker.", "hidden": true },
+                    { "name": "workerStart", "type": "number", "description": "Started running ServiceWorker.", "hidden": true },
                     { "name": "sendStart", "type": "number", "description": "Started sending request." },
                     { "name": "sendEnd", "type": "number", "description": "Finished sending request." },
                     { "name": "receiveHeadersEnd", "type": "number", "description": "Finished receiving response headers." }
@@ -2177,20 +2152,6 @@
                 "description": "DOM interaction is implemented in terms of mirror objects that represent the actual DOM nodes. DOMNode is a base node mirror type."
             },
             {
-                "id": "EventListener",
-                "type": "object",
-                "hidden": true,
-                "properties": [
-                    { "name": "type", "type": "string", "description": "<code>EventListener</code>'s type." },
-                    { "name": "useCapture", "type": "boolean", "description": "<code>EventListener</code>'s useCapture." },
-                    { "name": "isAttribute", "type": "boolean", "description": "<code>EventListener</code>'s isAttribute." },
-                    { "name": "nodeId", "$ref": "NodeId", "description": "Target <code>DOMNode</code> id." },
-                    { "name": "location", "$ref": "Debugger.Location", "description": "Handler code location." },
-                    { "name": "handler", "$ref": "Runtime.RemoteObject", "optional": true, "description": "Event handler function value." }
-                ],
-                "description": "DOM interaction is implemented in terms of mirror objects that represent the actual DOM nodes. DOMNode is a base node mirror type."
-            },
-            {
                 "id": "RGBA",
                 "type": "object",
                 "properties": [
@@ -2363,18 +2324,6 @@
                     { "name": "name", "type": "string", "description": "Name of the attribute to remove." }
                 ],
                 "description": "Removes attribute with given name from an element with given id."
-            },
-            {
-                "name": "getEventListenersForNode",
-                "parameters": [
-                    { "name": "nodeId", "$ref": "NodeId", "description": "Id of the node to get listeners for." },
-                    { "name": "objectGroup", "type": "string", "optional": true, "description": "Symbolic group name for handler value. Handler value is not returned without this parameter specified." }
-                ],
-                "returns": [
-                    { "name": "listeners", "type": "array", "items": { "$ref": "EventListener" }, "description": "Array of relevant listeners." }
-                ],
-                "description": "Returns event listeners relevant to the node.",
-                "hidden": true
             },
             {
                 "name": "getOuterHTML",
@@ -3797,6 +3746,18 @@
                 "type": "string",
                 "enum": ["subtree-modified", "attribute-modified", "node-removed"],
                 "description": "DOM breakpoint type."
+            },
+            {
+                "id": "EventListener",
+                "type": "object",
+                "description": "Object event listener.",
+                "properties": [
+                    { "name": "type", "type": "string", "description": "<code>EventListener</code>'s type." },
+                    { "name": "useCapture", "type": "boolean", "description": "<code>EventListener</code>'s useCapture." },
+                    { "name": "location", "$ref": "Debugger.Location", "description": "Handler code location." },
+                    { "name": "handler", "$ref": "Runtime.RemoteObject", "optional": true, "description": "Event handler function value." }
+                ],
+                "hidden": true
             }
         ],
         "commands": [
@@ -3861,6 +3822,17 @@
                     { "name": "url", "type": "string", "description": "Resource URL substring." }
                 ],
                 "description": "Removes breakpoint from XMLHttpRequest."
+            },
+            {
+                "name": "getEventListeners",
+                "hidden": true,
+                "parameters": [
+                    { "name": "objectId", "$ref": "Runtime.RemoteObjectId", "description": "Identifier of the object to return listeners for." }
+                ],
+                "returns": [
+                    { "name": "listeners", "type": "array", "items": { "$ref": "EventListener" }, "description": "Array of relevant listeners." }
+                ],
+                "description": "Returns event listeners of the given object."
             }
         ]
     },
@@ -4341,6 +4313,7 @@
                     { "name": "unmodifiedText", "type": "string", "optional": true, "description": "Text that would have been generated by the keyboard if no modifiers were pressed (except for shift). Useful for shortcut (accelerator) key handling (default: \"\")." },
                     { "name": "keyIdentifier", "type": "string", "optional": true, "description": "Unique key identifier (e.g., 'U+0041') (default: \"\")." },
                     { "name": "code", "type": "string", "optional": true, "description": "Unique DOM defined string value for each physical key (e.g., 'KeyA') (default: \"\")." },
+                    { "name": "key", "type": "string", "optional": true, "description": "Unique DOM defined string value describing the meaning of the key in the context of active modifiers, keyboard layout, etc (e.g., 'AltGr') (default: \"\")." },
                     { "name": "windowsVirtualKeyCode", "type": "integer", "optional": true, "description": "Windows virtual key code (default: 0)." },
                     { "name": "nativeVirtualKeyCode", "type": "integer", "optional": true, "description": "Native virtual key code (default: 0)." },
                     { "name": "autoRepeat", "type": "boolean", "optional": true, "description": "Whether the event was generated from auto repeat (default: false)." },
@@ -4957,12 +4930,14 @@
                 "type": "object",
                 "properties": [
                     { "name": "nodeId", "$ref": "AXNodeId", "description": "Unique identifier for this node." },
-                    { "name": "role", "$ref": "AXValue", "description": "This <code>Node</code>'s role, whether explicit or implicit." },
+                    { "name": "ignored", "type": "boolean", "description": "Whether this node is ignored for accessibility" },
+                    { "name": "ignoredReasons", "type": "array", "items": { "$ref": "AXProperty" }, "description": "Collection of reasons why this node is hidden.", "optional": true },
+                    { "name": "role", "$ref": "AXValue", "description": "This <code>Node</code>'s role, whether explicit or implicit.", "optional": true},
                     { "name": "name", "$ref": "AXValue", "description": "The accessible name for this <code>Node</code>.", "optional": true },
                     { "name": "description", "$ref": "AXValue", "description": "The accessible description for this <code>Node</code>.", "optional": true },
                     { "name": "value", "$ref": "AXValue", "description": "The value for this <code>Node</code>.", "optional": true },
                     { "name": "help", "$ref": "AXValue", "description": "Help.", "optional": true },
-                    { "name": "properties", "type": "array", "items": { "$ref": "AXProperty" }, "description": "All other properties" }
+                    { "name": "properties", "type": "array", "items": { "$ref": "AXProperty" }, "description": "All other properties", "optional": true }
                 ],
                 "description": "A node in the accessibility tree."
             }
