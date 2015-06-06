@@ -93,6 +93,21 @@ chrome> Network.Timestamp
   description: 'Number of seconds since epoch.' }
 ```
 
+Remote Debugging Protocol versions
+----------------------------------
+
+Currently it is not possible to fetch the protocol descriptor
+([`protocol.json`][local-json]) directly from the instrumented Chrome instance
+(see [#10][issue]); that file is fetched from time to time from the
+[Blink repo][remote-json] and pushed to this repository. To use some of the
+bleeding edge features that still does not appear in the provided
+[`protocol.json`][local-json], there are basically two options:
+
+1. update the local copy with `make update-protocol`;
+
+2. use the *raw* version of the [commands](#chromesendmethod-params-callback)
+   and [events](#event-method) interface.
+
 API
 ---
 
@@ -304,3 +319,8 @@ Resources
 [rdb]: https://developer.chrome.com/devtools/docs/protocol/1.1/index
 [clients-cri]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
 [clients]: https://developer.chrome.com/devtools/docs/debugging-clients
+
+<!-- related to #10 -->
+[local-json]: lib/protocol.json
+[remote-json]: https://src.chromium.org/blink/trunk/Source/devtools/protocol.json
+[issue]: https://github.com/cyrus-and/chrome-remote-interface/issues/10
