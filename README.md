@@ -366,6 +366,7 @@ Contributors
 ------------
 
 - [Andrey Sidorov](https://github.com/sidorares)
+- [Greg Cochard](https://github.com/gcochard)
 
 Resources
 ---------
