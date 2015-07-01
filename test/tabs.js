@@ -14,19 +14,6 @@ describe('tabs', function () {
     });
 
     describe('spawnTab',function(){
-        it('should spawn a new tab', function (done) {
-            Chrome.spawnTab(function (err, tab) {
-                assert.ifError(err);
-                assert(tab.id);
-                Chrome.listTabs(function (err, tabs) {
-                    assert(tabs.some(function(t){
-                        return t.id === tab.id;
-                    }));
-                    assert(util.isArray(tabs));
-                    done();
-                });
-            });
-        });
         it('should spawn a tab to a specific URL', function (done) {
             Chrome.spawnTab({url:'chrome://newtab/'}, function (err, tab) {
                 assert.ifError(err);
@@ -37,6 +24,19 @@ describe('tabs', function () {
                     }));
                     assert(util.isArray(tabs));
                     assert.equal(tab.url,'chrome://newtab/');
+                    done();
+                });
+            });
+        });
+        it('should spawn a new tab', function (done) {
+            Chrome.spawnTab(function (err, tab) {
+                assert.ifError(err);
+                assert(tab.id);
+                Chrome.listTabs(function (err, tabs) {
+                    assert(tabs.some(function(t){
+                        return t.id === tab.id;
+                    }));
+                    assert(util.isArray(tabs));
                     done();
                 });
             });
