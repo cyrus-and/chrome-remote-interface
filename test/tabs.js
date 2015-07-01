@@ -1,0 +1,66 @@
+var Chrome = require('../');
+var assert = require('assert');
+var util = require('util');
+
+describe('tabs', function () {
+    describe('listTabs',function(){
+        it('should return the tab list', function (done) {
+            Chrome.listTabs(function (err, tabs) {
+                assert.ifError(err);
+                assert(util.isArray(tabs));
+                done();
+            });
+        });
+    });
+
+    describe('spawnTab',function(){
+        it('should spawn a new tab', function (done) {
+            Chrome.spawnTab(function (err, tab) {
+                assert.ifError(err);
+                assert(tab.id);
+                Chrome.listTabs(function (err, tabs) {
+                    assert(tabs.some(function(t){
+                        return t.id === tab.id;
+                    }));
+                    assert(util.isArray(tabs));
+                    done();
+                });
+            });
+        });
+        it('should spawn a tab to a specific URL', function (done) {
+            Chrome.spawnTab({url:'http://www.example.com'}, function (err, tab) {
+                assert.ifError(err);
+                assert(tab.id);
+                Chrome.listTabs(function (err, tabs) {
+                    assert(tabs.some(function(t){
+                        return t.id === tab.id;
+                    }));
+                    assert(util.isArray(tabs));
+                    assert.equal(tab.url,'http://www.example.com/');
+                    done();
+                });
+            });
+        });
+    });
+
+    describe('closeTab',function(){
+        it('should close an existing tab', function (done) {
+            Chrome.listTabs(function (err, tabs) {
+                // tabs[0] is the latest tab to be spawned
+                var tab = tabs[0];
+                Chrome.closeTab({id:tab.id}, function (err) {
+                    assert.ifError(err);
+                    // WARNING: have to wait for tab to close as it is async!
+                    setTimeout(function(){
+                        Chrome.listTabs(function (err, tabs) {
+                            tabs.forEach(function(t){
+                                assert(t.id !== tab.id, t);
+                            });
+                            done();
+                        });
+                    },200);
+                });
+            });
+        });
+    });
+});

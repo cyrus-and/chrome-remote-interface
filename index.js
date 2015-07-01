@@ -26,3 +26,5 @@ module.exports = function (options, callback) {
 };
 
 module.exports.listTabs = Chrome.listTabs;
+module.exports.spawnTab = Chrome.spawnTab;
+module.exports.closeTab = Chrome.closeTab;
