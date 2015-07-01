@@ -223,7 +223,7 @@ For example:
 
 ```javascript
 var Chrome = require('chrome-remote-interface');
-Chrome.closeTab({id:'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'},function (err, tab) {
+Chrome.closeTab({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err, tab) {
     if (!err) {
         console.log('success! tab is closing');
     }
