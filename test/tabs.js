@@ -50,15 +50,7 @@ describe('tabs', function () {
                 var tab = tabs[0];
                 Chrome.closeTab({id:tab.id}, function (err) {
                     assert.ifError(err);
-                    // WARNING: have to wait for tab to close as it is async!
-                    setTimeout(function(){
-                        Chrome.listTabs(function (err, tabs) {
-                            tabs.forEach(function(t){
-                                assert(t.id !== tab.id, t);
-                            });
-                            done();
-                        });
-                    },200);
+                    done();
                 });
             });
         });
