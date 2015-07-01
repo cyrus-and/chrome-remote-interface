@@ -28,7 +28,7 @@ describe('tabs', function () {
             });
         });
         it('should spawn a tab to a specific URL', function (done) {
-            Chrome.spawnTab({url:'http://www.example.com'}, function (err, tab) {
+            Chrome.spawnTab({url:'chrome://newtab/'}, function (err, tab) {
                 assert.ifError(err);
                 assert(tab.id);
                 Chrome.listTabs(function (err, tabs) {
@@ -36,7 +36,7 @@ describe('tabs', function () {
                         return t.id === tab.id;
                     }));
                     assert(util.isArray(tabs));
-                    assert.equal(tab.url,'http://www.example.com/');
+                    assert.equal(tab.url,'chrome://newtab/');
                     done();
                 });
             });
