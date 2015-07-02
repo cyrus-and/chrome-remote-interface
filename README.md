@@ -124,6 +124,9 @@ Protocol][rdb].
   array returned by `http://host:port/json` containing the tab list and must
   return the numeric index of a tab. Defaults to a function which returns the
   currently active tab (`function (tabs) { return 0; }`).
+- `protocol`: [Remote Debugging Protocol][rdb] descriptor. Defaults to the
+  protocol fetched directly from Chrome, if available, otherwise falls back to
+  an hardcoded version.
 
 `callback` is a listener automatically added to the `connect` event of the
 returned `EventEmitter`.
@@ -150,6 +153,35 @@ Emitted if `http://host:port/json` can't be reached or if it's not possible to
 connect to Chrome's remote debugging WebSocket.
 
 `err` is an instance of `Error`.
+
+### module.fetchProtocol([options], callback)
+
+Fetch the [Remote Debugging Protocol][rdb] descriptor from the remote Chrome
+instance, or fall back to the local hardcoded version if not available.
+
+`options` is an object with the following optional properties:
+
+- `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
+- `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`.
+
+`callback` is executed when the protocol is fetched, it gets the following
+arguments:
+
+- `err`: a `Error` object indicating the success status;
+- `fromChrome`: a boolean indicating whether the protocol has been fetched from
+  Chrome or not;
+- `protocol`: the [Remote Debugging Protocol][rdb] descriptor.
+
+For example:
+
+```javascript
+var Chrome = require('chrome-remote-interface');
+Chrome.fetchProtocol(function (err, fromChrome, protocol) {
+    if (!err) {
+        console.log(JSON.stringify(protocol, null, 4));
+    }
+});
+```
 
 ### module.listTabs([options], callback)
 

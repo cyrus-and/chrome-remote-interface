@@ -142,6 +142,13 @@
                     { "name": "timestamp", "type": "number", "optional": true, "hidden": true, "description": "Frame swap timestamp." }
                 ],
                 "hidden": true
+            },
+            {
+                "id": "DialogType",
+                "description": "Javascript dialog type",
+                "type": "string",
+                "enum": ["alert", "confirm", "prompt", "beforeunload"],
+                "hidden": true
             }
         ],
         "commands": [
@@ -292,7 +299,11 @@
                     { "name": "fitWindow", "type": "boolean", "description": "Whether a view that exceeds the available browser window area should be scaled down to fit." },
                     { "name": "scale", "type": "number", "optional": true, "description": "Scale to apply to resulting view image. Ignored in |fitWindow| mode." },
                     { "name": "offsetX", "type": "number", "optional": true, "description": "X offset to shift resulting view image by. Ignored in |fitWindow| mode." },
-                    { "name": "offsetY", "type": "number", "optional": true, "description": "Y offset to shift resulting view image by. Ignored in |fitWindow| mode." }
+                    { "name": "offsetY", "type": "number", "optional": true, "description": "Y offset to shift resulting view image by. Ignored in |fitWindow| mode." },
+                    { "name": "screenWidth", "type": "integer", "optional": true, "description": "Overriding screen width value in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|." },
+                    { "name": "screenHeight", "type": "integer", "optional": true, "description": "Overriding screen height value in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|." },
+                    { "name": "positionX", "type": "integer", "optional": true, "description": "Overriding view X position on screen in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|." },
+                    { "name": "positionY", "type": "integer", "optional": true, "description": "Overriding view Y position on screen in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|." }
                 ],
                 "handlers": ["browser"],
                 "redirect": "Emulation",
@@ -510,13 +521,17 @@
                 "name": "javascriptDialogOpening",
                 "description": "Fired when a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload) is about to open.",
                 "parameters": [
-                    { "name": "message", "type": "string", "description": "Message that will be displayed by the dialog." }
+                    { "name": "message", "type": "string", "description": "Message that will be displayed by the dialog." },
+                    { "name": "type", "$ref": "DialogType", "description": "Dialog type." }
                 ],
                 "hidden": true
             },
             {
                 "name": "javascriptDialogClosed",
                 "description": "Fired when a JavaScript initiated dialog (alert, confirm, prompt, or onbeforeunload) has been closed.",
+                "parameters": [
+                    { "name": "result", "type": "boolean", "description": "Whether dialog was confirmed." }
+                ],
                 "hidden": true
             },
             {
@@ -636,7 +651,11 @@
                     { "name": "fitWindow", "type": "boolean", "description": "Whether a view that exceeds the available browser window area should be scaled down to fit." },
                     { "name": "scale", "type": "number", "optional": true, "description": "Scale to apply to resulting view image. Ignored in |fitWindow| mode." },
                     { "name": "offsetX", "type": "number", "optional": true, "description": "X offset to shift resulting view image by. Ignored in |fitWindow| mode." },
-                    { "name": "offsetY", "type": "number", "optional": true, "description": "Y offset to shift resulting view image by. Ignored in |fitWindow| mode." }
+                    { "name": "offsetY", "type": "number", "optional": true, "description": "Y offset to shift resulting view image by. Ignored in |fitWindow| mode." },
+                    { "name": "screenWidth", "type": "integer", "optional": true, "description": "Overriding screen width value in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|." },
+                    { "name": "screenHeight", "type": "integer", "optional": true, "description": "Overriding screen height value in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|." },
+                    { "name": "positionX", "type": "integer", "optional": true, "description": "Overriding view X position on screen in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|." },
+                    { "name": "positionY", "type": "integer", "optional": true, "description": "Overriding view Y position on screen in pixels (minimum 0, maximum 10000000). Only used for |mobile==true|." }
                 ],
                 "handlers": ["browser"]
             },
@@ -2216,6 +2235,7 @@
                     { "name": "showInfo", "type": "boolean", "optional": true, "description": "Whether the node info tooltip should be shown (default: false)." },
                     { "name": "showRulers", "type": "boolean", "optional": true, "description": "Whether the rulers should be shown (default: false)." },
                     { "name": "showExtensionLines", "type": "boolean", "optional": true, "description": "Whether the extension lines from node to the rulers should be shown (default: false)." },
+                    { "name": "showLayoutEditor", "type": "boolean", "optional": true, "hidden": true},
                     { "name": "contentColor", "$ref": "RGBA", "optional": true, "description": "The content box highlight fill color (default: transparent)." },
                     { "name": "paddingColor", "$ref": "RGBA", "optional": true, "description": "The padding highlight fill color (default: transparent)." },
                     { "name": "borderColor", "$ref": "RGBA", "optional": true, "description": "The border highlight fill color (default: transparent)." },
@@ -2967,7 +2987,6 @@
                     { "name": "nodeId", "$ref": "DOM.NodeId" }
                 ],
                 "returns": [
-                    { "name": "cssFamilyName", "type": "string", "description": "Font family name which is determined by computed style." },
                     { "name": "fonts", "type": "array", "items": { "$ref": "PlatformFontUsage" }, "description": "Usage statistics for every employed platform font." }
                 ],
                 "description": "Requests information about platform fonts which we used to render child TextNodes in the given node.",
@@ -2992,18 +3011,6 @@
                 "description": "Sets the new stylesheet text."
             },
             {
-                "name": "setPropertyText",
-                "parameters": [
-                    { "name": "styleSheetId", "$ref": "StyleSheetId" },
-                    { "name": "range", "$ref": "SourceRange", "description": "Either a source range of the property to be edited or an empty range representing a position for the property insertion." },
-                    { "name": "text", "type": "string" }
-                ],
-                "returns": [
-                    { "name": "style", "$ref": "CSSStyle", "description": "The resulting style after the property text modification." }
-                ],
-                "description": "Either replaces a property identified by <code>styleSheetId</code> and <code>range</code> with <code>text</code> or inserts a new property <code>text</code> at the position identified by an empty <code>range</code>."
-            },
-            {
                 "name": "setRuleSelector",
                 "parameters": [
                     { "name": "styleSheetId", "$ref": "StyleSheetId" },
@@ -3014,6 +3021,18 @@
                     { "name": "rule", "$ref": "CSSRule", "description": "The resulting rule after the selector modification." }
                 ],
                 "description": "Modifies the rule selector."
+            },
+            {
+                "name": "setStyleText",
+                "parameters": [
+                    { "name": "styleSheetId", "$ref": "StyleSheetId" },
+                    { "name": "range", "$ref": "SourceRange" },
+                    { "name": "text", "type": "string" }
+                ],
+                "returns": [
+                    { "name": "style", "$ref": "CSSStyle", "description": "The resulting style after the selector modification." }
+                ],
+                "description": "Modifies the style text."
             },
             {
                 "name": "setMediaText",
@@ -4113,6 +4132,10 @@
                 "enum": ["new", "installing", "installed", "activating", "activated", "redundant"]
             },
             {
+                "id": "TargetID",
+                "type": "string"
+            },
+            {
                 "id": "ServiceWorkerVersion",
                 "type": "object",
                 "description": "ServiceWorker version.",
@@ -4123,7 +4146,8 @@
                     { "name": "runningStatus", "$ref": "ServiceWorkerVersionRunningStatus" },
                     { "name": "status", "$ref": "ServiceWorkerVersionStatus" },
                     { "name": "scriptLastModified", "type": "number", "optional": true, "description": "The Last-Modified header value of the main script." },
-                    { "name": "scriptResponseTime", "type": "number", "optional": true, "description": "The time at which the response headers of the main script were received from the server.  For cached script it is the last time the cache entry was validated." }
+                    { "name": "scriptResponseTime", "type": "number", "optional": true, "description": "The time at which the response headers of the main script were received from the server.  For cached script it is the last time the cache entry was validated." },
+                    { "name": "controlledClients", "type": "array", "optional": true, "items": { "$ref": "TargetID" } }
                 ]
             },
             {
@@ -4137,6 +4161,16 @@
                     { "name": "sourceURL", "type": "string" },
                     { "name": "lineNumber", "type": "integer" },
                     { "name": "columnNumber", "type": "integer" }
+                ]
+            },
+            {
+                "id": "TargetInfo",
+                "type": "object",
+                "properties": [
+                    { "name": "id", "$ref": "TargetID" },
+                    { "name": "type", "type": "string" },
+                    { "name": "title", "type": "string" },
+                    { "name": "url", "type": "string" }
                 ]
             }
         ],
@@ -4219,6 +4253,23 @@
                     { "name": "origin", "type": "string" },
                     { "name": "registrationId", "type": "string" },
                     { "name": "data", "type": "string" }
+                ],
+                "handlers": ["browser"]
+            },
+            {
+                "name": "getTargetInfo",
+                "parameters": [
+                    { "name": "targetId", "$ref": "TargetID" }
+                ],
+                "returns": [
+                    { "name": "targetInfo","$ref": "TargetInfo" }
+                ],
+                "handlers": ["browser"]
+            },
+            {
+                "name": "activateTarget",
+                "parameters": [
+                    { "name": "targetId", "$ref": "TargetID" }
                 ],
                 "handlers": ["browser"]
             }
@@ -4597,6 +4648,32 @@
         ]
     },
     {
+        "domain": "ScreenOrientation",
+        "hidden": true,
+        "types": [
+            {
+                "id": "OrientationType",
+                "type": "string",
+                "enum": ["portraitPrimary", "portraitSecondary", "landscapePrimary", "landscapeSecondary"],
+                "description": "Orientation type"
+            }
+        ],
+        "commands": [
+            {
+                "name": "setScreenOrientationOverride",
+                "description": "Overrides the Screen Orientation.",
+                "parameters": [
+                    { "name": "angle", "type": "integer", "description": "Orientation angle" },
+                    { "name": "type", "$ref": "OrientationType", "description": "Orientation type" }
+                ]
+            },
+            {
+                "name": "clearScreenOrientationOverride",
+                "description": "Clears the overridden Screen Orientation."
+            }
+        ]
+    },
+    {
         "domain": "Tracing",
         "commands": [
             {
@@ -4953,6 +5030,52 @@
                 ],
                 "description": "Fetches the accessibility node for this DOM node, if it exists.",
                 "hidden": true
+            }
+        ]
+    },
+    {
+        "domain": "Security",
+        "description": "Security",
+        "hidden": true,
+        "types": [
+            {
+                "id": "SecurityState",
+                "type": "string",
+                "enum": ["unknown", "http", "insecure", "warning", "secure"],
+                "description": "The security level of a page or resource."
+            },
+            {
+                "id": "SecurityStateExplanation",
+                "type": "object",
+                "properties": [
+                    { "name": "securityState", "$ref": "SecurityState", "description": "Security state representing the severity of the factor being explained." },
+                    { "name": "summary", "type": "string", "description": "Short phrase describing the type of factor." },
+                    { "name": "description", "type": "string", "description": "Full text explanation of the factor." }
+                ],
+                "description": "An explanation of an factor contributing to the security state."
+            }
+        ],
+        "commands": [
+            {
+                "name": "enable",
+                "description": "Enables tracking security state changes.",
+                "handlers": ["browser"]
+            },
+            {
+                "name": "disable",
+                "description": "Disables tracking security state changes.",
+                "handlers": ["browser"]
+            }
+        ],
+        "events": [
+            {
+                "name": "securityStateChanged",
+                "description": "The security state of the page changed.",
+                "parameters": [
+                    { "name": "securityState", "$ref": "SecurityState", "description": "Security state." },
+                    { "name": "explanations", "type": "array", "items": { "$ref": "SecurityStateExplanation" }, "description": "List of explanations for the security state. If the overall security state is `insecure` or `warning`, at least one corresponding explanation should be included.", "optional": true }
+                ],
+                "handlers": ["browser"]
             }
         ]
     }]
