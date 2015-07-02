@@ -177,6 +177,63 @@ Chrome.listTabs(function (err, tabs) {
 });
 ```
 
+### module.spawnTab([options], callback)
+
+Create a new tab in the remote Chrome instance.
+
+`options` is an object with the following optional properties:
+
+- `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
+- `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`.
+- `url`: [Remote Debugging Protocol][rdb] url. Defaults to `about:blank`.
+
+`callback` is executed when the tab is created, it gets the
+following arguments:
+
+- `err`: a `Error` object indicating the success status;
+- `tab`: the object returned by `http://host:port/json/new` containing the tab.
+
+For example:
+
+```javascript
+var Chrome = require('chrome-remote-interface');
+Chrome.spawnTab(function (err, tab) {
+    if (!err) {
+        console.log(tab);
+    }
+});
+```
+
+### module.closeTab([options], callback)
+
+Close an open tab of the remote Chrome instance.
+
+`options` is an object with the following properties:
+
+- `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
+- `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`.
+- `id`: [Remote Debugging Protocol][rdb] id. Required, no default.
+
+`callback` is executed when the response to the close request is
+received. It gets the following arguments:
+
+- `err`: a `Error` object indicating the success status;
+
+For example:
+
+```javascript
+var Chrome = require('chrome-remote-interface');
+Chrome.closeTab({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err, tab) {
+    if (!err) {
+        console.log('success! tab is closing');
+    }
+});
+```
+
+Note that the callback is fired when the tab is *queued* for removal,
+but the actual removal will occur asynchronously. It typically takes
+~200ms for this to occur.
+
 ### Class: Chrome
 
 #### Event: 'event'
@@ -309,6 +366,7 @@ Contributors
 ------------
 
 - [Andrey Sidorov](https://github.com/sidorares)
+- [Greg Cochard](https://github.com/gcochard)
 
 Resources
 ---------
