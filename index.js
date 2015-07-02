@@ -25,6 +25,7 @@ module.exports = function (options, callback) {
     return notifier;
 };
 
+module.exports.fetchProtocol = Chrome.fetchProtocol;
 module.exports.listTabs = Chrome.listTabs;
 module.exports.spawnTab = Chrome.spawnTab;
 module.exports.closeTab = Chrome.closeTab;
