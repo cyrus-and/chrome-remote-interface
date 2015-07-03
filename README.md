@@ -292,6 +292,33 @@ Note that the callback is fired when the tab is *queued* for removal,
 but the actual removal will occur asynchronously. It typically takes
 ~200ms for this to occur.
 
+### module.fetchVersion([options], callback)
+
+Request version information from the remote Chrome instance.
+
+`options` is an object with the following optional properties:
+
+- `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
+- `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`.
+
+`callback` is executed when the version information is correctly received, it
+gets the following arguments:
+
+- `err`: a `Error` object indicating the success status;
+- `info`: a JSON object returned by `http://host:port/json/version` containing
+  the version information.
+
+For example:
+
+```javascript
+var Chrome = require('chrome-remote-interface');
+Chrome.fetchVersion(function (err, info) {
+    if (!err) {
+        console.log(info);
+    }
+});
+```
+
 ### Class: Chrome
 
 #### Event: 'event'
