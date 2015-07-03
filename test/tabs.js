@@ -43,6 +43,19 @@ describe('tabs', function () {
         });
     });
 
+    describe('activateTab',function(){
+        it('should activate an existing tab', function (done) {
+            Chrome.listTabs(function (err, tabs) {
+                // tabs[0] is the latest tab to be spawned
+                var tab = tabs[0];
+                Chrome.activateTab({id:tab.id}, function (err) {
+                    assert.ifError(err);
+                    done();
+                });
+            });
+        });
+    });
+
     describe('closeTab',function(){
         it('should close an existing tab', function (done) {
             Chrome.listTabs(function (err, tabs) {

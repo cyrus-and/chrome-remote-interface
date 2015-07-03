@@ -28,4 +28,5 @@ module.exports = function (options, callback) {
 module.exports.fetchProtocol = Chrome.fetchProtocol;
 module.exports.listTabs = Chrome.listTabs;
 module.exports.spawnTab = Chrome.spawnTab;
+module.exports.activateTab = Chrome.activateTab;
 module.exports.closeTab = Chrome.closeTab;

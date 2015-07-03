@@ -236,6 +236,32 @@ Chrome.spawnTab(function (err, tab) {
 });
 ```
 
+### module.activateTab([options], callback)
+
+Activate an open tab of the remote Chrome instance.
+
+`options` is an object with the following properties:
+
+- `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
+- `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`.
+- `id`: [Remote Debugging Protocol][rdb] id. Required, no default.
+
+`callback` is executed when the response to the activation request is
+received. It gets the following arguments:
+
+- `err`: a `Error` object indicating the success status;
+
+For example:
+
+```javascript
+var Chrome = require('chrome-remote-interface');
+Chrome.activateTab({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err, tab) {
+    if (!err) {
+        console.log('success! tab is closing');
+    }
+});
+```
+
 ### module.closeTab([options], callback)
 
 Close an open tab of the remote Chrome instance.
