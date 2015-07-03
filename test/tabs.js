@@ -3,9 +3,9 @@ var assert = require('assert');
 var util = require('util');
 
 describe('tabs', function () {
-    describe('listTabs',function(){
+    describe('List',function(){
         it('should return the tab list', function (done) {
-            Chrome.listTabs(function (err, tabs) {
+            Chrome.List(function (err, tabs) {
                 assert.ifError(err);
                 assert(util.isArray(tabs));
                 done();
@@ -13,12 +13,12 @@ describe('tabs', function () {
         });
     });
 
-    describe('spawnTab',function(){
+    describe('New',function(){
         it('should spawn a tab to a specific URL', function (done) {
-            Chrome.spawnTab({url:'chrome://newtab/'}, function (err, tab) {
+            Chrome.New({url:'chrome://newtab/'}, function (err, tab) {
                 assert.ifError(err);
                 assert(tab.id);
-                Chrome.listTabs(function (err, tabs) {
+                Chrome.List(function (err, tabs) {
                     assert(tabs.some(function(t){
                         return t.id === tab.id;
                     }));
@@ -29,10 +29,10 @@ describe('tabs', function () {
             });
         });
         it('should spawn a new tab', function (done) {
-            Chrome.spawnTab(function (err, tab) {
+            Chrome.New(function (err, tab) {
                 assert.ifError(err);
                 assert(tab.id);
-                Chrome.listTabs(function (err, tabs) {
+                Chrome.List(function (err, tabs) {
                     assert(tabs.some(function(t){
                         return t.id === tab.id;
                     }));
@@ -43,12 +43,12 @@ describe('tabs', function () {
         });
     });
 
-    describe('activateTab',function(){
+    describe('Activate',function(){
         it('should activate an existing tab', function (done) {
-            Chrome.listTabs(function (err, tabs) {
+            Chrome.List(function (err, tabs) {
                 // tabs[0] is the latest tab to be spawned
                 var tab = tabs[0];
-                Chrome.activateTab({id:tab.id}, function (err) {
+                Chrome.Activate({id:tab.id}, function (err) {
                     assert.ifError(err);
                     done();
                 });
@@ -56,12 +56,12 @@ describe('tabs', function () {
         });
     });
 
-    describe('closeTab',function(){
+    describe('Close',function(){
         it('should close an existing tab', function (done) {
-            Chrome.listTabs(function (err, tabs) {
+            Chrome.List(function (err, tabs) {
                 // tabs[0] is the latest tab to be spawned
                 var tab = tabs[0];
-                Chrome.closeTab({id:tab.id}, function (err) {
+                Chrome.Close({id:tab.id}, function (err) {
                     assert.ifError(err);
                     done();
                 });

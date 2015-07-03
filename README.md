@@ -154,7 +154,7 @@ connect to Chrome's remote debugging WebSocket.
 
 `err` is an instance of `Error`.
 
-### module.fetchProtocol([options], callback)
+### module.Protocol([options], callback)
 
 Fetch the [Remote Debugging Protocol][rdb] descriptor from the remote Chrome
 instance, or fall back to the local hardcoded version if not available.
@@ -176,14 +176,14 @@ For example:
 
 ```javascript
 var Chrome = require('chrome-remote-interface');
-Chrome.fetchProtocol(function (err, fromChrome, protocol) {
+Chrome.Protocol(function (err, fromChrome, protocol) {
     if (!err) {
         console.log(JSON.stringify(protocol, null, 4));
     }
 });
 ```
 
-### module.listTabs([options], callback)
+### module.List([options], callback)
 
 Request the list of the available open tabs of the remote Chrome instance.
 
@@ -203,14 +203,14 @@ For example:
 
 ```javascript
 var Chrome = require('chrome-remote-interface');
-Chrome.listTabs(function (err, tabs) {
+Chrome.List(function (err, tabs) {
     if (!err) {
         console.log(tabs);
     }
 });
 ```
 
-### module.spawnTab([options], callback)
+### module.New([options], callback)
 
 Create a new tab in the remote Chrome instance.
 
@@ -230,14 +230,14 @@ For example:
 
 ```javascript
 var Chrome = require('chrome-remote-interface');
-Chrome.spawnTab(function (err, tab) {
+Chrome.New(function (err, tab) {
     if (!err) {
         console.log(tab);
     }
 });
 ```
 
-### module.activateTab([options], callback)
+### module.Activate([options], callback)
 
 Activate an open tab of the remote Chrome instance.
 
@@ -256,14 +256,14 @@ For example:
 
 ```javascript
 var Chrome = require('chrome-remote-interface');
-Chrome.activateTab({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err, tab) {
+Chrome.Activate({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err, tab) {
     if (!err) {
         console.log('success! tab is closing');
     }
 });
 ```
 
-### module.closeTab([options], callback)
+### module.Close([options], callback)
 
 Close an open tab of the remote Chrome instance.
 
@@ -282,7 +282,7 @@ For example:
 
 ```javascript
 var Chrome = require('chrome-remote-interface');
-Chrome.closeTab({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err, tab) {
+Chrome.Close({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err, tab) {
     if (!err) {
         console.log('success! tab is closing');
     }
@@ -293,7 +293,7 @@ Note that the callback is fired when the tab is *queued* for removal,
 but the actual removal will occur asynchronously. It typically takes
 ~200ms for this to occur.
 
-### module.fetchVersion([options], callback)
+### module.Version([options], callback)
 
 Request version information from the remote Chrome instance.
 
@@ -313,7 +313,7 @@ For example:
 
 ```javascript
 var Chrome = require('chrome-remote-interface');
-Chrome.fetchVersion(function (err, info) {
+Chrome.Version(function (err, info) {
     if (!err) {
         console.log(info);
     }

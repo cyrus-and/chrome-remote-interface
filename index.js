@@ -25,9 +25,14 @@ module.exports = function (options, callback) {
     return notifier;
 };
 
-module.exports.fetchProtocol = Chrome.fetchProtocol;
-module.exports.listTabs = Chrome.listTabs;
-module.exports.spawnTab = Chrome.spawnTab;
-module.exports.activateTab = Chrome.activateTab;
-module.exports.closeTab = Chrome.closeTab;
-module.exports.fetchVersion = Chrome.fetchVersion;
+// for backward compatibility
+module.exports.listTabs = Chrome.List;
+module.exports.spawnTab = Chrome.New;
+module.exports.closeTab = Chrome.Close;
+
+module.exports.Protocol = Chrome.Protocol;
+module.exports.List = Chrome.List;
+module.exports.New = Chrome.New;
+module.exports.Activate = Chrome.Activate;
+module.exports.Close = Chrome.Close;
+module.exports.Version = Chrome.Version;
