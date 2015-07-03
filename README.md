@@ -196,7 +196,8 @@ Request the list of the available open tabs of the remote Chrome instance.
 following arguments:
 
 - `err`: a `Error` object indicating the success status;
-- `tabs`: the array returned by `http://host:port/json` containing the tab list.
+- `tabs`: the array returned by `http://host:port/json/list` containing the tab
+  list.
 
 For example:
 
