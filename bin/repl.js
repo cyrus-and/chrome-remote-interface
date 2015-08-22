@@ -9,7 +9,7 @@ var Chrome = require('../');
 program
     .option('-t, --host <host>', 'Remote Debugging Protocol host')
     .option('-p, --port <port>', 'Remote Debugging Protocol port')
-    .option('-j, --protocol <file.json>', 'Remote Debugging Protocol description')
+    .option('-j, --protocol <file.json>', 'Remote Debugging Protocol descriptor')
     .parse(process.argv);
 
 var options = {

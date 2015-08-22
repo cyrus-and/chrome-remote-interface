@@ -5,7 +5,7 @@ var util = require('util');
 describe('devtool interaction', function () {
 
     describe('Protocol', function () {
-        it('should return the protocol description (possibly) from Chrome', function (done) {
+        it('should return the protocol descriptor (possibly) from Chrome', function (done) {
             Chrome.Protocol(function (err, fromChrome, protocol) {
                 assert.ifError(err);
                 assert.equal(typeof protocol, 'object');
@@ -13,7 +13,7 @@ describe('devtool interaction', function () {
                 done();
             });
         });
-        it('should return the hardcoded protocol description', function (done) {
+        it('should return the hardcoded protocol descriptor', function (done) {
             Chrome.Protocol({'port':1}, function (err, fromChrome, protocol) {
                 assert.ifError(err);
                 assert(!fromChrome);
