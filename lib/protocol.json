@@ -66,7 +66,7 @@
             {
                 "id": "ResourceType",
                 "type": "string",
-                "enum": ["Document", "Stylesheet", "Image", "Media", "Font", "Script", "TextTrack", "XHR", "WebSocket", "Other"],
+                "enum": ["Document", "Stylesheet", "Image", "Media", "Font", "Script", "TextTrack", "XHR", "Fetch", "EventSource", "WebSocket", "Other"],
                 "description": "Resource type as it was perceived by the rendering engine."
             },
             {
@@ -604,13 +604,6 @@
                 ]
             },
             {
-                "name": "setContinuousPaintingEnabled",
-                "description": "Requests that backend enables continuous painting",
-                "parameters": [
-                    { "name": "enabled", "type": "boolean", "description": "True for enabling cointinuous painting" }
-                ]
-            },
-            {
                 "name": "setShowScrollBottleneckRects",
                 "description": "Requests that backend shows scroll bottleneck rects",
                 "parameters": [
@@ -850,7 +843,7 @@
                 "description": "Description of an isolated world.",
                 "properties": [
                     { "name": "id", "$ref": "ExecutionContextId", "description": "Unique id of the execution context. It can be used to specify in which execution context script evaluation should be performed." },
-                    { "name": "isPageContext", "type": "boolean", "optional": true, "description": "True if this is a context where inpspected web page scripts run. False if it is a content script isolated context.", "hidden": true },
+                    { "name": "type", "type": "string", "optional": true, "description": "Context type. It is used e.g. to distinguish content scripts from web page script.", "hidden": true },
                     { "name": "origin", "type": "string", "description": "Execution context origin.", "hidden": true},
                     { "name": "name", "type": "string", "description": "Human readable name describing given context.", "hidden": true},
                     { "name": "frameId", "type": "string", "description": "Id of the owning frame. May be an empty string if the context is not associated with a frame." }
@@ -1076,6 +1069,65 @@
         ]
     },
     {
+        "domain": "Security",
+        "description": "Security",
+        "hidden": true,
+        "types": [
+            {
+                "id": "SecurityState",
+                "type": "string",
+                "enum": ["unknown", "neutral", "insecure", "warning", "secure"],
+                "description": "The security level of a page or resource."
+            },
+            {
+                "id": "SecurityStateExplanation",
+                "type": "object",
+                "properties": [
+                    { "name": "securityState", "$ref": "SecurityState", "description": "Security state representing the severity of the factor being explained." },
+                    { "name": "summary", "type": "string", "description": "Short phrase describing the type of factor." },
+                    { "name": "description", "type": "string", "description": "Full text explanation of the factor." }
+                ],
+                "description": "An explanation of an factor contributing to the security state."
+            },
+            {
+                "id": "MixedContentStatus",
+                "type": "object",
+                "properties": [
+                    { "name": "ranInsecureContent", "type": "boolean", "description": "True if the page ran insecure content such as scripts." },
+                    { "name": "displayedInsecureContent", "type": "boolean", "description": "True if the page displayed insecure content such as images." },
+                    { "name": "ranInsecureContentStyle", "$ref": "SecurityState", "description": "Security state representing a page that ran insecure content." },
+                    { "name": "displayedInsecureContentStyle", "$ref": "SecurityState", "description": "Security state representing a page that displayed insecure content." }
+                ],
+                "description": "Information about mixed content on the page."
+            }
+        ],
+        "commands": [
+            {
+                "name": "enable",
+                "description": "Enables tracking security state changes.",
+                "handlers": ["browser"]
+            },
+            {
+                "name": "disable",
+                "description": "Disables tracking security state changes.",
+                "handlers": ["browser"]
+            }
+        ],
+        "events": [
+            {
+                "name": "securityStateChanged",
+                "description": "The security state of the page changed.",
+                "parameters": [
+                    { "name": "securityState", "$ref": "SecurityState", "description": "Security state." },
+                    { "name": "explanations", "type": "array", "items": { "$ref": "SecurityStateExplanation" }, "description": "List of explanations for the security state. If the overall security state is `insecure` or `warning`, at least one corresponding explanation should be included.", "optional": true },
+                    { "name": "mixedContentStatus", "$ref": "MixedContentStatus", "description": "Information about mixed content on the page.", "optional": true },
+                    { "name": "schemeIsCryptographic", "type": "boolean", "description": "True if the page was loaded over cryptographic transport such as HTTPS.", "optional": true }
+                ],
+                "handlers": ["browser"]
+            }
+        ]
+    },
+    {
         "domain": "Network",
         "description": "Network domain allows tracking network activities of the page. It exposes information about http, file, data and other requests and responses, their headers, bodies, timing, etc.",
         "types": [
@@ -1114,6 +1166,7 @@
                     { "name": "sslStart", "type": "number", "description": "Started SSL handshake." },
                     { "name": "sslEnd", "type": "number", "description": "Finished SSL handshake." },
                     { "name": "workerStart", "type": "number", "description": "Started running ServiceWorker.", "hidden": true },
+                    { "name": "workerReady", "type": "number", "description": "Finished Starting ServiceWorker.", "hidden": true },
                     { "name": "sendStart", "type": "number", "description": "Started sending request." },
                     { "name": "sendEnd", "type": "number", "description": "Finished sending request." },
                     { "name": "receiveHeadersEnd", "type": "number", "description": "Finished receiving response headers." }
@@ -1127,7 +1180,46 @@
                     { "name": "url", "type": "string", "description": "Request URL." },
                     { "name": "method", "type": "string", "description": "HTTP request method." },
                     { "name": "headers", "$ref": "Headers", "description": "HTTP request headers." },
-                    { "name": "postData", "type": "string", "optional": true, "description": "HTTP POST request data." }
+                    { "name": "postData", "type": "string", "optional": true, "description": "HTTP POST request data." },
+                    { "name": "mixedContentType", "optional": true, "type": "string", "enum": ["blockable", "optionally-blockable", "none"], "description": "The mixed content status of the request, as defined in http://www.w3.org/TR/mixed-content/" }
+                ]
+            },
+            {
+                "id": "CertificateId",
+                "type": "integer",
+                "description": "An internal certificate ID value."
+            },
+            {
+                "id": "CertificateSubject",
+                "type": "object",
+                "description": "Subject of a certificate.",
+                "properties": [
+                    { "name": "name", "type": "string", "description": "Certificate subject name." },
+                    { "name": "sanDnsNames", "type": "array", "items": { "type": "string" }, "description": "Subject Alternative Name (SAN) DNS names." },
+                    { "name": "sanIpAddresses", "type": "array", "items": { "type": "string" }, "description": "Subject Alternative Name (SAN) IP addresses." }
+                ]
+            },
+            {
+                "id": "CertificateDetails",
+                "type": "object",
+                "description": "Details about a request's certificate.",
+                "properties": [
+                    { "name": "subject", "$ref": "CertificateSubject", "description": "Certificate subject." },
+                    { "name": "issuer", "type": "string", "description": "Name of the issuing CA." },
+                    { "name": "validFrom", "$ref": "Timestamp", "description": "Certificate valid from date." },
+                    { "name": "validTo", "$ref": "Timestamp", "description": "Certificate valid to (expiration) date" }
+                ]
+            },
+            {
+                "id": "SecurityDetails",
+                "type": "object",
+                "description": "Security details about a request.",
+                "properties": [
+                    { "name": "protocol", "type": "string", "description": "Protocol name (e.g. \"TLS 1.2\" or \"QUIC\"." },
+                    { "name": "keyExchange", "type": "string", "description": "Key Exchange used by the connection." },
+                    { "name": "cipher", "type": "string", "description": "Cipher name." },
+                    { "name": "mac", "type": "string", "optional": true, "description": "TLS MAC. Note that AEAD ciphers do not have separate MACs." },
+                    { "name": "certificateId", "$ref": "CertificateId", "description": "Certificate ID value." }
                 ]
             },
             {
@@ -1151,7 +1243,9 @@
                     { "name": "fromServiceWorker", "type": "boolean", "optional": true, "description": "Specifies that the request was served from the ServiceWorker." },
                     { "name": "encodedDataLength", "type": "number", "optional": false, "description": "Total number of bytes received for this request so far." },
                     { "name": "timing", "$ref": "ResourceTiming", "optional": true, "description": "Timing information for the given request." },
-                    { "name": "protocol", "type": "string", "optional": true, "description": "Protocol used to fetch this resquest." }
+                    { "name": "protocol", "type": "string", "optional": true, "description": "Protocol used to fetch this request." },
+                    { "name": "securityState", "$ref": "Security.SecurityState", "description": "Security state of the request resource." },
+                    { "name": "securityDetails", "$ref": "SecurityDetails", "optional": true, "description": "Security details for the request." }
                 ]
             },
             {
@@ -1361,6 +1455,17 @@
                 ],
                 "description": "For testing.",
                 "hidden": true
+            },
+            {
+                "name": "getCertificateDetails",
+                "description": "Returns details for the given certificate.",
+                "parameters": [
+                    { "name": "certificateId", "$ref": "CertificateId", "description": "ID of the certificate to get details for." }
+                ],
+                "returns": [
+                    { "name": "result", "$ref": "CertificateDetails", "description": "Certificate details." }
+                ],
+                "handlers": ["browser"]
             }
         ],
         "events": [
@@ -2236,6 +2341,7 @@
                     { "name": "showRulers", "type": "boolean", "optional": true, "description": "Whether the rulers should be shown (default: false)." },
                     { "name": "showExtensionLines", "type": "boolean", "optional": true, "description": "Whether the extension lines from node to the rulers should be shown (default: false)." },
                     { "name": "showLayoutEditor", "type": "boolean", "optional": true, "hidden": true},
+                    { "name": "displayAsMaterial", "type": "boolean", "optional": true, "hidden": true},
                     { "name": "contentColor", "$ref": "RGBA", "optional": true, "description": "The content box highlight fill color (default: transparent)." },
                     { "name": "paddingColor", "$ref": "RGBA", "optional": true, "description": "The padding highlight fill color (default: transparent)." },
                     { "name": "borderColor", "$ref": "RGBA", "optional": true, "description": "The border highlight fill color (default: transparent)." },
@@ -2851,7 +2957,8 @@
                 "type": "object",
                 "properties": [
                     { "name": "name", "type": "string", "description": "Shorthand name." },
-                    { "name": "value", "type": "string", "description": "Shorthand value." }
+                    { "name": "value", "type": "string", "description": "Shorthand value." },
+                    { "name": "important", "type": "boolean", "optional": true, "description": "Whether the property has \"!important\" annotation (implies <code>false</code> if absent)." }
                 ]
             },
             {
@@ -3083,6 +3190,16 @@
                 ],
                 "description": "Returns all media queries parsed by the rendering engine.",
                 "hidden": true
+            },
+            {
+                "name": "setEffectivePropertyValueForNode",
+                "parameters": [
+                    { "name": "nodeId", "$ref": "DOM.NodeId", "description": "The element id for which to set property." },
+                    { "name": "propertyName", "type": "string"},
+                    { "name": "value", "type": "string"}
+                ],
+                "description": "Find a rule with the given active property for the given node and set the new value for this property",
+                "hidden": true
             }
         ],
         "events": [
@@ -3110,6 +3227,13 @@
                     { "name": "styleSheetId", "$ref": "StyleSheetId", "description": "Identifier of the removed stylesheet." }
                 ],
                 "description": "Fired whenever an active document stylesheet is removed."
+            },
+            {
+                "name": "layoutEditorChange",
+                "parameters": [
+                    { "name": "styleSheetId", "$ref": "StyleSheetId", "description": "Identifier of the stylesheet where the modification occurred."},
+                    { "name": "changeRange", "$ref": "SourceRange", "description": "Range where the modification occurred."}
+                ]
             }
         ]
     },
@@ -3454,7 +3578,7 @@
                 ],
                 "returns": [
                     { "name": "callFrames", "type": "array", "optional": true, "items": { "$ref": "CallFrame" }, "description": "New stack trace in case editing has happened while VM was stopped." },
-                    { "name": "result", "type": "object", "optional": true, "description": "VM-specific description of the changes applied.", "hidden": true },
+                    { "name": "stackChanged", "type": "boolean", "optional": true, "description": "Whether current call stack  was modified after applying the changes.", "hidden": true },
                     { "name": "asyncStackTrace", "$ref": "StackTrace", "optional": true, "description": "Async stack trace, if any.", "hidden": true }
                 ],
                 "error": {
@@ -3469,7 +3593,6 @@
                 ],
                 "returns": [
                     { "name": "callFrames", "type": "array", "items": { "$ref": "CallFrame" }, "description": "New stack trace." },
-                    { "name": "result", "type": "object", "description": "VM-specific description." },
                     { "name": "asyncStackTrace", "$ref": "StackTrace", "optional": true, "description": "Async stack trace, if any." }
                 ],
                 "hidden": true,
@@ -4442,7 +4565,10 @@
                     { "name": "yOverscroll", "type": "integer", "optional": true, "description": "The number of additional pixels to scroll back along the Y axis, in addition to the given distance." },
                     { "name": "preventFling", "type": "boolean", "optional": true, "description": "Prevent fling (default: true)." },
                     { "name": "speed", "type": "integer", "optional": true, "description": "Swipe speed in pixels per second (default: 800)." },
-                    { "name": "gestureSourceType", "$ref": "GestureSourceType", "optional": true, "description": "Which type of input events to be generated (default: 'default', which queries the platform for the preferred input type)." }
+                    { "name": "gestureSourceType", "$ref": "GestureSourceType", "optional": true, "description": "Which type of input events to be generated (default: 'default', which queries the platform for the preferred input type)." },
+                    { "name": "repeatCount", "type": "integer", "optional": true, "description": "The number of times to repeat the gesture (default: 0)." },
+                    { "name": "repeatDelayMs", "type": "integer", "optional": true, "description": "The number of milliseconds delay between each repeat. (default: 250)." },
+                    { "name": "interactionMarkerName", "type": "string", "optional": true, "description": "The name of the interaction markers to generate, if not empty (default: \"\")." }
                 ],
                 "description": "Synthesizes a scroll gesture over a time period by issuing appropriate touch events.",
                 "hidden": true,
@@ -4701,6 +4827,16 @@
                     { "name": "categories", "type": "array", "items": { "type": "string" }, "description": "A list of supported tracing categories." }
                 ],
                 "handlers": ["browser"]
+            },
+            {
+                "name": "requestMemoryDump",
+                "async": true,
+                "description": "Request a global memory dump.",
+                "returns": [
+                    { "name": "dumpGuid", "type": "string", "description": "GUID of the resulting global memory dump." },
+                    { "name": "success", "type": "boolean", "description": "True iff the global memory dump succeeded." }
+                ],
+                "handlers": ["browser"]
             }
         ],
         "events": [
@@ -4789,40 +4925,40 @@
         "hidden": true,
         "types": [
             {
-                "id": "AnimationPlayer",
+                "id": "Animation",
                 "type": "object",
                 "hidden": true,
                 "properties": [
-                    { "name": "id", "type": "string", "description": "<code>AnimationPlayer</code>'s id." },
-                    { "name": "pausedState", "type": "boolean", "hidden": "true", "description": "<code>AnimationPlayer</code>'s internal paused state." },
-                    { "name": "playState", "type": "string", "description": "<code>AnimationPlayer</code>'s play state." },
-                    { "name": "playbackRate", "type": "number", "description": "<code>AnimationPlayer</code>'s playback rate." },
-                    { "name": "startTime", "type": "number", "description": "<code>AnimationPlayer</code>'s start time." },
-                    { "name": "currentTime", "type": "number", "description": "<code>AnimationPlayer</code>'s current time." },
-                    { "name": "source", "$ref": "AnimationNode", "description": "<code>AnimationPlayer</code>'s source animation node." },
-                    { "name": "type", "type": "string", "enum": ["CSSTransition", "CSSAnimation", "WebAnimation"], "description": "Animation type of <code>AnimationPlayer</code>." }
+                    { "name": "id", "type": "string", "description": "<code>Animation</code>'s id." },
+                    { "name": "pausedState", "type": "boolean", "hidden": "true", "description": "<code>Animation</code>'s internal paused state." },
+                    { "name": "playState", "type": "string", "description": "<code>Animation</code>'s play state." },
+                    { "name": "playbackRate", "type": "number", "description": "<code>Animation</code>'s playback rate." },
+                    { "name": "startTime", "type": "number", "description": "<code>Animation</code>'s start time." },
+                    { "name": "currentTime", "type": "number", "description": "<code>Animation</code>'s current time." },
+                    { "name": "source", "$ref": "AnimationEffect", "description": "<code>Animation</code>'s source animation node." },
+                    { "name": "type", "type": "string", "enum": ["CSSTransition", "CSSAnimation", "WebAnimation"], "description": "Animation type of <code>Animation</code>." }
                 ],
-                "description": "AnimationPlayer instance."
+                "description": "Animation instance."
             },
             {
-                "id": "AnimationNode",
+                "id": "AnimationEffect",
                 "type": "object",
                 "hidden": true,
                 "properties": [
-                    { "name": "delay", "type": "number", "description": "<code>AnimationNode</code>'s delay." },
-                    { "name": "endDelay", "type": "number", "description": "<code>AnimationNode</code>'s end delay." },
-                    { "name": "playbackRate", "type": "number", "description": "<code>AnimationNode</code>'s playbackRate." },
-                    { "name": "iterationStart", "type": "number", "description": "<code>AnimationNode</code>'s iteration start." },
-                    { "name": "iterations", "type": "number", "description": "<code>AnimationNode</code>'s iterations." },
-                    { "name": "duration", "type": "number", "description": "<code>AnimationNode</code>'s iteration duration." },
-                    { "name": "direction", "type": "string", "description": "<code>AnimationNode</code>'s playback direction." },
-                    { "name": "fill", "type": "string", "description": "<code>AnimationNode</code>'s fill mode." },
-                    { "name": "name", "type": "string", "description": "<code>AnimationNode</code>'s name." },
-                    { "name": "backendNodeId", "$ref": "DOM.BackendNodeId", "description": "<code>AnimationNode</code>'s target node." },
-                    { "name": "keyframesRule", "$ref": "KeyframesRule", "optional": true, "description": "<code>AnimationNode</code>'s keyframes." },
-                    { "name": "easing", "type": "string", "description": "<code>AnimationNode</code>'s timing function." }
+                    { "name": "delay", "type": "number", "description": "<code>AnimationEffect</code>'s delay." },
+                    { "name": "endDelay", "type": "number", "description": "<code>AnimationEffect</code>'s end delay." },
+                    { "name": "playbackRate", "type": "number", "description": "<code>AnimationEffect</code>'s playbackRate." },
+                    { "name": "iterationStart", "type": "number", "description": "<code>AnimationEffect</code>'s iteration start." },
+                    { "name": "iterations", "type": "number", "description": "<code>AnimationEffect</code>'s iterations." },
+                    { "name": "duration", "type": "number", "description": "<code>AnimationEffect</code>'s iteration duration." },
+                    { "name": "direction", "type": "string", "description": "<code>AnimationEffect</code>'s playback direction." },
+                    { "name": "fill", "type": "string", "description": "<code>AnimationEffect</code>'s fill mode." },
+                    { "name": "name", "type": "string", "description": "<code>AnimationEffect</code>'s name." },
+                    { "name": "backendNodeId", "$ref": "DOM.BackendNodeId", "description": "<code>AnimationEffect</code>'s target node." },
+                    { "name": "keyframesRule", "$ref": "KeyframesRule", "optional": true, "description": "<code>AnimationEffect</code>'s keyframes." },
+                    { "name": "easing", "type": "string", "description": "<code>AnimationEffect</code>'s timing function." }
                 ],
-                "description": "AnimationNode instance"
+                "description": "AnimationEffect instance"
             },
             {
                 "id": "KeyframesRule",
@@ -4838,7 +4974,7 @@
                 "type": "object",
                 "properties": [
                     { "name": "offset", "type": "string", "description": "Keyframe's time offset." },
-                    { "name": "easing", "type": "string", "description": "<code>AnimationNode</code>'s timing function." }
+                    { "name": "easing", "type": "string", "description": "<code>AnimationEffect</code>'s timing function." }
                 ],
                 "description": "Keyframe Style"
             }
@@ -4849,16 +4985,8 @@
                 "description": "Enables animation domain notifications."
             },
             {
-                "name": "getAnimationPlayersForNode",
-                "parameters": [
-                    { "name": "nodeId", "$ref": "DOM.NodeId", "description": "Id of the node to get animation players for." },
-                    { "name": "includeSubtreeAnimations", "type": "boolean", "description": "Include animations from elements subtree." }
-                ],
-                "returns": [
-                    { "name": "animationPlayers", "type": "array", "items": { "$ref": "AnimationPlayer" }, "description": "Array of animation players." }
-                ],
-                "description": "Returns animation players relevant to the node.",
-                "hidden": true
+                "name": "disable",
+                "description": "Disables animation domain notifications."
             },
             {
                 "name": "getPlaybackRate",
@@ -4893,19 +5021,19 @@
         ],
         "events": [
             {
-                "name": "animationPlayerCreated",
+                "name": "animationCreated",
                 "parameters": [
-                    { "name": "player", "$ref": "AnimationPlayer", "description": "AnimationPlayer that was created." },
+                    { "name": "player", "$ref": "Animation", "description": "Animation that was created." },
                     { "name": "resetTimeline", "type": "boolean", "description": "Whether the timeline should be reset." }
                 ],
                 "description": "Event for each animation player that has been created."
             },
             {
-                "name": "animationPlayerCanceled",
+                "name": "animationCanceled",
                 "parameters": [
-                    { "name": "playerId", "type": "string", "description": "Id of the AnimationPlayer that was cancelled." }
+                    { "name": "id", "type": "string", "description": "Id of the Animation that was cancelled." }
                 ],
-                "description": "Event for AnimationPlayers in the frontend that have been cancelled."
+                "description": "Event for Animations in the frontend that have been cancelled."
             }
         ]
     },
@@ -5030,52 +5158,6 @@
                 ],
                 "description": "Fetches the accessibility node for this DOM node, if it exists.",
                 "hidden": true
-            }
-        ]
-    },
-    {
-        "domain": "Security",
-        "description": "Security",
-        "hidden": true,
-        "types": [
-            {
-                "id": "SecurityState",
-                "type": "string",
-                "enum": ["unknown", "http", "insecure", "warning", "secure"],
-                "description": "The security level of a page or resource."
-            },
-            {
-                "id": "SecurityStateExplanation",
-                "type": "object",
-                "properties": [
-                    { "name": "securityState", "$ref": "SecurityState", "description": "Security state representing the severity of the factor being explained." },
-                    { "name": "summary", "type": "string", "description": "Short phrase describing the type of factor." },
-                    { "name": "description", "type": "string", "description": "Full text explanation of the factor." }
-                ],
-                "description": "An explanation of an factor contributing to the security state."
-            }
-        ],
-        "commands": [
-            {
-                "name": "enable",
-                "description": "Enables tracking security state changes.",
-                "handlers": ["browser"]
-            },
-            {
-                "name": "disable",
-                "description": "Disables tracking security state changes.",
-                "handlers": ["browser"]
-            }
-        ],
-        "events": [
-            {
-                "name": "securityStateChanged",
-                "description": "The security state of the page changed.",
-                "parameters": [
-                    { "name": "securityState", "$ref": "SecurityState", "description": "Security state." },
-                    { "name": "explanations", "type": "array", "items": { "$ref": "SecurityStateExplanation" }, "description": "List of explanations for the security state. If the overall security state is `insecure` or `warning`, at least one corresponding explanation should be included.", "optional": true }
-                ],
-                "handlers": ["browser"]
             }
         ]
     }]
