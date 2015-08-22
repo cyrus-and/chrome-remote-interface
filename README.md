@@ -124,9 +124,9 @@ Protocol][rdb].
   array returned by `http://host:port/json` containing the tab list and must
   return the numeric index of a tab. Defaults to a function which returns the
   currently active tab (`function (tabs) { return 0; }`).
-- `protocol`: [Remote Debugging Protocol][rdb] descriptor. Defaults to the
-  protocol fetched directly from Chrome, if available, otherwise falls back to
-  an hardcoded version.
+- `protocol`: [Remote Debugging Protocol][rdb] descriptor object.
+  Defaults to the protocol fetched directly from Chrome, if available, otherwise
+  falls back to an hardcoded version.
 
 `callback` is a listener automatically added to the `connect` event of the
 returned `EventEmitter`.
