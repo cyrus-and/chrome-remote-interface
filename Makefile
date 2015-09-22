@@ -4,6 +4,6 @@ test:
 	@./node_modules/.bin/mocha -b
 
 update-protocol:
-	cd ./lib/; svn export --force https://src.chromium.org/blink/trunk/Source/devtools/protocol.json
+	curl 'https://chromium.googlesource.com/chromium/blink/+/master/Source/devtools/protocol.json?format=TEXT' | base64 -d >./lib/protocol.json
 
 .PHONY: test update-protocol
