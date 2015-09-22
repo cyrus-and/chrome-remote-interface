@@ -1085,7 +1085,8 @@
                 "properties": [
                     { "name": "securityState", "$ref": "SecurityState", "description": "Security state representing the severity of the factor being explained." },
                     { "name": "summary", "type": "string", "description": "Short phrase describing the type of factor." },
-                    { "name": "description", "type": "string", "description": "Full text explanation of the factor." }
+                    { "name": "description", "type": "string", "description": "Full text explanation of the factor." },
+                    { "name": "certificateId", "$ref": "Network.CertificateId", "optional": true, "description": "Associated certificate id." }
                 ],
                 "description": "An explanation of an factor contributing to the security state."
             },
@@ -1173,6 +1174,12 @@
                 ]
             },
             {
+                "id": "ResourcePriority",
+                "type": "string",
+                "enum": ["VeryLow", "Low", "Medium", "High", "VeryHigh"],
+                "description": "Loading priority of a resource request."
+            },
+            {
                 "id": "Request",
                 "type": "object",
                 "description": "HTTP request data.",
@@ -1181,7 +1188,8 @@
                     { "name": "method", "type": "string", "description": "HTTP request method." },
                     { "name": "headers", "$ref": "Headers", "description": "HTTP request headers." },
                     { "name": "postData", "type": "string", "optional": true, "description": "HTTP POST request data." },
-                    { "name": "mixedContentType", "optional": true, "type": "string", "enum": ["blockable", "optionally-blockable", "none"], "description": "The mixed content status of the request, as defined in http://www.w3.org/TR/mixed-content/" }
+                    { "name": "mixedContentType", "optional": true, "type": "string", "enum": ["blockable", "optionally-blockable", "none"], "description": "The mixed content status of the request, as defined in http://www.w3.org/TR/mixed-content/" },
+                    { "name": "initialPriority", "$ref": "ResourcePriority", "description": "Priority of the resource request at the time request is sent."}
                 ]
             },
             {
@@ -1221,6 +1229,13 @@
                     { "name": "mac", "type": "string", "optional": true, "description": "TLS MAC. Note that AEAD ciphers do not have separate MACs." },
                     { "name": "certificateId", "$ref": "CertificateId", "description": "Certificate ID value." }
                 ]
+            },
+            {
+                "id": "BlockedReason",
+                "type": "string",
+                "description": "The reason why request was blocked.",
+                "enum": ["csp", "mixed-content", "origin", "inspector", "other"],
+                "hidden": true
             },
             {
                 "id": "Response",
@@ -1359,6 +1374,22 @@
                 ]
             },
             {
+                "name": "addBlockedURL",
+                "description": "Blocks specific URL from loading.",
+                "parameters": [
+                    { "name": "url", "type": "string", "description": "URL to block." }
+                ],
+                "hidden": true
+            },
+            {
+                "name": "removeBlockedURL",
+                "description": "Cancels blocking of a specific URL from loading.",
+                "parameters": [
+                    { "name": "url", "type": "string", "description": "URL to stop blocking." }
+                ],
+                "hidden": true
+            },
+            {
                 "name": "replayXHR",
                 "description": "This method sends a new XMLHttpRequest which is identical to the original one. The following parameters should be identical: method, url, async, request body, extra headers, withCredentials attribute, user, password.",
                 "parameters": [
@@ -1466,6 +1497,14 @@
                     { "name": "result", "$ref": "CertificateDetails", "description": "Certificate details." }
                 ],
                 "handlers": ["browser"]
+            },
+            {
+                "name": "showCertificateViewer",
+                "description": "Displays native dialog with the certificate details.",
+                "parameters": [
+                    { "name": "certificateId", "$ref": "CertificateId", "description": "Certificate id." }
+                ],
+                "handlers": ["browser"]
             }
         ],
         "events": [
@@ -1531,7 +1570,8 @@
                     { "name": "timestamp", "$ref": "Timestamp", "description": "Timestamp." },
                     { "name": "type", "$ref": "Page.ResourceType", "description": "Resource type." },
                     { "name": "errorText", "type": "string", "description": "User friendly error message." },
-                    { "name": "canceled", "type": "boolean", "optional": true, "description": "True if loading was canceled." }
+                    { "name": "canceled", "type": "boolean", "optional": true, "description": "True if loading was canceled." },
+                    { "name": "blockedReason", "$ref": "BlockedReason", "optional": true, "description": "The reason why loading was blocked, if any.", "hidden": true }
                 ]
             },
             {
@@ -2240,7 +2280,7 @@
             {
                 "id": "ShadowRootType",
                 "type": "string",
-                "enum": ["user-agent", "author"],
+                "enum": ["user-agent", "open", "closed"],
                 "description": "Shadow root type."
             },
             {
@@ -2340,7 +2380,6 @@
                     { "name": "showInfo", "type": "boolean", "optional": true, "description": "Whether the node info tooltip should be shown (default: false)." },
                     { "name": "showRulers", "type": "boolean", "optional": true, "description": "Whether the rulers should be shown (default: false)." },
                     { "name": "showExtensionLines", "type": "boolean", "optional": true, "description": "Whether the extension lines from node to the rulers should be shown (default: false)." },
-                    { "name": "showLayoutEditor", "type": "boolean", "optional": true, "hidden": true},
                     { "name": "displayAsMaterial", "type": "boolean", "optional": true, "hidden": true},
                     { "name": "contentColor", "$ref": "RGBA", "optional": true, "description": "The content box highlight fill color (default: transparent)." },
                     { "name": "paddingColor", "$ref": "RGBA", "optional": true, "description": "The padding highlight fill color (default: transparent)." },
@@ -2351,6 +2390,17 @@
                     { "name": "shapeMarginColor", "$ref": "RGBA", "optional": true, "hidden": true, "description": "The shape margin fill color (default: transparent)." }
                 ],
                 "description": "Configuration data for the highlighting of page elements."
+            },
+            {
+                "id": "InspectMode",
+                "type": "string",
+                "hidden": true,
+                "enum": [
+                    "searchForNode",
+                    "searchForUAShadowDOM",
+                    "showLayoutEditor",
+                    "none"
+                ]
             }
         ],
         "commands": [
@@ -2514,11 +2564,10 @@
                 "description": "Requests that the node is sent to the caller given the JavaScript node object reference. All nodes that form the path from the node to the root are also sent to the client as a series of <code>setChildNodes</code> notifications."
             },
             {
-                "name": "setInspectModeEnabled",
+                "name": "setInspectMode",
                 "hidden": true,
                 "parameters": [
-                    { "name": "enabled", "type": "boolean", "description": "True to enable inspection mode, false to disable it." },
-                    { "name": "inspectUAShadowDOM", "type": "boolean", "optional": true, "description": "True to enable inspection mode for user agent shadow DOM." },
+                    { "name": "mode", "$ref": "InspectMode", "description": "Set an inspection mode." },
                     { "name": "highlightConfig", "$ref": "HighlightConfig", "optional": true, "description": "A descriptor for the highlight appearance of hovered-over nodes. May be omitted if <code>enabled == false</code>." }
                 ],
                 "description": "Enters the 'inspect' mode. In this mode, elements that user is hovering over are highlighted. Backend then generates 'inspectNodeRequested' event upon element selection."
@@ -2734,7 +2783,7 @@
                 "parameters": [
                     { "name": "backendNodeId", "$ref": "BackendNodeId", "description": "Id of the node to inspect." }
                 ],
-                "description": "Fired when the node should be inspected. This happens after call to <code>setInspectModeEnabled</code>.",
+                "description": "Fired when the node should be inspected. This happens after call to <code>setInspectMode</code>.",
                 "hidden" : true
             },
             {
@@ -3056,11 +3105,11 @@
             {
                 "name": "getMatchedStylesForNode",
                 "parameters": [
-                    { "name": "nodeId", "$ref": "DOM.NodeId" },
-                    { "name": "excludePseudo", "type": "boolean", "optional": true, "description": "Whether to exclude pseudo styles (default: false)." },
-                    { "name": "excludeInherited", "type": "boolean", "optional": true, "description": "Whether to exclude inherited styles (default: false)." }
+                    { "name": "nodeId", "$ref": "DOM.NodeId" }
                 ],
                 "returns": [
+                    { "name": "inlineStyle", "$ref": "CSSStyle", "optional": true, "description": "Inline style for the specified DOM node." },
+                    { "name": "attributesStyle", "$ref": "CSSStyle", "optional": true, "description": "Attribute-defined element style (e.g. resulting from \"width=20 height=100%\")."},
                     { "name": "matchedCSSRules", "type": "array", "items": { "$ref": "RuleMatch" }, "optional": true, "description": "CSS rules matching this node, from all applicable stylesheets." },
                     { "name": "pseudoElements", "type": "array", "items": { "$ref": "PseudoIdMatches" }, "optional": true, "description": "Pseudo style matches for this node." },
                     { "name": "inherited", "type": "array", "items": { "$ref": "InheritedStyleEntry" }, "optional": true, "description": "A chain of inherited styles (from the immediate node parent up to the DOM tree root)." }
@@ -3234,6 +3283,42 @@
                     { "name": "styleSheetId", "$ref": "StyleSheetId", "description": "Identifier of the stylesheet where the modification occurred."},
                     { "name": "changeRange", "$ref": "SourceRange", "description": "Range where the modification occurred."}
                 ]
+            }
+        ]
+    },
+    {
+        "domain": "IO",
+        "description": "Input/Output operations for streams produced by DevTools.",
+        "hidden": true,
+        "types": [
+            {
+                "id": "StreamHandle",
+                "type": "string"
+            }
+        ],
+        "commands": [
+            {
+                "name": "read",
+                "description": "Read a chunk of the stream",
+                "async": true,
+                "parameters": [
+                    { "name": "handle", "$ref": "StreamHandle", "description": "Handle of the stream to read." },
+                    { "name": "offset", "type": "integer", "optional": true, "description": "Seek to the specified offset before reading (if not specificed, proceed with offset following the last read)." },
+                    { "name": "size", "type": "integer", "optional": true,  "description": "Maximum number of bytes to read (left upon the agent discretion if not specified)." }
+                ],
+                "returns": [
+                    { "name": "data", "type": "string", "description": "Data that were read." },
+                    { "name": "eof", "type": "boolean", "description": "Set if the end-of-file condition occured while reading." }
+                ],
+                "handlers": ["browser"]
+            },
+            {
+                "name": "close",
+                "description": "Close the stream, discard any temporary backing storage.",
+                "parameters": [
+                    { "name": "handle", "$ref": "StreamHandle", "description": "Handle of the stream to close." }
+                ],
+                "handlers": ["browser"]
             }
         ]
     },
@@ -3897,7 +3982,8 @@
                     { "name": "type", "type": "string", "description": "<code>EventListener</code>'s type." },
                     { "name": "useCapture", "type": "boolean", "description": "<code>EventListener</code>'s useCapture." },
                     { "name": "location", "$ref": "Debugger.Location", "description": "Handler code location." },
-                    { "name": "handler", "$ref": "Runtime.RemoteObject", "optional": true, "description": "Event handler function value." }
+                    { "name": "handler", "$ref": "Runtime.RemoteObject", "optional": true, "description": "Event handler function value." },
+                    { "name": "originalHandler", "$ref": "Runtime.RemoteObject", "optional": true, "description": "Event original handler function value." }
                 ],
                 "hidden": true
             }
@@ -4241,7 +4327,8 @@
                 "properties": [
                     { "name": "registrationId", "type": "string" },
                     { "name": "scopeURL", "type": "string" },
-                    { "name": "isDeleted", "type": "boolean", "optional": true }
+                    { "name": "isDeleted", "type": "boolean" },
+                    { "name": "forceUpdateOnPageLoad", "type": "boolean", "optional": true }
                 ]
             },
             {
@@ -4371,6 +4458,14 @@
                 "handlers": ["browser"]
             },
             {
+                "name": "setForceUpdateOnPageLoad",
+                "parameters": [
+                    { "name": "registrationId", "type": "string" },
+                    { "name": "forceUpdateOnPageLoad", "type": "boolean" }
+                ],
+                "handlers": ["browser"]
+            },
+            {
                 "name": "deliverPushMessage",
                 "parameters": [
                     { "name": "origin", "type": "string" },
@@ -4402,7 +4497,8 @@
                 "name": "workerCreated",
                 "parameters": [
                     { "name": "workerId", "type": "string" },
-                    { "name": "url", "type": "string" }
+                    { "name": "url", "type": "string" },
+                    { "name": "versionId", "type": "string" }
                 ],
                 "handlers": ["browser"]
             },
@@ -4809,7 +4905,8 @@
                 "parameters": [
                     { "name": "categories", "type": "string", "optional": true, "description": "Category/tag filter" },
                     { "name": "options", "type": "string", "optional": true, "description": "Tracing options" },
-                    { "name": "bufferUsageReportingInterval", "type": "number", "optional": true, "description": "If set, the agent will issue bufferUsage events at this interval, specified in milliseconds" }
+                    { "name": "bufferUsageReportingInterval", "type": "number", "optional": true, "description": "If set, the agent will issue bufferUsage events at this interval, specified in milliseconds" },
+                    { "name": "transferMode", "type": "string", "enum": ["ReportEvents", "ReturnAsStream"], "optional": true, "description": "Whether to report trace events as series of dataCollected events or to save trace to a stream (defaults to <code>ReportEvents</code>)." }
                 ],
                 "handlers": ["browser", "renderer"]
             },
@@ -4851,6 +4948,9 @@
             {
                 "name": "tracingComplete",
                 "description": "Signals that tracing is stopped and there is no trace buffers pending flush, all data were delivered via dataCollected events.",
+                "parameters": [
+                    { "name": "stream", "$ref": "IO.StreamHandle", "optional": true, "description": "A handle of the stream that holds resulting trace data." }
+                ],
                 "handlers": ["browser"]
             },
             {
@@ -5023,10 +5123,16 @@
             {
                 "name": "animationCreated",
                 "parameters": [
-                    { "name": "player", "$ref": "Animation", "description": "Animation that was created." },
-                    { "name": "resetTimeline", "type": "boolean", "description": "Whether the timeline should be reset." }
+                    { "name": "id", "type": "string", "description": "Id of the animation that was created." }
                 ],
-                "description": "Event for each animation player that has been created."
+                "description": "Event for each animation that has been created."
+            },
+            {
+                "name": "animationStarted",
+                "parameters": [
+                    { "name": "animation", "$ref": "Animation", "description": "Animation that was started." }
+                ],
+                "description": "Event for animation that has been started."
             },
             {
                 "name": "animationCanceled",
