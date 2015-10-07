@@ -98,16 +98,16 @@ Remote Debugging Protocol versions
 
 Currently it is not possible to fetch the protocol descriptor
 ([`protocol.json`][local-json]) directly from the instrumented Chrome instance
-(see [#10][issue]); rather, that file is fetched from the proper source
-repository at every connection, and if that is not possible, the [harcoded
-version](local-json) is used. This file is fetched from time to time from the
-[Blink repo][remote-json] and pushed to this repository.
+(see [#10][issue]); rather, that file can be fetched from the proper [source
+repository][remote-json] at every connection. By default, the [hardcoded local
+version][local-json] is used.
 
 To override the above behavior there are basically three options:
 
 1. update the local copy with `make update-protocol`;
 
-2. pass a custom protocol descriptor upon
+2. pass a custom protocol descriptor (use `null` to fetch it from the remote
+   repository) upon
    [connection](https://github.com/cyrus-and/chrome-remote-interface#moduleoptions-callback);
 
 3. use the *raw* version of the [commands](#chromesendmethod-params-callback)
@@ -129,9 +129,11 @@ Protocol][rdb].
   array returned by `http://host:port/json` containing the tab list and must
   return the numeric index of a tab. Defaults to a function which returns the
   currently active tab (`function (tabs) { return 0; }`).
-- `protocol`: [Remote Debugging Protocol][rdb] descriptor object.
-  Defaults to the protocol fetched directly from the Chrome repository, if
-  available, otherwise falls back to an hardcoded version.
+- `protocol`: [Remote Debugging Protocol][rdb] descriptor object. Passing `null`
+  causes the proper protocol descriptor to be fetched from the remote Chrome
+  repository according to the version exposed by the instrumented Chrome
+  instance, falling back to the default if that is not possible. Defaults to the
+  [hardcoded local version][local-json].
 
 `callback` is a listener automatically added to the `connect` event of the
 returned `EventEmitter`.
