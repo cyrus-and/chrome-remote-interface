@@ -98,14 +98,19 @@ Remote Debugging Protocol versions
 
 Currently it is not possible to fetch the protocol descriptor
 ([`protocol.json`][local-json]) directly from the instrumented Chrome instance
-(see [#10][issue]); that file is fetched from time to time from the
-[Blink repo][remote-json] and pushed to this repository. To use some of the
-bleeding edge features that still does not appear in the provided
-[`protocol.json`][local-json], there are basically two options:
+(see [#10][issue]); rather, that file is fetched from the proper source
+repository at every connection, and if that is not possible, the [harcoded
+version](local-json) is used. This file is fetched from time to time from the
+[Blink repo][remote-json] and pushed to this repository.
+
+To override the above behavior there are basically three options:
 
 1. update the local copy with `make update-protocol`;
 
-2. use the *raw* version of the [commands](#chromesendmethod-params-callback)
+2. pass a custom protocol descriptor upon
+   [connection](https://github.com/cyrus-and/chrome-remote-interface#moduleoptions-callback);
+
+3. use the *raw* version of the [commands](#chromesendmethod-params-callback)
    and [events](#event-method) interface.
 
 API
@@ -125,8 +130,8 @@ Protocol][rdb].
   return the numeric index of a tab. Defaults to a function which returns the
   currently active tab (`function (tabs) { return 0; }`).
 - `protocol`: [Remote Debugging Protocol][rdb] descriptor object.
-  Defaults to the protocol fetched directly from Chrome, if available, otherwise
-  falls back to an hardcoded version.
+  Defaults to the protocol fetched directly from the Chrome repository, if
+  available, otherwise falls back to an hardcoded version.
 
 `callback` is a listener automatically added to the `connect` event of the
 returned `EventEmitter`.
@@ -156,8 +161,9 @@ connect to Chrome's remote debugging WebSocket.
 
 ### module.Protocol([options], callback)
 
-Fetch the [Remote Debugging Protocol][rdb] descriptor from the remote Chrome
-instance, or fall back to the local hardcoded version if not available.
+Fetch the [Remote Debugging Protocol][rdb] descriptor from the Chrome repository
+according to the version of the remote Chrome instance, or fall back to the
+local hardcoded version if not available.
 
 `options` is an object with the following optional properties:
 
@@ -169,7 +175,7 @@ arguments:
 
 - `err`: a `Error` object indicating the success status;
 - `fromChrome`: a boolean indicating whether the protocol has been fetched from
-  Chrome or not;
+  the Chrome repository or not;
 - `protocol`: the [Remote Debugging Protocol][rdb] descriptor.
 
 For example:
