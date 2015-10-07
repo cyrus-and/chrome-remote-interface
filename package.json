@@ -1,6 +1,7 @@
 {
     "name": "chrome-remote-interface",
     "author": "Andrea Cardaci <cyrus.and@gmail.com>",
+    "license": "MIT",
     "contributors": [
         "Andrey Sidorov <sidoares@yandex.ru>",
         "Greg Cochard <greg@gregcochard.com>"
