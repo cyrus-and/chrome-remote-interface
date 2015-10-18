@@ -125,10 +125,11 @@ Protocol][rdb].
 
 - `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
 - `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`;
-- `chooseTab`: callback used to determine which remote tab attach to. Takes the
-  array returned by `http://host:port/json` containing the tab list and must
-  return the numeric index of a tab. Defaults to a function which returns the
-  currently active tab (`function (tabs) { return 0; }`).
+- `chooseTab`: Either a callback or a tab object (i.e. those returned by `New`
+  and `List` methods). The callback is used to determine which remote tab attach
+  to, it  takes the array returned by the `List` method and must return the
+  numeric index of a tab. Defaults to a function which returns the currently
+  active tab (`function (tabs) { return 0; }`).
 - `protocol`: [Remote Debugging Protocol][rdb] descriptor object. Passing `null`
   causes the proper protocol descriptor to be fetched from the remote Chrome
   repository according to the version exposed by the instrumented Chrome
