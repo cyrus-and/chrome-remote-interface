@@ -264,7 +264,7 @@ For example:
 
 ```javascript
 var Chrome = require('chrome-remote-interface');
-Chrome.Activate({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err, tab) {
+Chrome.Activate({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
     if (!err) {
         console.log('success! tab is closing');
     }
@@ -290,7 +290,7 @@ For example:
 
 ```javascript
 var Chrome = require('chrome-remote-interface');
-Chrome.Close({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err, tab) {
+Chrome.Close({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
     if (!err) {
         console.log('success! tab is closing');
     }
