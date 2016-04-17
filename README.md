@@ -416,6 +416,9 @@ following arguments:
   (`result` field, if `error === false`) or the indication of the error (`error`
   field, if `error === true`).
 
+When `callback` is omitted a `Promise` object is returned instead, with the
+fulfilled/rejected states implemented according to the `error` parameter.
+
 Note that the field `id` mentioned in the [Remote Debugging Protocol
 specifications][rdb] is managed internally and it's not exposed to the user.
 
