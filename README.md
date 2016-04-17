@@ -162,7 +162,7 @@ connect to Chrome's remote debugging WebSocket.
 
 `err` is an instance of `Error`.
 
-### module.Protocol([options], callback)
+### module.Protocol([options], [callback])
 
 Fetch the [Remote Debugging Protocol][rdb] descriptor from the Chrome repository
 according to the version of the remote Chrome instance, or fall back to the
@@ -182,6 +182,8 @@ arguments:
       from the Chrome repository or not;
    - `descriptor`: the [Remote Debugging Protocol][rdb] descriptor.
 
+When `callback` is omitted a `Promise` object is returned.
+
 For example:
 
 ```javascript
@@ -193,7 +195,7 @@ Chrome.Protocol(function (err, protocol) {
 });
 ```
 
-### module.List([options], callback)
+### module.List([options], [callback])
 
 Request the list of the available open tabs of the remote Chrome instance.
 
@@ -209,6 +211,8 @@ following arguments:
 - `tabs`: the array returned by `http://host:port/json/list` containing the tab
   list.
 
+When `callback` is omitted a `Promise` object is returned.
+
 For example:
 
 ```javascript
@@ -220,7 +224,7 @@ Chrome.List(function (err, tabs) {
 });
 ```
 
-### module.New([options], callback)
+### module.New([options], [callback])
 
 Create a new tab in the remote Chrome instance.
 
@@ -236,6 +240,8 @@ following arguments:
 - `err`: a `Error` object indicating the success status;
 - `tab`: the object returned by `http://host:port/json/new` containing the tab.
 
+When `callback` is omitted a `Promise` object is returned.
+
 For example:
 
 ```javascript
@@ -247,7 +253,7 @@ Chrome.New(function (err, tab) {
 });
 ```
 
-### module.Activate([options], callback)
+### module.Activate([options], [callback])
 
 Activate an open tab of the remote Chrome instance.
 
@@ -262,6 +268,8 @@ received. It gets the following arguments:
 
 - `err`: a `Error` object indicating the success status;
 
+When `callback` is omitted a `Promise` object is returned.
+
 For example:
 
 ```javascript
@@ -273,7 +281,7 @@ Chrome.Activate({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
 });
 ```
 
-### module.Close([options], callback)
+### module.Close([options], [callback])
 
 Close an open tab of the remote Chrome instance.
 
@@ -287,6 +295,8 @@ Close an open tab of the remote Chrome instance.
 received. It gets the following arguments:
 
 - `err`: a `Error` object indicating the success status;
+
+When `callback` is omitted a `Promise` object is returned.
 
 For example:
 
@@ -303,7 +313,7 @@ Note that the callback is fired when the tab is *queued* for removal,
 but the actual removal will occur asynchronously. It typically takes
 ~200ms for this to occur.
 
-### module.Version([options], callback)
+### module.Version([options], [callback])
 
 Request version information from the remote Chrome instance.
 
@@ -318,6 +328,8 @@ gets the following arguments:
 - `err`: a `Error` object indicating the success status;
 - `info`: a JSON object returned by `http://host:port/json/version` containing
   the version information.
+
+When `callback` is omitted a `Promise` object is returned.
 
 For example:
 
