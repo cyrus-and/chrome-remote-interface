@@ -470,7 +470,7 @@ Resources
 - [Chrome Developer Tools: Remote Debugging Protocol v1.1][rdb]
 - [Showcase Chrome Debugging Protocol Clients][clients]
 
-[rdb-viewer]: http://chromedevtools.github.io/debugger-protocol-viewer/
+[rdb-viewer]: https://chromedevtools.github.io/debugger-protocol-viewer/
 [rdb]: https://developer.chrome.com/devtools/docs/protocol/1.1/index
 [clients-cri]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
 [clients]: https://developer.chrome.com/devtools/docs/debugging-clients
