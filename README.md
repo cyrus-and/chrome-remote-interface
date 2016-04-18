@@ -177,17 +177,18 @@ local hardcoded version if not available.
 arguments:
 
 - `err`: a `Error` object indicating the success status;
-- `fromChrome`: a boolean indicating whether the protocol has been fetched from
-  the Chrome repository or not;
-- `protocol`: the [Remote Debugging Protocol][rdb] descriptor.
+- `protocol`: an object with the following properties:
+   - `fromChrome`: a boolean indicating whether the protocol has been fetched
+      from the Chrome repository or not;
+   - `descriptor`: the [Remote Debugging Protocol][rdb] descriptor.
 
 For example:
 
 ```javascript
 var Chrome = require('chrome-remote-interface');
-Chrome.Protocol(function (err, fromChrome, protocol) {
+Chrome.Protocol(function (err, protocol) {
     if (!err) {
-        console.log(JSON.stringify(protocol, null, 4));
+        console.log(JSON.stringify(protocol.descriptor, null, 4));
     }
 });
 ```

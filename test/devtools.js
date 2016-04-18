@@ -6,19 +6,19 @@ describe('devtool interaction', function () {
 
     describe('Protocol', function () {
         it('should return the protocol descriptor (possibly) from Chrome', function (done) {
-            Chrome.Protocol(function (err, fromChrome, protocol) {
+            Chrome.Protocol(function (err, protocol) {
                 assert.ifError(err);
-                assert.equal(typeof protocol, 'object');
-                assert.equal(typeof protocol.version, 'object');
+                assert.equal(typeof protocol.descriptor, 'object');
+                assert.equal(typeof protocol.descriptor.version, 'object');
                 done();
             });
         });
         it('should return the hardcoded protocol descriptor', function (done) {
-            Chrome.Protocol({'port':1}, function (err, fromChrome, protocol) {
+            Chrome.Protocol({'port':1}, function (err, protocol) {
                 assert.ifError(err);
-                assert(!fromChrome);
-                assert.equal(typeof protocol, 'object');
-                assert.equal(typeof protocol.version, 'object');
+                assert(!protocol.fromChrome);
+                assert.equal(typeof protocol.descriptor, 'object');
+                assert.equal(typeof protocol.descriptor.version, 'object');
                 done();
             });
         });
