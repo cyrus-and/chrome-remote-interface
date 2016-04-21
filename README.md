@@ -137,7 +137,8 @@ Protocol][rdb].
   [hardcoded local version][local-json].
 
 `callback` is a listener automatically added to the `connect` event of the
-returned `EventEmitter`.
+returned `EventEmitter`; when `callback` is omitted a `Promise` object is
+returned.
 
 Returns an `EventEmitter` that supports the following events:
 
