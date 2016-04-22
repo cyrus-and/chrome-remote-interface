@@ -84,7 +84,9 @@ describe('devtool interaction', function () {
                 var tab = tabs[0];
                 Chrome.Close({id:tab.id}, function (err) {
                     assert.ifError(err);
-                    done();
+                    // avoid that further test cases attach to this tab as the
+                    // actual close is a bit delayed
+                    setTimeout(done, 1000);
                 });
             });
         });
