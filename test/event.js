@@ -11,7 +11,7 @@ describe('registering event', function () {
                     done();
                 });
                 chrome.send('Network.enable');
-                chrome.send('Page.reload');
+                chrome.send('Page.navigate', {'url': 'chrome://newtab/'});
             });
         });
     });
@@ -23,7 +23,7 @@ describe('registering event', function () {
                 done();
             });
             chrome.send('Network.enable');
-            chrome.send('Page.reload');
+            chrome.send('Page.navigate', {'url': 'chrome://newtab/'});
         });
     });
     it('should give the payload only (alternate syntax)', function (done) {
@@ -34,7 +34,7 @@ describe('registering event', function () {
                 done();
             });
             chrome.send('Network.enable');
-            chrome.send('Page.reload');
+            chrome.send('Page.navigate', {'url': 'chrome://newtab/'});
         });
     });
 });

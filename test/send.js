@@ -10,7 +10,7 @@ describe('sending a command', function () {
                     done();
                 });
                 chrome.send('Network.enable');
-                chrome.send('Page.reload');
+                chrome.send('Page.navigate', {'url': 'chrome://newtab/'});
             });
         });
     });
@@ -44,7 +44,7 @@ describe('sending a command', function () {
                     done();
                 });
                 chrome.Network.enable();
-                chrome.Page.reload();
+                chrome.send('Page.navigate', {'url': 'chrome://newtab/'});
             });
         });
     });
