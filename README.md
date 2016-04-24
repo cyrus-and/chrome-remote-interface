@@ -135,7 +135,7 @@ Protocol][rdb].
   and `List` methods). The callback is used to determine which remote tab attach
   to, it  takes the array returned by the `List` method and must return the
   numeric index of a tab. Defaults to a function which returns the currently
-  active tab (`function (tabs) { return 0; }`).
+  active tab (`function (tabs) { return 0; }`);
 - `protocol`: [Remote Debugging Protocol][rdb] descriptor object. Passing `null`
   causes the proper protocol descriptor to be fetched from the remote Chrome
   repository according to the version exposed by the instrumented Chrome
