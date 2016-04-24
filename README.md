@@ -8,6 +8,12 @@ in a Node.js fashion: commands and notifications.
 `chrome-remote-interface` is listed among
 [third-party Chrome debugging protocol clients][clients-cri].
 
+This module should work with every browser/adaptor implementing the Chrome
+[Remote Debugging Protocol][rdb]. In particular, it has been tested with:
+
+- **Google Chrome** (native support);
+- **Microsoft Edge** (via [Edge Diagnostics Adaptor][edge-diagnostics-adaptor]).
+
 Installation
 ------------
 
@@ -134,7 +140,10 @@ Protocol][rdb].
   causes the proper protocol descriptor to be fetched from the remote Chrome
   repository according to the version exposed by the instrumented Chrome
   instance, falling back to the default if that is not possible. Defaults to the
-  [hardcoded local version][local-json].
+  [hardcoded local version][local-json];
+- `fallback`: a boolean indicating whether the protocol must be fetched
+  *remotely* or if the fallback local version must be used. Defaults to
+  `false`.
 
 `callback` is a listener automatically added to the `connect` event of the
 returned `EventEmitter`; when `callback` is omitted a `Promise` object is
@@ -172,15 +181,18 @@ local hardcoded version if not available.
 `options` is an object with the following optional properties:
 
 - `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`.
+- `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`;
+- `fallback`: a boolean indicating whether the protocol must be fetched
+  *remotely* or if the fallback local version must be returned. Defaults to
+  `false`.
 
 `callback` is executed when the protocol is fetched, it gets the following
 arguments:
 
 - `err`: a `Error` object indicating the success status;
 - `protocol`: an object with the following properties:
-   - `fromChrome`: a boolean indicating whether the protocol has been fetched
-      from the Chrome repository or not;
+   - `fallback`: a boolean indicating whether the returned descriptor is the
+     hardcoded version (due to user choice or error) or not;
    - `descriptor`: the [Remote Debugging Protocol][rdb] descriptor.
 
 When `callback` is omitted a `Promise` object is returned.
@@ -491,6 +503,7 @@ Resources
 [rdb]: https://developer.chrome.com/devtools/docs/protocol/1.1/index
 [clients-cri]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
 [clients]: https://developer.chrome.com/devtools/docs/debugging-clients
+[edge-diagnostics-adaptor]: https://github.com/Microsoft/edge-diagnostics-adaptor
 
 <!-- related to #10 -->
 [local-json]: lib/protocol.json
