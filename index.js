@@ -7,22 +7,19 @@ module.exports = function (options, callback) {
         options = undefined;
     }
     var notifier = new events.EventEmitter();
-    if (typeof callback === 'function') {
-        notifier.on('connect', callback);
+    if (callback) {
+        // allow to register the error callback later
+        process.nextTick(function () {
+            new Chrome(options, notifier);
+        });
+        return notifier.on('connect', callback);
+    } else {
+        return new Promise(function (fulfill, reject) {
+            notifier.on('connect', fulfill);
+            notifier.on('error', reject);
+            new Chrome(options, notifier);
+        });
     }
-    // allow to register callbacks later
-    process.nextTick(function () {
-        // the default listener just disconnects from Chrome, this can be used
-        // to simply check the connection
-        if (notifier.listeners('connect').length === 0) {
-            notifier.on('connect', function (chrome) {
-                chrome.close();
-            });
-        }
-        // create the client passing the notifier
-        new Chrome(options, notifier);
-    });
-    return notifier;
 };
 
 // for backward compatibility

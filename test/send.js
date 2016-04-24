@@ -70,4 +70,48 @@ describe('sending a command', function () {
             });
         });
     });
+    describe('without a callback', function () {
+        it('should fulfill the promise if the command succeeds', function (done) {
+            Chrome(function (chrome) {
+                chrome.send('Network.enable').then(function () {
+                    chrome.close();
+                    done();
+                }).catch(function () {
+                    assert(false);
+                });
+            });
+        });
+        it('should reject the promise if the command fails', function (done) {
+            Chrome(function (chrome) {
+                chrome.send('Network.getResponseBody').then(function () {
+                    assert(false);
+                }).catch(function () {
+                    chrome.close();
+                    done();
+                });
+            });
+        });
+    });
+    describe('without a callback (shorthand)', function () {
+        it('should fulfill the promise if the command succeeds', function (done) {
+            Chrome(function (chrome) {
+                chrome.Network.enable().then(function () {
+                    chrome.close();
+                    done();
+                }).catch(function () {
+                    assert(false);
+                });
+            });
+        });
+        it('should reject the promise if the command fails', function (done) {
+            Chrome(function (chrome) {
+                chrome.Network.getResponseBody().then(function () {
+                    assert(false);
+                }).catch(function () {
+                    chrome.close();
+                    done();
+                });
+            });
+        });
+    });
 });
