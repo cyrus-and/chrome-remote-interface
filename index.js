@@ -1,5 +1,6 @@
 var events = require('events');
 var Chrome = require('./lib/chrome.js');
+var devtools = require('./lib/devtools.js');
 
 module.exports = function (options, callback) {
     if (typeof options === 'function') {
@@ -23,13 +24,13 @@ module.exports = function (options, callback) {
 };
 
 // for backward compatibility
-module.exports.listTabs = Chrome.List;
-module.exports.spawnTab = Chrome.New;
-module.exports.closeTab = Chrome.Close;
+module.exports.listTabs = devtools.List;
+module.exports.spawnTab = devtools.New;
+module.exports.closeTab = devtools.Close;
 
-module.exports.Protocol = Chrome.Protocol;
-module.exports.List = Chrome.List;
-module.exports.New = Chrome.New;
-module.exports.Activate = Chrome.Activate;
-module.exports.Close = Chrome.Close;
-module.exports.Version = Chrome.Version;
+module.exports.Protocol = devtools.Protocol;
+module.exports.List = devtools.List;
+module.exports.New = devtools.New;
+module.exports.Activate = devtools.Activate;
+module.exports.Close = devtools.Close;
+module.exports.Version = devtools.Version;
