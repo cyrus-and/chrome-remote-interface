@@ -8,11 +8,11 @@ in a Node.js fashion: commands and notifications.
 `chrome-remote-interface` is listed among
 [third-party Chrome debugging protocol clients][clients-cri].
 
-This module should work with every browser/adaptor implementing the Chrome
+This module should work with every browser/adapter implementing the Chrome
 [Remote Debugging Protocol][rdb]. In particular, it has been tested with:
 
 - **Google Chrome** (native support);
-- **Microsoft Edge** (via [Edge Diagnostics Adaptor][edge-diagnostics-adaptor]).
+- **Microsoft Edge** (via [Edge Diagnostics Adapter][edge-diagnostics-adapter]).
 
 Installation
 ------------
@@ -503,7 +503,7 @@ Resources
 [rdb]: https://developer.chrome.com/devtools/docs/protocol/1.1/index
 [clients-cri]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
 [clients]: https://developer.chrome.com/devtools/docs/debugging-clients
-[edge-diagnostics-adaptor]: https://github.com/Microsoft/edge-diagnostics-adaptor
+[edge-diagnostics-adapter]: https://github.com/Microsoft/edge-diagnostics-adapter
 
 <!-- related to #10 -->
 [local-json]: lib/protocol.json
