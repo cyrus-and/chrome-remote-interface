@@ -6,18 +6,28 @@ describe('devtool interaction', function () {
 
     describe('Protocol', function () {
         describe('with callback', function () {
-            it('should return the protocol descriptor (possibly) from Chrome', function (done) {
+            it('should return the protocol descriptor from Chrome', function (done) {
                 Chrome.Protocol(function (err, protocol) {
                     assert.ifError(err);
+                    assert(!protocol.fallback);
                     assert.equal(typeof protocol.descriptor, 'object');
                     assert.equal(typeof protocol.descriptor.version, 'object');
                     done();
                 });
             });
-            it('should return the hardcoded protocol descriptor', function (done) {
+            it('should return the hardcoded protocol descriptor (on error)', function (done) {
                 Chrome.Protocol({'port':1}, function (err, protocol) {
                     assert.ifError(err);
-                    assert(!protocol.fromChrome);
+                    assert(protocol.fallback);
+                    assert.equal(typeof protocol.descriptor, 'object');
+                    assert.equal(typeof protocol.descriptor.version, 'object');
+                    done();
+                });
+            });
+            it('should return the hardcoded protocol descriptor (if requested)', function (done) {
+                Chrome.Protocol({'fallback': true}, function (err, protocol) {
+                    assert.ifError(err);
+                    assert(protocol.fallback);
                     assert.equal(typeof protocol.descriptor, 'object');
                     assert.equal(typeof protocol.descriptor.version, 'object');
                     done();
@@ -25,8 +35,9 @@ describe('devtool interaction', function () {
             });
         });
         describe('without callback', function () {
-            it('should return the protocol descriptor (possibly) from Chrome', function (done) {
+            it('should return the protocol descriptor from Chrome', function (done) {
                 Chrome.Protocol().then(function (protocol) {
+                    assert(!protocol.fallback);
                     assert.equal(typeof protocol.descriptor, 'object');
                     assert.equal(typeof protocol.descriptor.version, 'object');
                     done();
@@ -34,9 +45,19 @@ describe('devtool interaction', function () {
                     assert(false);
                 });
             });
-            it('should return the hardcoded protocol descriptor', function (done) {
+            it('should return the hardcoded protocol descriptor (on error)', function (done) {
                 Chrome.Protocol({'port':1}).then(function (protocol) {
-                    assert(!protocol.fromChrome);
+                    assert(protocol.fallback);
+                    assert.equal(typeof protocol.descriptor, 'object');
+                    assert.equal(typeof protocol.descriptor.version, 'object');
+                    done();
+                }).catch(function () {
+                    assert(false);
+                });
+            });
+            it('should return the hardcoded protocol descriptor (if requested)', function (done) {
+                Chrome.Protocol({'fallback': true}).then(function (protocol) {
+                    assert(protocol.fallback);
                     assert.equal(typeof protocol.descriptor, 'object');
                     assert.equal(typeof protocol.descriptor.version, 'object');
                     done();
