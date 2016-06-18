@@ -46,8 +46,8 @@ Chrome(function (chrome) {
             Page.navigate({'url': 'https://github.com'});
         });
     }
-}).on('error', function () {
-    console.error('Cannot connect to Chrome');
+}).on('error', function (err) {
+    console.error('Cannot connect to Chrome:', err);
 });
 ```
 
