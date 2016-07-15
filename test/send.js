@@ -6,8 +6,7 @@ describe('sending a command', function () {
         it('should succeed', function (done) {
             Chrome(function (chrome) {
                 chrome.once('Network.requestWillBeSent', function () {
-                    chrome.close();
-                    done();
+                    chrome.close(done);
                 });
                 chrome.send('Network.enable');
                 chrome.send('Page.navigate', {'url': 'chrome://newtab/'});
@@ -18,9 +17,8 @@ describe('sending a command', function () {
         it('should succeed', function (done) {
             Chrome(function (chrome) {
                 chrome.send('Page.enable', function (error, response) {
-                    chrome.close();
                     assert(!error);
-                    done();
+                    chrome.close(done);
                 });
             });
         });
@@ -29,9 +27,8 @@ describe('sending a command', function () {
         it('should succeed', function (done) {
             Chrome(function (chrome) {
                 chrome.send('Network.setCacheDisabled', {'cacheDisabled': true}, function (error, response) {
-                    chrome.close();
                     assert(!error);
-                    done();
+                    chrome.close(done);
                 });
             });
         });
@@ -40,8 +37,7 @@ describe('sending a command', function () {
         it('should succeed', function (done) {
             Chrome(function (chrome) {
                 chrome.once('Network.requestWillBeSent', function () {
-                    chrome.close();
-                    done();
+                    chrome.close(done);
                 });
                 chrome.Network.enable();
                 chrome.send('Page.navigate', {'url': 'chrome://newtab/'});
@@ -52,9 +48,8 @@ describe('sending a command', function () {
         it('should succeed', function (done) {
             Chrome(function (chrome) {
                 chrome.Page.enable(function (error, response) {
-                    chrome.close();
                     assert(!error);
-                    done();
+                    chrome.close(done);
                 });
             });
         });
@@ -63,9 +58,8 @@ describe('sending a command', function () {
         it('should succeed', function (done) {
             Chrome(function (chrome) {
                 chrome.Network.setCacheDisabled({'cacheDisabled': true}, function (error, response) {
-                    chrome.close();
                     assert(!error);
-                    done();
+                    chrome.close(done);
                 });
             });
         });
@@ -74,8 +68,7 @@ describe('sending a command', function () {
         it('should fulfill the promise if the command succeeds', function (done) {
             Chrome(function (chrome) {
                 chrome.send('Network.enable').then(function () {
-                    chrome.close();
-                    done();
+                    chrome.close(done);
                 }).catch(function () {
                     assert(false);
                 });
@@ -86,8 +79,7 @@ describe('sending a command', function () {
                 chrome.send('Network.getResponseBody').then(function () {
                     assert(false);
                 }).catch(function () {
-                    chrome.close();
-                    done();
+                    chrome.close(done);
                 });
             });
         });
@@ -96,8 +88,7 @@ describe('sending a command', function () {
         it('should fulfill the promise if the command succeeds', function (done) {
             Chrome(function (chrome) {
                 chrome.Network.enable().then(function () {
-                    chrome.close();
-                    done();
+                    chrome.close(done);
                 }).catch(function () {
                     assert(false);
                 });
@@ -108,8 +99,7 @@ describe('sending a command', function () {
                 chrome.Network.getResponseBody().then(function () {
                     assert(false);
                 }).catch(function () {
-                    chrome.close();
-                    done();
+                    chrome.close(done);
                 });
             });
         });

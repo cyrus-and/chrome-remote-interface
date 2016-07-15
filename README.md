@@ -482,9 +482,13 @@ For example:
 chrome.Network.requestWillBeSent(console.log);
 ```
 
-#### chrome.close()
+#### chrome.close([callback])
 
 Close the connection to Chrome.
+
+`callback` is executed when the WebSocket is successfully closed.
+
+When `callback` is omitted a `Promise` object is returned.
 
 Contributors
 ------------

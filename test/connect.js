@@ -6,8 +6,7 @@ describe('connecting to Chrome', function () {
         describe('with default parameters', function () {
             it('should succeed with "connect" callback passed as an argument', function (done) {
                 Chrome(function (chrome) {
-                    chrome.close();
-                    done();
+                    chrome.close(done);
                 }).on('error', function () {
                     assert(false);
                 });
@@ -16,8 +15,7 @@ describe('connecting to Chrome', function () {
         describe('with custom parameters', function () {
             it('should succeed with "connect" callback passed as an argument', function (done) {
                 Chrome({'host': 'localhost', 'port': 9222}, function (chrome) {
-                    chrome.close();
-                    done();
+                    chrome.close(done);
                 }).on('error', function () {
                     assert(false);
                 });
@@ -55,9 +53,8 @@ describe('connecting to Chrome', function () {
                     Chrome(function () {
                         assert(false);
                     }).on('error', function (err) {
-                        chrome.close();
                         assert(err instanceof Error);
-                        done();
+                        chrome.close(done);
                     });
                 }).on('error', function () {
                     assert(false);
@@ -69,8 +66,7 @@ describe('connecting to Chrome', function () {
         describe('with default parameters', function () {
             it('should succeed with "connect" callback passed as an argument', function (done) {
                 Chrome().then(function (chrome) {
-                    chrome.close();
-                    done();
+                    chrome.close(done);
                 }).catch(function () {
                     assert(false);
                 });
@@ -79,8 +75,7 @@ describe('connecting to Chrome', function () {
         describe('with custom parameters', function () {
             it('should succeed with "connect" callback passed as an argument', function (done) {
                 Chrome({'host': 'localhost', 'port': 9222}).then(function (chrome) {
-                    chrome.close();
-                    done();
+                    chrome.close(done);
                 }).catch(function () {
                     assert(false);
                 });
@@ -118,9 +113,8 @@ describe('connecting to Chrome', function () {
                     Chrome().then(function () {
                         assert(false);
                     }).catch(function (err) {
-                        chrome.close();
                         assert(err instanceof Error);
-                        done();
+                        chrome.close(done);
                     });
                 }).on('error', function () {
                     assert(false);
