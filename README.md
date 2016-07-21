@@ -66,18 +66,18 @@ chrome> Network.requestWillBeSent(console.log)
 chrome> Page.navigate({url: 'https://github.com'})
 ```
 
-Using the provided `help` field it's possible to obtain information on the
-events and methods available through the [Remote Debugging Protocol][rdb]. For
-example to learn how to call `Page.navigate` type:
+Every object is *decorated* with the information available through the [Remote
+Debugging Protocol][rdb]. The `category` field determines if the member is a
+`command`, an `event` or a `type`. Remember that this REPL interface provides
+completion.
+
+For example to learn how to call `Page.navigate`:
 
 ```javascript
-chrome> Page.navigate.help
-{ type: 'command',
-  name: 'navigate',
-  parameters:
-   [ { name: 'url',
-       type: 'string',
-       description: 'URL to navigate the page to.' } ],
+chrome> Page.navigate
+{ [Function]
+  category: 'command',
+  parameters: { url: { type: 'string', description: 'URL to navigate the page to.' } },
   returns:
    [ { name: 'frameId',
        '$ref': 'FrameId',
@@ -87,16 +87,65 @@ chrome> Page.navigate.help
   handlers: [ 'browser', 'renderer' ] }
 ```
 
-The `type` field determines whether this member is a `command` or an `event`.
-
-For what concerns the types instead (they usually start with an upper case
-letter), just type its name:
+To learn about the parameters returned by the `Network.requestWillBeSent` event:
 
 ```javascript
-chrome> Network.Timestamp
-{ id: 'Timestamp',
-  type: 'number',
-  description: 'Number of seconds since epoch.' }
+chrome> Network.requestWillBeSent
+{ [Function]
+  category: 'event',
+  description: 'Fired when page is about to send HTTP request.',
+  parameters:
+   { requestId: { '$ref': 'RequestId', description: 'Request identifier.' },
+     frameId:
+      { '$ref': 'Page.FrameId',
+        description: 'Frame identifier.',
+        hidden: true },
+     loaderId: { '$ref': 'LoaderId', description: 'Loader identifier.' },
+     documentURL:
+      { type: 'string',
+        description: 'URL of the document this request is loaded for.' },
+     request: { '$ref': 'Request', description: 'Request data.' },
+     timestamp: { '$ref': 'Timestamp', description: 'Timestamp.' },
+     wallTime:
+      { '$ref': 'Timestamp',
+        hidden: true,
+        description: 'UTC Timestamp.' },
+     initiator: { '$ref': 'Initiator', description: 'Request initiator.' },
+     redirectResponse:
+      { optional: true,
+        '$ref': 'Response',
+        description: 'Redirect response data.' },
+     type:
+      { '$ref': 'Page.ResourceType',
+        optional: true,
+        hidden: true,
+        description: 'Type of this resource.' } } }
+```
+To inspect the `Network.Request` (note that unlike commands and events, types
+are named in upper camel case) type:
+
+```javascript
+chrome> Network.Request
+{ category: 'type',
+  id: 'Request',
+  type: 'object',
+  description: 'HTTP request data.',
+  properties:
+   { url: { type: 'string', description: 'Request URL.' },
+     method: { type: 'string', description: 'HTTP request method.' },
+     headers: { '$ref': 'Headers', description: 'HTTP request headers.' },
+     postData:
+      { type: 'string',
+        optional: true,
+        description: 'HTTP POST request data.' },
+     mixedContentType:
+      { optional: true,
+        type: 'string',
+        enum: [Object],
+        description: 'The mixed content status of the request, as defined in http://www.w3.org/TR/mixed-content/' },
+     initialPriority:
+      { '$ref': 'ResourcePriority',
+        description: 'Priority of the resource request at the time request is sent.' } } }
 ```
 
 Remote Debugging Protocol versions
