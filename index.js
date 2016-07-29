@@ -8,7 +8,7 @@ module.exports = function (options, callback) {
         options = undefined;
     }
     var notifier = new events.EventEmitter();
-    if (callback) {
+    if (typeof callback === 'function') {
         // allow to register the error callback later
         process.nextTick(function () {
             new Chrome(options, notifier);
