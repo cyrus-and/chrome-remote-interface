@@ -154,7 +154,7 @@ Remote Debugging Protocol versions
 Currently it is not possible to fetch the protocol descriptor
 ([`protocol.json`][local-json]) directly from the instrumented Chrome instance
 (see [#10][issue]); rather, that file can be fetched from the proper [source
-repository][remote-json] at every connection. By default, the [hardcoded local
+repository][remote-json] at every connection. By default, the [local
 version][local-json] is used.
 
 To override the above behavior there are basically three options:
@@ -185,10 +185,10 @@ Protocol][rdb].
   numeric index of a tab. Defaults to a function which returns the currently
   active tab (`function (tabs) { return 0; }`);
 - `protocol`: [Remote Debugging Protocol][rdb] descriptor object. Defaults to
-  use the protocol chosen according to the `fallback` option;
-- `fallback`: a boolean indicating whether the protocol must be fetched
-  *remotely* or if the fallback local version must be used. It has not effect if
-  the `protocol` option is set. Defaults to `false`.
+  use the protocol chosen according to the `remote` option;
+- `remote`: a boolean indicating whether the protocol must be fetched
+  *remotely* or if the local version must be used. It has not effect if the
+  `protocol` option is set. Defaults to `false`.
 
 `callback` is a listener automatically added to the `connect` event of the
 returned `EventEmitter`; when `callback` is omitted a `Promise` object is
@@ -219,25 +219,23 @@ connect to Chrome's remote debugging WebSocket.
 
 ### module.Protocol([options], [callback])
 
-Fetch the [Remote Debugging Protocol][rdb] descriptor from the Chrome repository
-according to the version of the remote Chrome instance, or fall back to the
-local hardcoded version if not available.
+Fetch the [Remote Debugging Protocol][rdb] descriptor.
 
 `options` is an object with the following optional properties:
 
 - `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
 - `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`;
-- `fallback`: a boolean indicating whether the protocol must be fetched
-  *remotely* or if the fallback local version must be returned. Defaults to
-  `false`.
+- `remote`: a boolean indicating whether the protocol must be fetched
+  *remotely* or if the local version must be returned. If it is not possible to
+  fulfill the request then the local version is used. Defaults to `false`.
 
 `callback` is executed when the protocol is fetched, it gets the following
 arguments:
 
 - `err`: a `Error` object indicating the success status;
 - `protocol`: an object with the following properties:
-   - `fallback`: a boolean indicating whether the returned descriptor is the
-     hardcoded version (due to user choice or error) or not;
+   - `remote`: a boolean indicating whether the returned descriptor is the
+     remote version or not (due to user choice or error);
    - `descriptor`: the [Remote Debugging Protocol][rdb] descriptor.
 
 When `callback` is omitted a `Promise` object is returned.
