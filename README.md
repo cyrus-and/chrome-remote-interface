@@ -560,5 +560,5 @@ Resources
 
 <!-- related to #10 -->
 [local-json]: lib/protocol.json
-[remote-json]: https://chromium.googlesource.com/chromium/blink/+/master/Source/devtools/protocol.json
+[remote-json]: https://chromium.googlesource.com/chromium/src/+/master/third_party/WebKit/Source/
 [issue]: https://github.com/cyrus-and/chrome-remote-interface/issues/10
