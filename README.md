@@ -161,8 +161,7 @@ To override the above behavior there are basically three options:
 
 1. update the local copy with `make update-protocol`;
 
-2. pass a custom protocol descriptor (use `null` to fetch it from the remote
-   repository) upon
+2. pass a custom protocol descriptor upon
    [connection](https://github.com/cyrus-and/chrome-remote-interface#moduleoptions-callback);
 
 3. use the *raw* version of the [commands](#chromesendmethod-params-callback)
@@ -185,14 +184,11 @@ Protocol][rdb].
   to, it  takes the array returned by the `List` method and must return the
   numeric index of a tab. Defaults to a function which returns the currently
   active tab (`function (tabs) { return 0; }`);
-- `protocol`: [Remote Debugging Protocol][rdb] descriptor object. Passing `null`
-  causes the proper protocol descriptor to be fetched from the remote Chrome
-  repository according to the version exposed by the instrumented Chrome
-  instance, falling back to the default if that is not possible. Defaults to the
-  [hardcoded local version][local-json];
+- `protocol`: [Remote Debugging Protocol][rdb] descriptor object. Defaults to
+  use the protocol chosen according to the `fallback` option;
 - `fallback`: a boolean indicating whether the protocol must be fetched
-  *remotely* or if the fallback local version must be used. Defaults to
-  `false`.
+  *remotely* or if the fallback local version must be used. It has not effect if
+  the `protocol` option is set. Defaults to `false`.
 
 `callback` is a listener automatically added to the `connect` event of the
 returned `EventEmitter`; when `callback` is omitted a `Promise` object is
