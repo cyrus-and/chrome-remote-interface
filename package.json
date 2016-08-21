@@ -21,6 +21,11 @@
         "ws": "1.x.x",
         "commander": "2.1.x"
     },
+    "files": [
+        "lib",
+        "bin",
+        "index.js"
+    ],
     "bin": {
         "chrome-repl": "./bin/repl.js"
     },

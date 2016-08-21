@@ -160,12 +160,13 @@ using `make update-protocol` and pushed to this repository.
 
 To override the above behavior there are basically three options:
 
-1. update the local copy with `make update-protocol`;
+1. pass a custom protocol descriptor upon [connection](#moduleoptions-callback);
 
-2. pass a custom protocol descriptor upon [connection](#moduleoptions-callback);
+2. use the *raw* version of the [commands](#chromesendmethod-params-callback)
+   and [events](#event-method) interface;
 
-3. use the *raw* version of the [commands](#chromesendmethod-params-callback)
-   and [events](#event-method) interface.
+3. update the local copy with `make update-protocol` (not present when fetched
+   with `npm install`).
 
 API
 ---
