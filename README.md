@@ -543,12 +543,12 @@ Contributors
 Resources
 ---------
 
-- [Chrome Debugger Protocol Viewer][rdb-viewer]
-- [Chrome Developer Tools: Remote Debugging Protocol v1.1][rdb]
+- [Chrome Debugging Protocol][rdb]
+- [Chrome Debugging Protocol Viewer][rdb-viewer]
 - [Showcase Chrome Debugging Protocol Clients][clients]
 
+[rdb]: https://developer.chrome.com/devtools/docs/debugger-protocol
 [rdb-viewer]: https://chromedevtools.github.io/debugger-protocol-viewer/
-[rdb]: https://developer.chrome.com/devtools/docs/protocol/1.1/index
 [clients-cri]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
 [clients]: https://developer.chrome.com/devtools/docs/debugging-clients
 [edge-diagnostics-adapter]: https://github.com/Microsoft/edge-diagnostics-adapter
