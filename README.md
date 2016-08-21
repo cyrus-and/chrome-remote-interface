@@ -1,7 +1,7 @@
 chrome-remote-interface
 =======================
 
-[Remote Debugging Protocol][rdb] interface that helps to instrument Chrome by
+[Remote Debugging Protocol][rdp] interface that helps to instrument Chrome by
 providing a simple abstraction of the two main objects exposed by the protocol
 in a Node.js fashion: commands and notifications.
 
@@ -9,7 +9,7 @@ in a Node.js fashion: commands and notifications.
 [third-party Chrome debugging protocol clients][clients-cri].
 
 This module should work with every browser/adapter implementing the Chrome
-[Remote Debugging Protocol][rdb]. In particular, it has been tested with:
+[Remote Debugging Protocol][rdp]. In particular, it has been tested with:
 
 - **Google Chrome** (native support);
 - **Microsoft Edge** (via [Edge Diagnostics Adapter][edge-diagnostics-adapter]).
@@ -23,7 +23,7 @@ Chrome setup
 ------------
 
 Chrome needs to be started with the `--remote-debugging-port=<port>` option to
-enable the [Remote Debugging Protocol][rdb], for example:
+enable the [Remote Debugging Protocol][rdp], for example:
 
     google-chrome --remote-debugging-port=9222
 
@@ -67,7 +67,7 @@ chrome> Page.navigate({url: 'https://github.com'})
 ```
 
 Every object is *decorated* with the information available through the [Remote
-Debugging Protocol][rdb]. The `category` field determines if the member is a
+Debugging Protocol][rdp]. The `category` field determines if the member is a
 `command`, an `event` or a `type`. Remember that this REPL interface provides
 completion.
 
@@ -174,18 +174,18 @@ API
 ### module([options], [callback])
 
 Connects to a remote instance of Chrome using the [Remote Debugging
-Protocol][rdb].
+Protocol][rdp].
 
 `options` is an object with the following optional properties:
 
-- `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`;
+- `host`: [Remote Debugging Protocol][rdp] host. Defaults to `localhost`;
+- `port`: [Remote Debugging Protocol][rdp] port. Defaults to `9222`;
 - `chooseTab`: Either a callback or a tab object (i.e. those returned by `New`
   and `List` methods). The callback is used to determine which remote tab attach
   to, it  takes the array returned by the `List` method and must return the
   numeric index of a tab. Defaults to a function which returns the currently
   active tab (`function (tabs) { return 0; }`);
-- `protocol`: [Remote Debugging Protocol][rdb] descriptor object. Defaults to
+- `protocol`: [Remote Debugging Protocol][rdp] descriptor object. Defaults to
   use the protocol chosen according to the `remote` option;
 - `remote`: a boolean indicating whether the protocol must be fetched
   *remotely* or if the local version must be used. It has not effect if the
@@ -220,12 +220,12 @@ connect to Chrome's remote debugging WebSocket.
 
 ### module.Protocol([options], [callback])
 
-Fetch the [Remote Debugging Protocol][rdb] descriptor.
+Fetch the [Remote Debugging Protocol][rdp] descriptor.
 
 `options` is an object with the following optional properties:
 
-- `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`;
+- `host`: [Remote Debugging Protocol][rdp] host. Defaults to `localhost`;
+- `port`: [Remote Debugging Protocol][rdp] port. Defaults to `9222`;
 - `remote`: a boolean indicating whether the protocol must be fetched
   *remotely* or if the local version must be returned. If it is not possible to
   fulfill the request then the local version is used. Defaults to `false`.
@@ -237,7 +237,7 @@ arguments:
 - `protocol`: an object with the following properties:
    - `remote`: a boolean indicating whether the returned descriptor is the
      remote version or not (due to user choice or error);
-   - `descriptor`: the [Remote Debugging Protocol][rdb] descriptor.
+   - `descriptor`: the [Remote Debugging Protocol][rdp] descriptor.
 
 When `callback` is omitted a `Promise` object is returned.
 
@@ -258,8 +258,8 @@ Request the list of the available open tabs of the remote Chrome instance.
 
 `options` is an object with the following optional properties:
 
-- `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`.
+- `host`: [Remote Debugging Protocol][rdp] host. Defaults to `localhost`;
+- `port`: [Remote Debugging Protocol][rdp] port. Defaults to `9222`.
 
 `callback` is executed when the list is correctly received, it gets the
 following arguments:
@@ -287,9 +287,9 @@ Create a new tab in the remote Chrome instance.
 
 `options` is an object with the following optional properties:
 
-- `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`.
-- `url`: [Remote Debugging Protocol][rdb] url. Defaults to `about:blank`.
+- `host`: [Remote Debugging Protocol][rdp] host. Defaults to `localhost`;
+- `port`: [Remote Debugging Protocol][rdp] port. Defaults to `9222`.
+- `url`: [Remote Debugging Protocol][rdp] url. Defaults to `about:blank`.
 
 `callback` is executed when the tab is created, it gets the
 following arguments:
@@ -316,9 +316,9 @@ Activate an open tab of the remote Chrome instance.
 
 `options` is an object with the following properties:
 
-- `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`.
-- `id`: [Remote Debugging Protocol][rdb] id. Required, no default.
+- `host`: [Remote Debugging Protocol][rdp] host. Defaults to `localhost`;
+- `port`: [Remote Debugging Protocol][rdp] port. Defaults to `9222`.
+- `id`: [Remote Debugging Protocol][rdp] id. Required, no default.
 
 `callback` is executed when the response to the activation request is
 received. It gets the following arguments:
@@ -344,9 +344,9 @@ Close an open tab of the remote Chrome instance.
 
 `options` is an object with the following properties:
 
-- `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`.
-- `id`: [Remote Debugging Protocol][rdb] id. Required, no default.
+- `host`: [Remote Debugging Protocol][rdp] host. Defaults to `localhost`;
+- `port`: [Remote Debugging Protocol][rdp] port. Defaults to `9222`.
+- `id`: [Remote Debugging Protocol][rdp] id. Required, no default.
 
 `callback` is executed when the response to the close request is
 received. It gets the following arguments:
@@ -376,8 +376,8 @@ Request version information from the remote Chrome instance.
 
 `options` is an object with the following optional properties:
 
-- `host`: [Remote Debugging Protocol][rdb] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][rdb] port. Defaults to `9222`.
+- `host`: [Remote Debugging Protocol][rdp] host. Defaults to `localhost`;
+- `port`: [Remote Debugging Protocol][rdp] port. Defaults to `9222`.
 
 `callback` is executed when the version information is correctly received, it
 gets the following arguments:
@@ -415,7 +415,7 @@ Emitted when Chrome sends a notification through the WebSocket.
   `'Network.requestWillBeSent'`).
 - `params`: an object containing the payload.
 
-Refer to the [Remote Debugging Protocol specifications][rdb] for more information.
+Refer to the [Remote Debugging Protocol specifications][rdp] for more information.
 
 For example:
 
@@ -490,7 +490,7 @@ When `callback` is omitted a `Promise` object is returned instead, with the
 fulfilled/rejected states implemented according to the `error` parameter.
 
 Note that the field `id` mentioned in the [Remote Debugging Protocol
-specifications][rdb] is managed internally and it's not exposed to the user.
+specifications][rdp] is managed internally and it's not exposed to the user.
 
 For example:
 
@@ -543,12 +543,12 @@ Contributors
 Resources
 ---------
 
-- [Chrome Debugging Protocol][rdb]
-- [Chrome Debugging Protocol Viewer][rdb-viewer]
+- [Chrome Debugging Protocol][rdp]
+- [Chrome Debugging Protocol Viewer][rdp-viewer]
 - [Showcase Chrome Debugging Protocol Clients][clients]
 
-[rdb]: https://developer.chrome.com/devtools/docs/debugger-protocol
-[rdb-viewer]: https://chromedevtools.github.io/debugger-protocol-viewer/
+[rdp]: https://developer.chrome.com/devtools/docs/debugger-protocol
+[rdp-viewer]: https://chromedevtools.github.io/debugger-protocol-viewer/
 [clients-cri]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
 [clients]: https://developer.chrome.com/devtools/docs/debugging-clients
 [edge-diagnostics-adapter]: https://github.com/Microsoft/edge-diagnostics-adapter
