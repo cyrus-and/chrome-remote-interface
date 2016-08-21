@@ -153,16 +153,16 @@ Remote Debugging Protocol versions
 
 Currently it is not possible to fetch the protocol descriptor
 ([`protocol.json`][local-json]) directly from the instrumented Chrome instance
-(see [#10][issue]); rather, that file can be fetched from the proper [source
+(see [#10][issue]). Rather, that file can be fetched from the proper [source
 repository][remote-json] at every connection. By default, the [local
-version][local-json] is used.
+version][local-json] is used. That file is manually updated from time to time
+using `make update-protocol` and pushed to this repository.
 
 To override the above behavior there are basically three options:
 
 1. update the local copy with `make update-protocol`;
 
-2. pass a custom protocol descriptor upon
-   [connection](https://github.com/cyrus-and/chrome-remote-interface#moduleoptions-callback);
+2. pass a custom protocol descriptor upon [connection](#moduleoptions-callback);
 
 3. use the *raw* version of the [commands](#chromesendmethod-params-callback)
    and [events](#event-method) interface.
