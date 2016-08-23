@@ -29,6 +29,8 @@ describe('registering event', function () {
             chrome.Network.requestWillBeSent(function (message) {
                 assert(!message.method);
                 chrome.close(done);
+                // avoid to call `done()` more than once
+                chrome.removeAllListeners();
             });
             chrome.send('Network.enable');
             chrome.send('Page.navigate', {'url': 'chrome://newtab/'});
