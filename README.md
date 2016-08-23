@@ -8,11 +8,20 @@ in a Node.js fashion: commands and notifications.
 `chrome-remote-interface` is listed among
 [third-party Chrome debugging protocol clients][clients-cri].
 
-This module should work with every browser/adapter implementing the Chrome
-[Remote Debugging Protocol][rdp]. In particular, it has been tested with:
+This module should work with every application implementing the Chrome [Remote
+Debugging Protocol][rdp]. In particular, it has been tested against the
+following implementations.
 
-- **Google Chrome** (native support);
-- **Microsoft Edge** (via [Edge Diagnostics Adapter][edge-diagnostics-adapter]).
+Implementation      | Notes
+--------------------|------
+[Google Chrome][1]  | native support
+[Microsoft Edge][2] | via the [Edge Diagnostics Adapter][edge-diagnostics-adapter]
+[Node.js][3.1]      | via [node-inspector][3.2] (by connecting to `ws://127.0.0.1:8080/?port=5858` by default)
+
+[1]: https://www.chromium.org/
+[2]: https://www.microsoft.com/windows/microsoft-edge
+[3.1]: https://nodejs.org/
+[3.2]: https://github.com/node-inspector/node-inspector
 
 Installation
 ------------
@@ -180,11 +189,16 @@ Protocol][rdp].
 
 - `host`: [Remote Debugging Protocol][rdp] host. Defaults to `localhost`;
 - `port`: [Remote Debugging Protocol][rdp] port. Defaults to `9222`;
-- `chooseTab`: Either a callback or a tab object (i.e. those returned by `New`
-  and `List` methods). The callback is used to determine which remote tab attach
-  to, it  takes the array returned by the `List` method and must return the
-  numeric index of a tab. Defaults to a function which returns the currently
-  active tab (`function (tabs) { return 0; }`);
+- `chooseTab`: determines which tab this instance should attach to.The behavior
+  changes according to the type:
+
+  - a `function` that takes the array returned by the `List` method and must
+    return the numeric index of a tab;
+  - a tab `object` like those returned by the `New` and `List` methods;
+  - a `string` representing the raw WebSocket URL.
+
+  Defaults to a function which returns the currently active tab (`function
+  (tabs) { return 0; }`);
 - `protocol`: [Remote Debugging Protocol][rdp] descriptor object. Defaults to
   use the protocol chosen according to the `remote` option;
 - `remote`: a boolean indicating whether the protocol must be fetched
