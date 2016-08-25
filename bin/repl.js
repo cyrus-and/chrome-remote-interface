@@ -2,8 +2,9 @@
 
 var repl = require('repl');
 var util = require('util');
-var program = require('commander');
 var fs = require('fs');
+
+var program = require('commander');
 var Chrome = require('../');
 
 program
@@ -39,10 +40,10 @@ Chrome(options, function (chrome) {
     });
 
     // add protocol API
-    for (var domainIdx in chrome.protocol.domains) {
-        var domainName = chrome.protocol.domains[domainIdx].domain;
+    chrome.protocol.domains.forEach(function (domainObject) {
+        var domainName = domainObject.domain;
         chromeRepl.context[domainName] = chrome[domainName];
-    }
+    });
 }).on('error', function (err) {
     console.error('Cannot connect to Chrome:', err);
 });
