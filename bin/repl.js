@@ -23,13 +23,18 @@ function inheritProperties(from, to) {
 program
     .option('-t, --host <host>', 'HTTP frontend host')
     .option('-p, --port <port>', 'HTTP frontend port')
+    .option('-w, --web-socket <url>', 'WebSocket URL')
     .option('-j, --protocol <file.json>', 'Remote Debugging Protocol descriptor')
     .parse(process.argv);
 
-var options = {
-    'host': program.host,
-    'port': program.port
-};
+var options = {};
+
+if (program.webSocket) {
+    options.chooseTab = program.webSocket;
+} else {
+    options.host = program.host;
+    options.port = program.port;
+}
 
 if (program.protocol) {
     options.protocol = JSON.parse(fs.readFileSync(program.protocol));
