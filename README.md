@@ -60,25 +60,52 @@ Chrome(function (chrome) {
 });
 ```
 
-REPL interface and embedded documentation
------------------------------------------
+REPL interface
+--------------
 
 This module comes with a REPL interface that can be used to interactively
-control Chrome (run with `--help` to display the list of available options). It
-supports command execution and event binding, see the documentation for
-`chrome.<domain>.<method>([params], [callback])` and
-`chrome.<domain>.<event>(callback)`. Here's a sample session:
+control Chrome (run with `--help` to display the list of available options).
+
+It supports [command execution](#chromedomainmethodparams-callback) and [event
+binding](#chromedomaineventcallback). But unlike the regular API the callbacks
+are overridden to conveniently display the result of the commands and the
+message of the events. Also, the event binding is simplified here, executing a
+shorthand method (e.g., `Page.loadEventFired()`) toggles the event
+registration.
+
+Here's a sample session:
 
 ```javascript
->>> Network.enable()
->>> Network.requestWillBeSent(console.log)
+>>> Runtime.evaluate({expression: 'window.location.toString()'})
+{ result:
+   { result:
+      { type: 'string',
+        value: 'https://www.google.it/_/chrome/newtab?espv=2&ie=UTF-8' },
+     wasThrown: false } }
+>>> Page.enable()
+{ result: {} }
+>>> Page.loadEventFired() // registered
+{ 'Page.loadEventFired': true }
+>>> Page.loadEventFired() // unregistered
+{ 'Page.loadEventFired': false }
+>>> Page.loadEventFired() // registered
+{ 'Page.loadEventFired': true }
 >>> Page.navigate({url: 'https://github.com'})
+{ result: { frameId: '28677.1' } }
+{ 'Page.loadEventFired': { timestamp: 21385.383076 } }
+>>> Runtime.evaluate({expression: 'window.location.toString()'})
+{ result:
+   { result: { type: 'string', value: 'https://github.com/' },
+     wasThrown: false } }
 ```
 
-Every object is *decorated* with the information available through the [Remote
-Debugging Protocol][rdp]. The `category` field determines if the member is a
-`command`, an `event` or a `type`. Remember that this REPL interface provides
-completion.
+Embedded documentation
+----------------------
+
+In both the REPL and the regular API every object of the protocol is
+*decorated* with the information available through the [Remote Debugging
+Protocol][rdp]. The `category` field determines if the member is a `command`,
+an `event` or a `type`. Remember that this REPL interface provides completion.
 
 For example to learn how to call `Page.navigate`:
 
