@@ -60,22 +60,24 @@ Chrome(function (chrome) {
 });
 ```
 
-REPL interface
+Bundled client
 --------------
 
-This module comes with a REPL interface that can be used to interactively
-control Chrome (run with `--help` to display the list of available options).
+This module comes with a bundled client application that can be used to
+interactively control Chrome.
 
-It supports [command execution](#chromedomainmethodparams-callback) and [event
-binding](#chromedomaineventcallback). But unlike the regular API the callbacks
-are overridden to conveniently display the result of the commands and the
-message of the events. Also, the event binding is simplified here, executing a
-shorthand method (e.g., `Page.loadEventFired()`) toggles the event
-registration.
+Using the `inspect` subcommand it is possible to perform [command
+execution](#chromedomainmethodparams-callback) and [event
+binding](#chromedomaineventcallback) in a REPL fashion. But unlike the regular
+API the callbacks are overridden to conveniently display the result of the
+commands and the message of the events. Also, the event binding is simplified
+here, executing a shorthand method (e.g., `Page.loadEventFired()`) toggles the
+event registration.
 
 Here's a sample session:
 
 ```javascript
+$ chrome-remote-interface inspect
 >>> Runtime.evaluate({expression: 'window.location.toString()'})
 { result:
    { result:
@@ -98,6 +100,10 @@ Here's a sample session:
    { result: { type: 'string', value: 'https://github.com/' },
      wasThrown: false } }
 ```
+
+The bundled client also exposes commands to interact with the HTTP frontend
+(e.g., [List](#modulelistoptions-callback), [New](#modulenewoptions-callback),
+etc.), run with `--help` to display the list of available options.
 
 Embedded documentation
 ----------------------

@@ -27,7 +27,7 @@
         "index.js"
     ],
     "bin": {
-        "chrome-repl": "./bin/repl.js"
+        "chrome-remote-interface": "./bin/client.js"
     },
     "devDependencies": {
         "mocha": "*"
