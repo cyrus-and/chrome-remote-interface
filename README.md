@@ -187,15 +187,16 @@ Protocol][rdp].
 
 `options` is an object with the following optional properties:
 
-- `host`: [Remote Debugging Protocol][rdp] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][rdp] port. Defaults to `9222`;
+- `host`: HTTP frontend host. Defaults to `localhost`;
+- `port`: HTTP frontend port. Defaults to `9222`;
 - `chooseTab`: determines which tab this instance should attach to.The behavior
   changes according to the type:
 
   - a `function` that takes the array returned by the `List` method and must
     return the numeric index of a tab;
   - a tab `object` like those returned by the `New` and `List` methods;
-  - a `string` representing the raw WebSocket URL.
+  - a `string` representing the raw WebSocket URL, in this case `host` and
+    `port` are not used to fetch the tab list.
 
   Defaults to a function which returns the currently active tab (`function
   (tabs) { return 0; }`);
@@ -238,8 +239,8 @@ Fetch the [Remote Debugging Protocol][rdp] descriptor.
 
 `options` is an object with the following optional properties:
 
-- `host`: [Remote Debugging Protocol][rdp] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][rdp] port. Defaults to `9222`;
+- `host`: HTTP frontend host. Defaults to `localhost`;
+- `port`: HTTP frontend port. Defaults to `9222`;
 - `remote`: a boolean indicating whether the protocol must be fetched
   *remotely* or if the local version must be returned. If it is not possible to
   fulfill the request then the local version is used. Defaults to `false`.
@@ -272,8 +273,8 @@ Request the list of the available open tabs of the remote Chrome instance.
 
 `options` is an object with the following optional properties:
 
-- `host`: [Remote Debugging Protocol][rdp] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][rdp] port. Defaults to `9222`.
+- `host`: HTTP frontend host. Defaults to `localhost`;
+- `port`: HTTP frontend port. Defaults to `9222`.
 
 `callback` is executed when the list is correctly received, it gets the
 following arguments:
@@ -301,8 +302,8 @@ Create a new tab in the remote Chrome instance.
 
 `options` is an object with the following optional properties:
 
-- `host`: [Remote Debugging Protocol][rdp] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][rdp] port. Defaults to `9222`.
+- `host`: HTTP frontend host. Defaults to `localhost`;
+- `port`: HTTP frontend port. Defaults to `9222`.
 - `url`: [Remote Debugging Protocol][rdp] url. Defaults to `about:blank`.
 
 `callback` is executed when the tab is created, it gets the
@@ -330,8 +331,8 @@ Activate an open tab of the remote Chrome instance.
 
 `options` is an object with the following properties:
 
-- `host`: [Remote Debugging Protocol][rdp] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][rdp] port. Defaults to `9222`.
+- `host`: HTTP frontend host. Defaults to `localhost`;
+- `port`: HTTP frontend port. Defaults to `9222`.
 - `id`: [Remote Debugging Protocol][rdp] id. Required, no default.
 
 `callback` is executed when the response to the activation request is
@@ -358,8 +359,8 @@ Close an open tab of the remote Chrome instance.
 
 `options` is an object with the following properties:
 
-- `host`: [Remote Debugging Protocol][rdp] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][rdp] port. Defaults to `9222`.
+- `host`: HTTP frontend host. Defaults to `localhost`;
+- `port`: HTTP frontend port. Defaults to `9222`.
 - `id`: [Remote Debugging Protocol][rdp] id. Required, no default.
 
 `callback` is executed when the response to the close request is
@@ -390,8 +391,8 @@ Request version information from the remote Chrome instance.
 
 `options` is an object with the following optional properties:
 
-- `host`: [Remote Debugging Protocol][rdp] host. Defaults to `localhost`;
-- `port`: [Remote Debugging Protocol][rdp] port. Defaults to `9222`.
+- `host`: HTTP frontend host. Defaults to `localhost`;
+- `port`: HTTP frontend port. Defaults to `9222`.
 
 `callback` is executed when the version information is correctly received, it
 gets the following arguments:
