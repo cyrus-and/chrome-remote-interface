@@ -96,6 +96,12 @@ Chrome(options, function (chrome) {
         chrome.close();
     });
 
+    // exit on disconnection
+    this.on('disconnect', function () {
+        console.error('Disconnected.');
+        process.exit(1);
+    });
+
     // add protocol API
     chrome.protocol.domains.forEach(function (domainObject) {
         // walk the domain names

@@ -249,6 +249,15 @@ Emitted when the connection to Chrome is established.
 
 `chrome` is an instance of the `Chrome` class.
 
+#### Event: 'disconnect'
+
+```javascript
+function () {}
+```
+
+Emitted when Chrome closes the connection, e.g., if the user opens the DevTools
+for the currently inspected tab.
+
 #### Event: 'error'
 
 ```javascript
