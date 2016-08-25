@@ -24,7 +24,7 @@ if (program.protocol) {
 
 Chrome(options, function (chrome) {
     var chromeRepl = repl.start({
-        'prompt': 'chrome> ',
+        'prompt': '>>> ',
         'ignoreUndefined': true,
         'writer': function (object) {
             return util.inspect(object, {

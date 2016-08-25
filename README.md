@@ -70,9 +70,9 @@ supports command execution and event binding, see the documentation for
 `chrome.<domain>.<event>(callback)`. Here's a sample session:
 
 ```javascript
-chrome> Network.enable()
-chrome> Network.requestWillBeSent(console.log)
-chrome> Page.navigate({url: 'https://github.com'})
+>>> Network.enable()
+>>> Network.requestWillBeSent(console.log)
+>>> Page.navigate({url: 'https://github.com'})
 ```
 
 Every object is *decorated* with the information available through the [Remote
@@ -83,7 +83,7 @@ completion.
 For example to learn how to call `Page.navigate`:
 
 ```javascript
-chrome> Page.navigate
+>>> Page.navigate
 { [Function]
   category: 'command',
   parameters: { url: { type: 'string', description: 'URL to navigate the page to.' } },
@@ -99,7 +99,7 @@ chrome> Page.navigate
 To learn about the parameters returned by the `Network.requestWillBeSent` event:
 
 ```javascript
-chrome> Network.requestWillBeSent
+>>> Network.requestWillBeSent
 { [Function]
   category: 'event',
   description: 'Fired when page is about to send HTTP request.',
@@ -134,7 +134,7 @@ To inspect the `Network.Request` (note that unlike commands and events, types
 are named in upper camel case) type:
 
 ```javascript
-chrome> Network.Request
+>>> Network.Request
 { category: 'type',
   id: 'Request',
   type: 'object',
