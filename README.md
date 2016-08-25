@@ -189,7 +189,7 @@ Protocol][rdp].
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
-- `chooseTab`: determines which tab this instance should attach to.The behavior
+- `chooseTab`: determines which tab this instance should attach to. The behavior
   changes according to the type:
 
   - a `function` that takes the array returned by the `List` method and must
@@ -304,7 +304,7 @@ Create a new tab in the remote Chrome instance.
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`.
-- `url`: [Remote Debugging Protocol][rdp] url. Defaults to `about:blank`.
+- `url`: URL to load in the new tab. Defaults to `about:blank`.
 
 `callback` is executed when the tab is created, it gets the
 following arguments:
@@ -333,7 +333,7 @@ Activate an open tab of the remote Chrome instance.
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`.
-- `id`: [Remote Debugging Protocol][rdp] id. Required, no default.
+- `id`: Tab id. Required, no default.
 
 `callback` is executed when the response to the activation request is
 received. It gets the following arguments:
@@ -361,7 +361,7 @@ Close an open tab of the remote Chrome instance.
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`.
-- `id`: [Remote Debugging Protocol][rdp] id. Required, no default.
+- `id`: Tab id. Required, no default.
 
 `callback` is executed when the response to the close request is
 received. It gets the following arguments:
