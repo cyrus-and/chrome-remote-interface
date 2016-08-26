@@ -3,6 +3,7 @@
 var repl = require('repl');
 var util = require('util');
 var fs = require('fs');
+var path = require('path');
 
 var program = require('commander');
 var Chrome = require('../');
@@ -40,6 +41,10 @@ function inspect(options, args) {
             'ignoreUndefined': true,
             'writer': display
         });
+
+        // make the history persistent
+        var history_file = path.join(process.env.HOME, '.cri_history');
+        require('repl.history')(chromeRepl, history_file);
 
         function overridePrompt(string) {
             // hack to get rid of the prompt (clean line and reposition cursor)
