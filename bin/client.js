@@ -37,7 +37,7 @@ function inspect(options, args) {
         var registeredEvents = {};
 
         var chromeRepl = repl.start({
-            'prompt': '>>> ',
+            'prompt': '\033[32m>>>\033[0m ',
             'ignoreUndefined': true,
             'writer': display
         });
