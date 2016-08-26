@@ -77,12 +77,12 @@ function inspect(options, args) {
                     // use the filter (or true) as a status token
                     var statusToken = (filter ? filter.toString() : true);
                     status[eventName] = registeredEvents[eventName] = statusToken;
-                    event(function (message) {
+                    event(function (params) {
                         var repr = {};
                         if (filter) {
-                            message = filter(message);
+                            params = filter(params);
                         }
-                        repr[eventName] = message;
+                        repr[eventName] = params;
                         overridePrompt(display(repr));
                     });
                 }
