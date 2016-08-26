@@ -124,6 +124,28 @@ $ chrome-remote-interface inspect
      wasThrown: false } }
 ```
 
+#### Event filtering
+
+To reduce the amount of data displayed by the event listeners it is possible to
+provide a filter function. In this example only the resource URL is shown:
+
+```javascript
+$ chrome-remote-interface inspect
+>>> Network.enable()
+{ result: {} }
+>>> Network.requestWillBeSent(params => params.request.url)
+{ 'Network.requestWillBeSent': 'params => params.request.url' }
+>>> Page.navigate({url: 'https://www.wikipedia.org'})
+{ 'Network.requestWillBeSent': 'https://www.wikipedia.org/' }
+{ result: { frameId: '5530.1' } }
+{ 'Network.requestWillBeSent': 'https://www.wikipedia.org/portal/wikipedia.org/assets/img/Wikipedia_wordmark.png' }
+{ 'Network.requestWillBeSent': 'https://www.wikipedia.org/portal/wikipedia.org/assets/img/Wikipedia-logo-v2.png' }
+{ 'Network.requestWillBeSent': 'https://www.wikipedia.org/portal/wikipedia.org/assets/js/index-3b68787aa6.js' }
+{ 'Network.requestWillBeSent': 'https://www.wikipedia.org/portal/wikipedia.org/assets/js/gt-ie9-c84bf66d33.js' }
+{ 'Network.requestWillBeSent': 'https://www.wikipedia.org/portal/wikipedia.org/assets/img/sprite-bookshelf_icons.png?16ed124e8ca7c5ce9d463e8f99b2064427366360' }
+{ 'Network.requestWillBeSent': 'https://www.wikipedia.org/portal/wikipedia.org/assets/img/sprite-project-logos.png?9afc01c5efe0a8fb6512c776955e2ad3eb48fbca' }
+```
+
 Embedded documentation
 ----------------------
 

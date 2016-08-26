@@ -65,16 +65,23 @@ function inspect(options, args) {
             var event = chrome[domainName][itemName];
             var eventName = domainName + '.' + itemName;
             // hard code a callback to display the event data
-            var override = function () {
+            var override = function (filter) {
+                // remove all the listeners (just one actually) anyway
+                chrome.removeAllListeners(eventName);
                 var status = {};
-                if (registeredEvents[eventName]) {
-                    chrome.removeAllListeners(eventName);
+                // a filter will always enable/update the listener
+                if (!filter && registeredEvents[eventName]) {
                     delete registeredEvents[eventName];
                     status[eventName] = false;
                 } else {
-                    status[eventName] = registeredEvents[eventName] = true;
+                    // use the filter (or true) as a status token
+                    var statusToken = (filter ? filter.toString() : true);
+                    status[eventName] = registeredEvents[eventName] = statusToken;
                     event(function (message) {
                         var repr = {};
+                        if (filter) {
+                            message = filter(message);
+                        }
                         repr[eventName] = message;
                         overridePrompt(display(repr));
                     });
