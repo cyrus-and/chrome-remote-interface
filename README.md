@@ -66,6 +66,29 @@ Bundled client
 This module comes with a bundled client application that can be used to
 interactively control Chrome.
 
+### Tab management
+
+The bundled client exposes subcommands to interact with the HTTP frontend
+(e.g., [List](#modulelistoptions-callback), [New](#modulenewoptions-callback),
+etc.), run with `--help` to display the list of available options.
+
+Here are some examples:
+
+```javascript
+$ chrome-remote-interface new http://example.com
+{ description: '',
+  devtoolsFrontendUrl: '/devtools/inspector.html?ws=localhost:9222/devtools/page/b049bb56-de7d-424c-a331-6ae44cf7ae01',
+  id: 'b049bb56-de7d-424c-a331-6ae44cf7ae01',
+  thumbnailUrl: '/thumb/b049bb56-de7d-424c-a331-6ae44cf7ae01',
+  title: '',
+  type: 'page',
+  url: 'http://example.com/',
+  webSocketDebuggerUrl: 'ws://localhost:9222/devtools/page/b049bb56-de7d-424c-a331-6ae44cf7ae01' }
+$ chrome-remote-interface close b049bb56-de7d-424c-a331-6ae44cf7ae01
+```
+
+### Inspection
+
 Using the `inspect` subcommand it is possible to perform [command
 execution](#chromedomainmethodparams-callback) and [event
 binding](#chromedomaineventcallback) in a REPL fashion. But unlike the regular
@@ -74,7 +97,7 @@ commands and the message of the events. Also, the event binding is simplified
 here, executing a shorthand method (e.g., `Page.loadEventFired()`) toggles the
 event registration.
 
-Here's a sample session:
+Here is a sample session:
 
 ```javascript
 $ chrome-remote-interface inspect
@@ -100,10 +123,6 @@ $ chrome-remote-interface inspect
    { result: { type: 'string', value: 'https://github.com/' },
      wasThrown: false } }
 ```
-
-The bundled client also exposes commands to interact with the HTTP frontend
-(e.g., [List](#modulelistoptions-callback), [New](#modulenewoptions-callback),
-etc.), run with `--help` to display the list of available options.
 
 Embedded documentation
 ----------------------
