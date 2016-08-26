@@ -101,6 +101,7 @@ function inspect(options, args) {
 
         // disconnect on exit
         chromeRepl.on('exit', function () {
+            console.log();
             chrome.close();
         });
 
