@@ -111,9 +111,10 @@ Embedded documentation
 In both the REPL and the regular API every object of the protocol is
 *decorated* with the information available through the [Remote Debugging
 Protocol][rdp]. The `category` field determines if the member is a `command`,
-an `event` or a `type`. Remember that this REPL interface provides completion.
+an `event` or a `type`.
 
-For example to learn how to call `Page.navigate`:
+Remember that the REPL interface provides completion. For example to learn how
+to call `Page.navigate`:
 
 ```javascript
 >>> Page.navigate
@@ -423,9 +424,8 @@ Chrome.Close({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
 });
 ```
 
-Note that the callback is fired when the tab is *queued* for removal,
-but the actual removal will occur asynchronously. It typically takes
-~200ms for this to occur.
+Note that the callback is fired when the tab is *queued* for removal, but the
+actual removal will occur asynchronously.
 
 ### module.Version([options], [callback])
 
@@ -519,7 +519,7 @@ For example to load a URL only after having enabled the notifications of both
 ```javascript
 Network.enable();
 Page.enable();
-once('ready', function() {
+once('ready', function () {
     Page.navigate({'url': 'https://github.com'});
 });
 ```
