@@ -23,7 +23,7 @@ function inheritProperties(from, to) {
 
 ///
 
-function inspect(options, args) {
+function inspect(args, options) {
     if (args.webSocket) {
         options.chooseTab = args.webSocket;
     }
@@ -135,7 +135,7 @@ function inspect(options, args) {
     });
 }
 
-function list(options, args) {
+function list(options) {
     Chrome.List(options, function (err, tabs) {
         if (err) {
             console.error(err.toString());
@@ -145,8 +145,8 @@ function list(options, args) {
     });
 }
 
-function _new(options, args) {
-    options.url = args;
+function _new(url, options) {
+    options.url = url;
     Chrome.New(options, function (err, tab) {
         if (err) {
             console.error(err.toString());
@@ -156,7 +156,7 @@ function _new(options, args) {
     });
 }
 
-function activate(options, args) {
+function activate(args, options) {
     options.id = args;
     Chrome.Activate(options, function (err) {
         if (err) {
@@ -166,7 +166,7 @@ function activate(options, args) {
     });
 }
 
-function close(options, args) {
+function close(args, options) {
     options.id = args;
     Chrome.Close(options, function (err) {
         if (err) {
@@ -176,7 +176,7 @@ function close(options, args) {
     });
 }
 
-function version(options, args) {
+function version(args, options) {
     Chrome.Version(options, function (err, info) {
         if (err) {
             console.error(err.toString());
@@ -186,7 +186,7 @@ function version(options, args) {
     });
 }
 
-function protocol(options, args) {
+function protocol(args, options) {
     options.remote = args.remote;
     Chrome.Protocol(options, function (err, protocol) {
         if (err) {
@@ -200,7 +200,6 @@ function protocol(options, args) {
 ///
 
 var action;
-var actionArguments;
 
 program
     .option('-t, --host <host>', 'HTTP frontend host')
@@ -212,8 +211,7 @@ program
     .option('-w, --web-socket <url>', 'WebSocket URL')
     .option('-j, --protocol <file.json>', 'Remote Debugging Protocol descriptor')
     .action(function (args) {
-        action = inspect;
-        actionArguments = args;
+        action = inspect.bind(null, args);
     });
 
 program
@@ -226,25 +224,22 @@ program
 program
     .command('new [<url>]')
     .description('create a new tab')
-    .action(function (args) {
-        action = _new;
-        actionArguments = args;
+    .action(function (url) {
+        action = _new.bind(null, url);
     });
 
 program
     .command('activate <id>')
     .description('activate a tab by id')
-    .action(function (args) {
-        action = activate;
-        actionArguments = args;
+    .action(function (id) {
+        action = activate.bind(null, id);
     });
 
 program
     .command('close <id>')
     .description('close a tab by id')
-    .action(function (args) {
-        action = close;
-        actionArguments = args;
+    .action(function (id) {
+        action = close.bind(null, id);
     });
 
 program
@@ -259,8 +254,7 @@ program
     .description('show the currently available protocol descriptor')
     .option('-r, --remote', 'Attempt to fetch the protocol descriptor remotely')
     .action(function (args) {
-        action = protocol;
-        actionArguments = args;
+        action = protocol.bind(null, args);
     });
 
 program.parse(process.argv);
@@ -272,7 +266,7 @@ var options = {
 };
 
 if (action) {
-    action(options, actionArguments);
+    action(options);
 } else {
     program.outputHelp();
     process.exit(1);
