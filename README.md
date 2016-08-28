@@ -268,8 +268,8 @@ Protocol][rdp].
 - `chooseTab`: determines which tab this instance should attach to. The behavior
   changes according to the type:
 
-  - a `function` that takes the array returned by the `List` method and must
-    return the numeric index of a tab;
+  - a `function` that takes the array returned by the `List` method and returns
+    the numeric index of a tab;
   - a tab `object` like those returned by the `New` and `List` methods;
   - a `string` representing the raw WebSocket URL, in this case `host` and
     `port` are not used to fetch the tab list.
