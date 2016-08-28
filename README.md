@@ -12,13 +12,14 @@ This module should work with every application implementing the Chrome [Remote
 Debugging Protocol][rdp]. In particular, it has been tested against the
 following implementations.
 
-Implementation      | Notes
---------------------|------
-[Google Chrome][1]  | native support
-[Microsoft Edge][2] | via the [Edge Diagnostics Adapter][edge-diagnostics-adapter]
-[Node.js][3.1]      | via [node-inspector][3.2] (by connecting to `ws://127.0.0.1:8080/?port=5858` by default)
+Implementation       | Notes
+---------------------|------
+[Google Chrome][1.1] | native support; enable [port forwarding][1.2] in Chrome for Android
+[Microsoft Edge][2]  | via the [Edge Diagnostics Adapter][edge-diagnostics-adapter]
+[Node.js][3.1]       | via [node-inspector][3.2] (by connecting to `ws://127.0.0.1:8080/?port=5858` by default)
 
-[1]: https://www.chromium.org/
+[1.1]: https://www.chromium.org/
+[1.2]: https://developer.chrome.com/devtools/docs/remote-debugging-legacy
 [2]: https://www.microsoft.com/windows/microsoft-edge
 [3.1]: https://nodejs.org/
 [3.2]: https://github.com/node-inspector/node-inspector
