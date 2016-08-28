@@ -23,9 +23,20 @@ function inheritProperties(from, to) {
 
 ///
 
-function inspect(args, options) {
-    if (args.webSocket) {
-        options.chooseTab = args.webSocket;
+function inspect(target, args, options) {
+    // otherwise the active tab
+    if (target) {
+        if (args.webSocket) {
+            // by WebSocket URL
+            options.chooseTab = target;
+        } else {
+            // by tab id
+            options.chooseTab = function (tabs) {
+                return tabs.findIndex(function (tab) {
+                    return tab.id === target;
+                });
+            };
+        }
     }
 
     if (args.protocol) {
@@ -206,12 +217,12 @@ program
     .option('-p, --port <port>', 'HTTP frontend port');
 
 program
-    .command('inspect')
-    .description('inspect a Remote Debugging Protocol target')
-    .option('-w, --web-socket <url>', 'WebSocket URL')
+    .command('inspect [<target>]')
+    .description('inspect a target (defaults to the current tab)')
+    .option('-w, --web-socket', 'interpret <target> as a WebSocket URL instead of a tab id')
     .option('-j, --protocol <file.json>', 'Remote Debugging Protocol descriptor')
-    .action(function (args) {
-        action = inspect.bind(null, args);
+    .action(function (target, args) {
+        action = inspect.bind(null, target, args);
     });
 
 program
