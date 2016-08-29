@@ -520,7 +520,7 @@ Refer to the [Remote Debugging Protocol specifications][rdp] for more informatio
 For example:
 
 ```javascript
-on('event', function (message) {
+chrome.on('event', function (message) {
     if (message.method === 'Network.requestWillBeSent') {
         console.log(message.params);
     }
@@ -560,10 +560,10 @@ For example to load a URL only after having enabled the notifications of both
 `Network` and `Page` domains:
 
 ```javascript
-Network.enable();
-Page.enable();
-once('ready', function () {
-    Page.navigate({'url': 'https://github.com'});
+chrome.Network.enable();
+chrome.Page.enable();
+chrome.once('ready', function () {
+    chrome.Page.navigate({'url': 'https://github.com'});
 });
 ```
 
