@@ -19,6 +19,9 @@ module.exports = function (options, callback) {
         return new Promise(function (fulfill, reject) {
             notifier.on('connect', fulfill);
             notifier.on('error', reject);
+            notifier.on('disconnect', function () {
+                reject(new Error('Disconnected'));
+            });
             new Chrome(options, notifier);
         });
     }

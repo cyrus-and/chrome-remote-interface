@@ -284,10 +284,11 @@ Protocol][rdp].
   `protocol` option is set. Defaults to `false`.
 
 `callback` is a listener automatically added to the `connect` event of the
-returned `EventEmitter`; when `callback` is omitted a `Promise` object is
-returned.
+returned `EventEmitter`. When `callback` is omitted a `Promise` object is
+returned which becomes fulfilled if the `connect` event is triggered and
+rejected if any of the `disconnect` or `error` events are triggered.
 
-Returns an `EventEmitter` that supports the following events:
+The `EventEmitter` supports the following events:
 
 #### Event: 'connect'
 
