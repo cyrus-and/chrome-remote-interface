@@ -1,5 +1,6 @@
-const Chrome = require('../');
 const assert = require('assert');
+
+const Chrome = require('../');
 
 describe('closing a connection', function () {
     describe('with callback', function () {

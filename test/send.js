@@ -1,5 +1,6 @@
-const Chrome = require('../');
 const assert = require('assert');
+
+const Chrome = require('../');
 
 describe('sending a command', function () {
     describe('without checking the result and without specifyng parameters', function () {

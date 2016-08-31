@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const program = require('commander');
+
 const Chrome = require('../');
 
 function display(object) {

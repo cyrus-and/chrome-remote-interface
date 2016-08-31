@@ -1,5 +1,6 @@
-const Chrome = require('../');
 const assert = require('assert');
+
+const Chrome = require('../');
 
 describe('connecting to Chrome', function () {
     describe('with callback', function () {

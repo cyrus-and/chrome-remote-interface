@@ -1,5 +1,6 @@
-const Chrome = require('../');
 const assert = require('assert');
+
+const Chrome = require('../');
 
 describe('registering event', function () {
     describe('"event"', function () {

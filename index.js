@@ -1,6 +1,7 @@
 const events = require('events');
-const Chrome = require('./lib/chrome.js');
+
 const devtools = require('./lib/devtools.js');
+const Chrome = require('./lib/chrome.js');
 
 module.exports = function (options, callback) {
     if (typeof options === 'function') {
