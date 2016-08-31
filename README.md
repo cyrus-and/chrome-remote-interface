@@ -44,7 +44,7 @@ Sample API usage
 The following snippet loads `https://github.com` and dumps every request made.
 
 ```javascript
-var Chrome = require('chrome-remote-interface');
+const Chrome = require('chrome-remote-interface');
 Chrome(function (chrome) {
     with (chrome) {
         Network.requestWillBeSent(function (params) {
@@ -345,7 +345,7 @@ When `callback` is omitted a `Promise` object is returned.
 For example:
 
 ```javascript
-var Chrome = require('chrome-remote-interface');
+const Chrome = require('chrome-remote-interface');
 Chrome.Protocol(function (err, protocol) {
     if (!err) {
         console.log(JSON.stringify(protocol.descriptor, null, 4));
@@ -374,7 +374,7 @@ When `callback` is omitted a `Promise` object is returned.
 For example:
 
 ```javascript
-var Chrome = require('chrome-remote-interface');
+const Chrome = require('chrome-remote-interface');
 Chrome.List(function (err, tabs) {
     if (!err) {
         console.log(tabs);
@@ -403,7 +403,7 @@ When `callback` is omitted a `Promise` object is returned.
 For example:
 
 ```javascript
-var Chrome = require('chrome-remote-interface');
+const Chrome = require('chrome-remote-interface');
 Chrome.New(function (err, tab) {
     if (!err) {
         console.log(tab);
@@ -431,7 +431,7 @@ When `callback` is omitted a `Promise` object is returned.
 For example:
 
 ```javascript
-var Chrome = require('chrome-remote-interface');
+const Chrome = require('chrome-remote-interface');
 Chrome.Activate({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
     if (!err) {
         console.log('success! tab is closing');
@@ -459,7 +459,7 @@ When `callback` is omitted a `Promise` object is returned.
 For example:
 
 ```javascript
-var Chrome = require('chrome-remote-interface');
+const Chrome = require('chrome-remote-interface');
 Chrome.Close({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
     if (!err) {
         console.log('success! tab is closing');
@@ -491,7 +491,7 @@ When `callback` is omitted a `Promise` object is returned.
 For example:
 
 ```javascript
-var Chrome = require('chrome-remote-interface');
+const Chrome = require('chrome-remote-interface');
 Chrome.Version(function (err, info) {
     if (!err) {
         console.log(info);

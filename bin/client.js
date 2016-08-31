@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-var repl = require('repl');
-var util = require('util');
-var fs = require('fs');
-var path = require('path');
+const repl = require('repl');
+const util = require('util');
+const fs = require('fs');
+const path = require('path');
 
-var program = require('commander');
-var Chrome = require('../');
+const program = require('commander');
+const Chrome = require('../');
 
 function display(object) {
     return util.inspect(object, {
@@ -16,7 +16,7 @@ function display(object) {
 }
 
 function inheritProperties(from, to) {
-    for (var property in from) {
+    for (const property in from) {
         to[property] = from[property];
     }
 }
@@ -45,16 +45,16 @@ function inspect(target, args, options) {
 
     Chrome(options, function (chrome) {
         // keep track of registered events
-        var registeredEvents = {};
+        const registeredEvents = {};
 
-        var chromeRepl = repl.start({
+        const chromeRepl = repl.start({
             'prompt': '\033[32m>>>\033[0m ',
             'ignoreUndefined': true,
             'writer': display
         });
 
         // make the history persistent
-        var history_file = path.join(process.env.HOME, '.cri_history');
+        const history_file = path.join(process.env.HOME, '.cri_history');
         require('repl.history')(chromeRepl, history_file);
 
         function overridePrompt(string) {
@@ -65,9 +65,9 @@ function inspect(target, args, options) {
 
         function overrideCommand(command) {
             // hard code a callback to display the result
-            var override = function (params) {
+            const override = function (params) {
                 command(params, function (error, response) {
-                    var repr = {};
+                    const repr = {};
                     repr[error ? 'error' : 'result'] = response;
                     overridePrompt(display(repr));
                 });
@@ -78,23 +78,23 @@ function inspect(target, args, options) {
         }
 
         function overrideEvent(chrome, domainName, itemName) {
-            var event = chrome[domainName][itemName];
-            var eventName = domainName + '.' + itemName;
+            const event = chrome[domainName][itemName];
+            const eventName = domainName + '.' + itemName;
             // hard code a callback to display the event data
-            var override = function (filter) {
+            const override = function (filter) {
                 // remove all the listeners (just one actually) anyway
                 chrome.removeAllListeners(eventName);
-                var status = {};
+                const status = {};
                 // a filter will always enable/update the listener
                 if (!filter && registeredEvents[eventName]) {
                     delete registeredEvents[eventName];
                     status[eventName] = false;
                 } else {
                     // use the filter (or true) as a status token
-                    var statusToken = (filter ? filter.toString() : true);
+                    const statusToken = (filter ? filter.toString() : true);
                     status[eventName] = registeredEvents[eventName] = statusToken;
                     event(function (params) {
-                        var repr = {};
+                        const repr = {};
                         if (filter) {
                             params = filter(params);
                         }
@@ -125,9 +125,9 @@ function inspect(target, args, options) {
         // add protocol API
         chrome.protocol.domains.forEach(function (domainObject) {
             // walk the domain names
-            var domainName = domainObject.domain;
+            const domainName = domainObject.domain;
             chromeRepl.context[domainName] = {};
-            for (var itemName in chrome[domainName]) {
+            for (const itemName in chrome[domainName]) {
                 // walk the items in the domain and override commands and events
                 var item = chrome[domainName][itemName];
                 switch (item.category) {
@@ -271,7 +271,7 @@ program
 program.parse(process.argv);
 
 // common options
-var options = {
+const options = {
     'host': program.host,
     'port': program.port
 };

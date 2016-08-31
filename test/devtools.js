@@ -1,6 +1,6 @@
-var Chrome = require('../');
-var assert = require('assert');
-var util = require('util');
+const Chrome = require('../');
+const assert = require('assert');
+const util = require('util');
 
 describe('devtool interaction', function () {
 
@@ -158,7 +158,7 @@ describe('devtool interaction', function () {
             it('should activate an existing tab', function (done) {
                 Chrome.List(function (err, tabs) {
                     // tabs[0] is the latest tab to be spawned
-                    var tab = tabs[0];
+                    const tab = tabs[0];
                     Chrome.Activate({id:tab.id}, function (err) {
                         assert.ifError(err);
                         done();
@@ -170,7 +170,7 @@ describe('devtool interaction', function () {
             it('should activate an existing tab', function (done) {
                 Chrome.List(function (err, tabs) {
                     // tabs[0] is the latest tab to be spawned
-                    var tab = tabs[0];
+                    const tab = tabs[0];
                     Chrome.Activate({id:tab.id}).then(function () {
                         done();
                     }).catch(function () {
@@ -186,7 +186,7 @@ describe('devtool interaction', function () {
             it('should close an existing tab', function (done) {
                 Chrome.List(function (err, tabs) {
                     // tabs[0] is the latest tab to be spawned
-                    var tab = tabs[0];
+                    const tab = tabs[0];
                     Chrome.Close({id:tab.id}, function (err) {
                         assert.ifError(err);
                         // avoid that further test cases attach to this tab as the
@@ -200,7 +200,7 @@ describe('devtool interaction', function () {
             it('should close an existing tab', function (done) {
                 Chrome.List(function (err, tabs) {
                     // tabs[0] is the latest tab to be spawned
-                    var tab = tabs[0];
+                    const tab = tabs[0];
                     Chrome.Close({id:tab.id}).then(function () {
                         // avoid that further test cases attach to this tab as the
                         // actual close is a bit delayed

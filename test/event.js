@@ -1,5 +1,5 @@
-var Chrome = require('../');
-var assert = require('assert');
+const Chrome = require('../');
+const assert = require('assert');
 
 describe('registering event', function () {
     describe('"event"', function () {
