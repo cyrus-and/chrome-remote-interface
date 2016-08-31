@@ -65,7 +65,7 @@ describe('connecting to Chrome', function () {
     });
     describe('without callback', function () {
         describe('with default parameters', function () {
-            it('should succeed with "connect" callback passed as an argument', function (done) {
+            it('should succeed', function (done) {
                 Chrome().then(function (chrome) {
                     chrome.close(done);
                 }).catch(function () {
@@ -74,7 +74,7 @@ describe('connecting to Chrome', function () {
             });
         });
         describe('with custom parameters', function () {
-            it('should succeed with "connect" callback passed as an argument', function (done) {
+            it('should succeed', function (done) {
                 Chrome({'host': 'localhost', 'port': 9222}).then(function (chrome) {
                     chrome.close(done);
                 }).catch(function () {
