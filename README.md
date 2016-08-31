@@ -242,7 +242,7 @@ Currently it is not possible to fetch the protocol descriptor
 (see [#10][issue]). Rather, that file can be fetched from the proper [source
 repository][remote-json] at every connection. By default, the [local
 version][local-json] is used. That file is manually updated from time to time
-using `make update-protocol` and pushed to this repository.
+using `scripts/update-protocol.sh` and pushed to this repository.
 
 To override the above behavior there are basically three options:
 
@@ -251,8 +251,8 @@ To override the above behavior there are basically three options:
 2. use the *raw* version of the [commands](#chromesendmethod-params-callback)
    and [events](#event-method) interface;
 
-3. update the local copy with `make update-protocol` (not present when fetched
-   with `npm install`).
+3. update the local copy with `scripts/update-protocol.sh` (not present when
+   fetched with `npm install`).
 
 API
 ---

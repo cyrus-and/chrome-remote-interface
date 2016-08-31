@@ -35,8 +35,5 @@
     },
     "devDependencies": {
         "mocha": "*"
-    },
-    "scripts": {
-        "test": "make test"
     }
 }
