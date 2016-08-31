@@ -4,7 +4,6 @@ const util = require('util');
 const Chrome = require('../');
 
 describe('devtool interaction', function () {
-
     describe('Protocol', function () {
         describe('with callback', function () {
             it('should return the local protocol descriptor', function (done) {
@@ -68,7 +67,6 @@ describe('devtool interaction', function () {
             });
         });
     });
-
     describe('List', function () {
         describe('with callback', function () {
             it('should return the tab list', function (done) {
@@ -90,7 +88,6 @@ describe('devtool interaction', function () {
             });
         });
     });
-
     describe('New', function () {
         describe('with callback', function () {
             it('should spawn a tab to a specific URL', function (done) {
@@ -153,7 +150,6 @@ describe('devtool interaction', function () {
             });
         });
     });
-
     describe('Activate', function () {
         describe('with callback', function () {
             it('should activate an existing tab', function (done) {
@@ -181,7 +177,6 @@ describe('devtool interaction', function () {
             });
         });
     });
-
     describe('Close', function () {
         describe('with callback', function () {
             it('should close an existing tab', function (done) {
@@ -213,7 +208,6 @@ describe('devtool interaction', function () {
             });
         });
     });
-
     describe('Version', function () {
         describe('with callback', function () {
             it('should return the version information', function (done) {
@@ -235,5 +229,4 @@ describe('devtool interaction', function () {
             });
         });
     });
-
 });
