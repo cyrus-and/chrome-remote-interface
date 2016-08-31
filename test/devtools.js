@@ -68,7 +68,7 @@ describe('devtool interaction', function () {
         });
     });
 
-    describe('List',function(){
+    describe('List', function () {
         describe('with callback', function () {
             it('should return the tab list', function (done) {
                 Chrome.List(function (err, tabs) {
@@ -90,18 +90,18 @@ describe('devtool interaction', function () {
         });
     });
 
-    describe('New',function(){
+    describe('New', function () {
         describe('with callback', function () {
             it('should spawn a tab to a specific URL', function (done) {
                 Chrome.New({url:'chrome://newtab/'}, function (err, tab) {
                     assert.ifError(err);
                     assert(tab.id);
                     Chrome.List(function (err, tabs) {
-                        assert(tabs.some(function(t){
+                        assert(tabs.some(function (t) {
                             return t.id === tab.id;
                         }));
                         assert(util.isArray(tabs));
-                        assert.equal(tab.url,'chrome://newtab/');
+                        assert.equal(tab.url, 'chrome://newtab/');
                         done();
                     });
                 });
@@ -111,7 +111,7 @@ describe('devtool interaction', function () {
                     assert.ifError(err);
                     assert(tab.id);
                     Chrome.List(function (err, tabs) {
-                        assert(tabs.some(function(t){
+                        assert(tabs.some(function (t) {
                             return t.id === tab.id;
                         }));
                         assert(util.isArray(tabs));
@@ -125,11 +125,11 @@ describe('devtool interaction', function () {
                 Chrome.New({url:'chrome://newtab/'}).then(function (tab) {
                     assert(tab.id);
                     Chrome.List(function (err, tabs) {
-                        assert(tabs.some(function(t){
+                        assert(tabs.some(function (t) {
                             return t.id === tab.id;
                         }));
                         assert(util.isArray(tabs));
-                        assert.equal(tab.url,'chrome://newtab/');
+                        assert.equal(tab.url, 'chrome://newtab/');
                         done();
                     });
                 }).catch(function () {
@@ -140,7 +140,7 @@ describe('devtool interaction', function () {
                 Chrome.New().then(function (tab) {
                     assert(tab.id);
                     Chrome.List(function (err, tabs) {
-                        assert(tabs.some(function(t){
+                        assert(tabs.some(function (t) {
                             return t.id === tab.id;
                         }));
                         assert(util.isArray(tabs));
@@ -153,8 +153,8 @@ describe('devtool interaction', function () {
         });
     });
 
-    describe('Activate',function(){
-        describe('with callback',function(){
+    describe('Activate', function () {
+        describe('with callback', function () {
             it('should activate an existing tab', function (done) {
                 Chrome.List(function (err, tabs) {
                     // tabs[0] is the latest tab to be spawned
@@ -166,7 +166,7 @@ describe('devtool interaction', function () {
                 });
             });
         });
-        describe('without callback',function(){
+        describe('without callback', function () {
             it('should activate an existing tab', function (done) {
                 Chrome.List(function (err, tabs) {
                     // tabs[0] is the latest tab to be spawned
@@ -181,8 +181,8 @@ describe('devtool interaction', function () {
         });
     });
 
-    describe('Close',function(){
-        describe('with callback',function(){
+    describe('Close', function () {
+        describe('with callback', function () {
             it('should close an existing tab', function (done) {
                 Chrome.List(function (err, tabs) {
                     // tabs[0] is the latest tab to be spawned
@@ -196,7 +196,7 @@ describe('devtool interaction', function () {
                 });
             });
         });
-        describe('without callback',function(){
+        describe('without callback', function () {
             it('should close an existing tab', function (done) {
                 Chrome.List(function (err, tabs) {
                     // tabs[0] is the latest tab to be spawned
@@ -213,8 +213,8 @@ describe('devtool interaction', function () {
         });
     });
 
-    describe('Version',function(){
-        describe('with callback',function(){
+    describe('Version', function () {
+        describe('with callback', function () {
             it('should return the version information', function (done) {
                 Chrome.Version(function (err, info) {
                     assert.ifError(err);
@@ -223,7 +223,7 @@ describe('devtool interaction', function () {
                 });
             });
         });
-        describe('without callback',function(){
+        describe('without callback', function () {
             it('should return the version information', function (done) {
                 Chrome.Version().then(function (info) {
                     assert(util.isObject(info));
