@@ -17,9 +17,9 @@ function display(object) {
 }
 
 function inheritProperties(from, to) {
-    for (const property in from) {
+    Object.keys(from).forEach(function (property) {
         to[property] = from[property];
-    }
+    });
 }
 
 ///
@@ -128,7 +128,7 @@ function inspect(target, args, options) {
             // walk the domain names
             const domainName = domainObject.domain;
             chromeRepl.context[domainName] = {};
-            for (const itemName in chrome[domainName]) {
+            Object.keys(chrome[domainName]).forEach(function (itemName) {
                 // walk the items in the domain and override commands and events
                 var item = chrome[domainName][itemName];
                 switch (item.category) {
@@ -140,7 +140,7 @@ function inspect(target, args, options) {
                     break;
                 }
                 chromeRepl.context[domainName][itemName] = item;
-            }
+            });
         });
     }).on('error', function (err) {
         console.error('Cannot connect to Chrome:', err.toString());
