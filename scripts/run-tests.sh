@@ -4,7 +4,7 @@ set -e
 
 if ! curl -s 'http://localhost:9222' >/dev/null; then
     echo 'Start Chrome with "--remote-debugging-port=9222"'
-    exit 1
+    false
 fi
 
 scripts/run-linter.sh
