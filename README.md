@@ -10,7 +10,7 @@ in a Node.js fashion: commands and notifications.
 
 This module should work with every application implementing the Chrome [Remote
 Debugging Protocol][rdp]. In particular, it has been tested against the
-following implementations.
+following implementations:
 
 [clients-cri]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
 
@@ -44,7 +44,7 @@ enable the [Remote Debugging Protocol][rdp], for example:
 Sample API usage
 ----------------
 
-The following snippet loads `https://github.com` and dumps every request made.
+The following snippet loads `https://github.com` and dumps every request made:
 
 ```javascript
 const Chrome = require('chrome-remote-interface');
@@ -397,7 +397,7 @@ Create a new tab in the remote Chrome instance.
 `options` is an object with the following optional properties:
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
-- `port`: HTTP frontend port. Defaults to `9222`.
+- `port`: HTTP frontend port. Defaults to `9222`;
 - `url`: URL to load in the new tab. Defaults to `about:blank`.
 
 `callback` is executed when the tab is created, it gets the
@@ -426,7 +426,7 @@ Activate an open tab of the remote Chrome instance.
 `options` is an object with the following properties:
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
-- `port`: HTTP frontend port. Defaults to `9222`.
+- `port`: HTTP frontend port. Defaults to `9222`;
 - `id`: Tab id. Required, no default.
 
 `callback` is executed when the response to the activation request is
@@ -454,7 +454,7 @@ Close an open tab of the remote Chrome instance.
 `options` is an object with the following properties:
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
-- `port`: HTTP frontend port. Defaults to `9222`.
+- `port`: HTTP frontend port. Defaults to `9222`;
 - `id`: Tab id. Required, no default.
 
 `callback` is executed when the response to the close request is
@@ -520,7 +520,7 @@ Emitted when Chrome sends a notification through the WebSocket.
 `message` is the object received, it has the following properties:
 
 - `method`: a string describing the notification (e.g.,
-  `'Network.requestWillBeSent'`).
+  `'Network.requestWillBeSent'`);
 - `params`: an object containing the payload.
 
 Refer to the [Remote Debugging Protocol specifications][rdp] for more information.
