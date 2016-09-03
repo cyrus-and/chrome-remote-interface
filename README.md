@@ -12,18 +12,21 @@ This module should work with every application implementing the Chrome [Remote
 Debugging Protocol][rdp]. In particular, it has been tested against the
 following implementations.
 
-Implementation       | Notes
----------------------|------
-[Google Chrome][1.1] | native support; enable [port forwarding][1.2] in Chrome for Android
-[Microsoft Edge][2]  | via the [Edge Diagnostics Adapter][edge-diagnostics-adapter]
-[Node.js][3.1]       | via [`--inspect`][3.3] (with `--port 9229`) or via [node-inspector][3.2] (by connecting to `ws://127.0.0.1:8080/?port=5858` by default)
+[clients-cri]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
+
+Implementation        | Notes
+----------------------|------
+[Google Chrome][1.1]  | native support; enable [port forwarding][1.2] in Chrome for Android
+[Microsoft Edge][2.1] | via the [Edge Diagnostics Adapter][2.2]
+[Node.js][3.1]        | via [`--inspect`][3.2] (with `--port 9229`) or via [node-inspector][3.3] (by connecting to `ws://127.0.0.1:8080/?port=5858` by default)
 
 [1.1]: https://www.chromium.org/
 [1.2]: https://developer.chrome.com/devtools/docs/remote-debugging-legacy
-[2]: https://www.microsoft.com/windows/microsoft-edge
+[2.1]: https://www.microsoft.com/windows/microsoft-edge
+[2.2]: https://github.com/Microsoft/edge-diagnostics-adapter
 [3.1]: https://nodejs.org/
-[3.2]: https://github.com/node-inspector/node-inspector
-[3.3]: https://chromedevtools.github.io/debugger-protocol-viewer/v8/
+[3.2]: https://chromedevtools.github.io/debugger-protocol-viewer/v8/
+[3.3]: https://github.com/node-inspector/node-inspector
 
 Installation
 ------------
@@ -239,7 +242,7 @@ Remote Debugging Protocol versions
 
 Currently it is not possible to fetch the protocol descriptor
 ([`protocol.json`][local-json]) directly from the instrumented Chrome instance
-(see [#10][issue]). Rather, that file can be fetched from the proper [source
+(see [#10][issue-10]). Rather, that file can be fetched from the proper [source
 repository][remote-json] at every connection. By default, the [local
 version][local-json] is used. That file is manually updated from time to time
 using `scripts/update-protocol.sh` and pushed to this repository.
@@ -253,6 +256,10 @@ To override the above behavior there are basically three options:
 
 3. update the local copy with `scripts/update-protocol.sh` (not present when
    fetched with `npm install`).
+
+[issue-10]: https://github.com/cyrus-and/chrome-remote-interface/issues/10
+[local-json]: lib/protocol.json
+[remote-json]: https://chromium.googlesource.com/chromium/src/+/master/third_party/WebKit/Source/
 
 API
 ---
@@ -651,12 +658,5 @@ Resources
 
 [rdp]: https://developer.chrome.com/devtools/docs/debugger-protocol
 [rdp-viewer]: https://chromedevtools.github.io/debugger-protocol-viewer/
-[clients-cri]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
-[clients]: https://developer.chrome.com/devtools/docs/debugging-clients
-[edge-diagnostics-adapter]: https://github.com/Microsoft/edge-diagnostics-adapter
 [goole-group]: https://groups.google.com/forum/#!forum/chrome-debugging-protocol
-
-<!-- related to #10 -->
-[local-json]: lib/protocol.json
-[remote-json]: https://chromium.googlesource.com/chromium/src/+/master/third_party/WebKit/Source/
-[issue]: https://github.com/cyrus-and/chrome-remote-interface/issues/10
+[clients]: https://developer.chrome.com/devtools/docs/debugging-clients
