@@ -646,6 +646,7 @@ Resources
 
 - [Chrome Debugging Protocol][rdp]
 - [Chrome Debugging Protocol Viewer][rdp-viewer]
+- [Chrome Debugging Protocol Google group][goole-group]
 - [Showcase Chrome Debugging Protocol Clients][clients]
 
 [rdp]: https://developer.chrome.com/devtools/docs/debugger-protocol
@@ -653,6 +654,7 @@ Resources
 [clients-cri]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
 [clients]: https://developer.chrome.com/devtools/docs/debugging-clients
 [edge-diagnostics-adapter]: https://github.com/Microsoft/edge-diagnostics-adapter
+[goole-group]: https://groups.google.com/forum/#!forum/chrome-debugging-protocol
 
 <!-- related to #10 -->
 [local-json]: lib/protocol.json
