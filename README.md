@@ -286,9 +286,9 @@ Protocol][rdp].
   (tabs) { return 0; }`);
 - `protocol`: [Remote Debugging Protocol][rdp] descriptor object. Defaults to
   use the protocol chosen according to the `remote` option;
-- `remote`: a boolean indicating whether the protocol must be fetched
-  *remotely* or if the local version must be used. It has not effect if the
-  `protocol` option is set. Defaults to `false`.
+- `remote`: a boolean indicating whether the protocol must be fetched *remotely*
+  or if the local version must be used. It has no effect if the `protocol`
+  option is set. Defaults to `false`.
 
 `callback` is a listener automatically added to the `connect` event of the
 returned `EventEmitter`. When `callback` is omitted a `Promise` object is
