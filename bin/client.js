@@ -25,6 +25,7 @@ function inheritProperties(from, to) {
 ///
 
 function inspect(target, args, options) {
+    options.remote = args.remote;
     // otherwise the active tab
     if (target) {
         if (args.webSocket) {
@@ -221,7 +222,8 @@ program
     .command('inspect [<target>]')
     .description('inspect a target (defaults to the current tab)')
     .option('-w, --web-socket', 'interpret <target> as a WebSocket URL instead of a tab id')
-    .option('-j, --protocol <file.json>', 'Remote Debugging Protocol descriptor')
+    .option('-j, --protocol <file.json>', 'Remote Debugging Protocol descriptor (overrides `--remote`)')
+    .option('-r, --remote', 'Attempt to fetch the protocol descriptor remotely')
     .action(function (target, args) {
         action = inspect.bind(null, target, args);
     });
