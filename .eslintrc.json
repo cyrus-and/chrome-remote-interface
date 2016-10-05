@@ -34,6 +34,9 @@
         "space-before-blocks": [
             "error"
         ],
+        "key-spacing": [
+            "error"
+        ],
         "no-unused-vars": [
             "error",
             {

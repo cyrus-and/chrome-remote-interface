@@ -16,7 +16,7 @@ describe('devtool interaction', function () {
                 });
             });
             it('should fail if remote is not available', function (done) {
-                Chrome.Protocol({'remote': true, 'port':1}, function (err, protocol) {
+                Chrome.Protocol({'remote': true, 'port': 1}, function (err, protocol) {
                     assert(err !== null);
                     assert(!protocol);
                     done();
@@ -44,7 +44,7 @@ describe('devtool interaction', function () {
                 });
             });
             it('should fail if remote is not available', function (done) {
-                Chrome.Protocol({'remote': true, 'port':1}, function (err, protocol) {
+                Chrome.Protocol({'remote': true, 'port': 1}, function (err, protocol) {
                     assert(err !== null);
                     assert(!protocol);
                     done();
@@ -86,7 +86,7 @@ describe('devtool interaction', function () {
     describe('New', function () {
         describe('with callback', function () {
             it('should spawn a tab to a specific URL', function (done) {
-                Chrome.New({url:'chrome://newtab/'}, function (err, tab) {
+                Chrome.New({url: 'chrome://newtab/'}, function (err, tab) {
                     assert.ifError(err);
                     assert(tab.id);
                     Chrome.List(function (err, tabs) {
@@ -115,7 +115,7 @@ describe('devtool interaction', function () {
         });
         describe('without callback', function () {
             it('should spawn a tab to a specific URL', function (done) {
-                Chrome.New({url:'chrome://newtab/'}).then(function (tab) {
+                Chrome.New({url: 'chrome://newtab/'}).then(function (tab) {
                     assert(tab.id);
                     Chrome.List(function (err, tabs) {
                         assert(tabs.some(function (t) {
@@ -151,7 +151,7 @@ describe('devtool interaction', function () {
                 Chrome.List(function (err, tabs) {
                     // tabs[0] is the latest tab to be spawned
                     const tab = tabs[0];
-                    Chrome.Activate({id:tab.id}, function (err) {
+                    Chrome.Activate({id: tab.id}, function (err) {
                         assert.ifError(err);
                         done();
                     });
@@ -163,7 +163,7 @@ describe('devtool interaction', function () {
                 Chrome.List(function (err, tabs) {
                     // tabs[0] is the latest tab to be spawned
                     const tab = tabs[0];
-                    Chrome.Activate({id:tab.id}).then(function () {
+                    Chrome.Activate({id: tab.id}).then(function () {
                         done();
                     }).catch(function () {
                         assert(false);
@@ -178,7 +178,7 @@ describe('devtool interaction', function () {
                 Chrome.List(function (err, tabs) {
                     // tabs[0] is the latest tab to be spawned
                     const tab = tabs[0];
-                    Chrome.Close({id:tab.id}, function (err) {
+                    Chrome.Close({id: tab.id}, function (err) {
                         assert.ifError(err);
                         // avoid that further test cases attach to this tab as the
                         // actual close is a bit delayed
@@ -192,7 +192,7 @@ describe('devtool interaction', function () {
                 Chrome.List(function (err, tabs) {
                     // tabs[0] is the latest tab to be spawned
                     const tab = tabs[0];
-                    Chrome.Close({id:tab.id}).then(function () {
+                    Chrome.Close({id: tab.id}).then(function () {
                         // avoid that further test cases attach to this tab as the
                         // actual close is a bit delayed
                         setTimeout(done, 1000);
