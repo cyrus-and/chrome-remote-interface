@@ -15,12 +15,10 @@ describe('devtool interaction', function () {
                     done();
                 });
             });
-            it('should return the local protocol descriptor (on error)', function (done) {
+            it('should fail if remote is not available', function (done) {
                 Chrome.Protocol({'remote': true, 'port':1}, function (err, protocol) {
-                    assert.ifError(err);
-                    assert(!protocol.remote);
-                    assert.equal(typeof protocol.descriptor, 'object');
-                    assert.equal(typeof protocol.descriptor.version, 'object');
+                    assert(err !== null);
+                    assert(!protocol);
                     done();
                 });
             });
@@ -45,14 +43,11 @@ describe('devtool interaction', function () {
                     assert(false);
                 });
             });
-            it('should return the local protocol descriptor (on error)', function (done) {
-                Chrome.Protocol({'remote': true, 'port':1}).then(function (protocol) {
-                    assert(!protocol.remote);
-                    assert.equal(typeof protocol.descriptor, 'object');
-                    assert.equal(typeof protocol.descriptor.version, 'object');
+            it('should fail if remote is not available', function (done) {
+                Chrome.Protocol({'remote': true, 'port':1}, function (err, protocol) {
+                    assert(err !== null);
+                    assert(!protocol);
                     done();
-                }).catch(function () {
-                    assert(false);
                 });
             });
             it('should return the remote protocol descriptor', function (done) {
