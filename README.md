@@ -18,7 +18,7 @@ Implementation        | Notes
 ----------------------|------
 [Google Chrome][1.1]  | native support; enable [port forwarding][1.2] in Chrome for Android
 [Microsoft Edge][2.1] | via the [Edge Diagnostics Adapter][2.2]
-[Node.js][3.1]        | via [`--inspect`][3.2] (with `--port 9229`) or via [node-inspector][3.3] (by connecting to `ws://127.0.0.1:8080/?port=5858` by default)
+[Node.js][3.1]        | via [`--inspect=9229`][3.2] or via [node-inspector][3.3] (by connecting to `ws://127.0.0.1:8080/?port=5858` by default)
 
 [1.1]: https://www.chromium.org/
 [1.2]: https://developer.chrome.com/devtools/docs/remote-debugging-legacy
