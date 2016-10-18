@@ -8,38 +8,7 @@ in a Node.js fashion: commands and notifications.
 `chrome-remote-interface` is listed among
 [third-party Chrome debugging protocol clients][clients-cri].
 
-This module should work with every application implementing the Chrome [Remote
-Debugging Protocol][rdp]. In particular, it has been tested against the
-following implementations:
-
 [clients-cri]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
-
-Implementation        | Notes
-----------------------|------
-[Google Chrome][1.1]  | native support; enable [port forwarding][1.2] in Chrome for Android
-[Microsoft Edge][2.1] | via the [Edge Diagnostics Adapter][2.2]
-[Node.js][3.1]        | via [`--inspect`][3.2] (with `--port 9229`) or via [node-inspector][3.3] (by connecting to `ws://127.0.0.1:8080/?port=5858` by default)
-
-[1.1]: https://www.chromium.org/
-[1.2]: https://developer.chrome.com/devtools/docs/remote-debugging-legacy
-[2.1]: https://www.microsoft.com/windows/microsoft-edge
-[2.2]: https://github.com/Microsoft/edge-diagnostics-adapter
-[3.1]: https://nodejs.org/
-[3.2]: https://chromedevtools.github.io/debugger-protocol-viewer/v8/
-[3.3]: https://github.com/node-inspector/node-inspector
-
-Installation
-------------
-
-    npm install chrome-remote-interface
-
-Chrome setup
-------------
-
-Chrome needs to be started with the `--remote-debugging-port=<port>` option to
-enable the [Remote Debugging Protocol][rdp], for example:
-
-    google-chrome --remote-debugging-port=9222
 
 Sample API usage
 ----------------
@@ -64,6 +33,74 @@ Chrome(function (chrome) {
     console.error('Cannot connect to Chrome:', err);
 });
 ```
+
+Installation
+------------
+
+    npm install chrome-remote-interface
+
+Implementations
+---------------
+
+This module should work with every application implementing the
+Chrome [Remote Debugging Protocol][rdp]. In particular, it has been tested
+against the following implementations:
+
+Implementation             | Protocol version   | [Protocol] | [List] | [New] | [Activate] | [Close] | [Version]
+---------------------------|--------------------|------------|--------|-------|------------|---------|-----------
+[Google Chrome][1.1]       | [tip-of-tree][1.2] | yes        | yes    | yes   | yes        | yes     | yes
+[Microsoft Edge][2.1]      | [partial][2.2]     | yes        | yes    | no    | no         | no      | yes
+[Node.js][3.1] ([v6.3.0]+) | [node][3.2]        | yes        | no     | no    | no         | no      | yes
+
+[1.1]: https://www.chromium.org/
+[1.2]: https://chromedevtools.github.io/debugger-protocol-viewer/tot/
+[2.1]: https://www.microsoft.com/windows/microsoft-edge
+[2.2]: https://github.com/Microsoft/edge-diagnostics-adapter/wiki/Supported-features-and-API
+[3.1]: https://nodejs.org/
+[3.2]: https://chromedevtools.github.io/debugger-protocol-viewer/v8/
+
+[v6.3.0]: https://nodejs.org/en/blog/release/v6.3.0/
+
+[Protocol]: #moduleprotocoloptions-callback
+[List]: #modulelistoptions-callback
+[New]: #modulenewoptions-callback
+[Activate]: #moduleactivateoptions-callback
+[Close]: #modulecloseoptions-callback
+[Version]: #moduleversionoptions-callback
+
+Setup
+-----
+
+Either Chrome itself or another implementation needs to be running on a known
+port in order to use this module (defaults to `localhost:9222`).
+
+### Chrome/Chromium
+
+#### Desktop
+
+Start Chrome with the `--remote-debugging-port` option, for example:
+
+    google-chrome --remote-debugging-port=9222
+
+#### Android
+
+Plug the device and enable the [port forwarding][adb], for example:
+
+    adb forward tcp:9222 localabstract:chrome_devtools_remote
+
+[adb]: https://developer.chrome.com/devtools/docs/remote-debugging-legacy
+
+### Edge
+
+Install and run the [Edge Diagnostics Adapter][edge-adapter].
+
+[edge-adapter]: https://github.com/Microsoft/edge-diagnostics-adapter
+
+### Node.js
+
+Start Node.js with the `--inspect` option, for example:
+
+    node --inspect=9222 script.js
 
 Bundled client
 --------------
