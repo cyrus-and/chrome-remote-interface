@@ -5,8 +5,8 @@ chrome-remote-interface
 providing a simple abstraction of the two main objects exposed by the protocol
 in a Node.js fashion: commands and notifications.
 
-`chrome-remote-interface` is listed among
-[third-party Chrome debugging protocol clients][clients-cri].
+`chrome-remote-interface` is listed
+among [third-party Chrome debugging protocol clients][clients-cri].
 
 [clients-cri]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
 
@@ -131,13 +131,13 @@ $ chrome-remote-interface close 'b049bb56-de7d-424c-a331-6ae44cf7ae01'
 
 ### Inspection
 
-Using the `inspect` subcommand it is possible to perform [command
-execution](#chromedomainmethodparams-callback) and [event
-binding](#chromedomaineventcallback) in a REPL fashion. But unlike the regular
-API the callbacks are overridden to conveniently display the result of the
-commands and the message of the events. Also, the event binding is simplified
-here, executing a shorthand method (e.g., `Page.loadEventFired()`) toggles the
-event registration.
+Using the `inspect` subcommand it is possible to
+perform [command execution](#chromedomainmethodparams-callback)
+and [event binding](#chromedomaineventcallback) in a REPL fashion. But unlike
+the regular API the callbacks are overridden to conveniently display the result
+of the commands and the message of the events. Also, the event binding is
+simplified here, executing a shorthand method (e.g., `Page.loadEventFired()`)
+toggles the event registration.
 
 Here is a sample session:
 
@@ -191,10 +191,10 @@ $ chrome-remote-interface inspect
 Embedded documentation
 ----------------------
 
-In both the REPL and the regular API every object of the protocol is
-*decorated* with the information available through the [Remote Debugging
-Protocol][rdp]. The `category` field determines if the member is a `command`,
-an `event` or a `type`.
+In both the REPL and the regular API every object of the protocol is *decorated*
+with the information available through the [Remote Debugging Protocol][rdp]. The
+`category` field determines if the member is a `command`, an `event` or a
+`type`.
 
 Remember that the REPL interface provides completion. For example to learn how
 to call `Page.navigate`:
@@ -247,6 +247,7 @@ To learn about the parameters returned by the `Network.requestWillBeSent` event:
         hidden: true,
         description: 'Type of this resource.' } } }
 ```
+
 To inspect the `Network.Request` (note that unlike commands and events, types
 are named in upper camel case) type:
 
@@ -279,10 +280,10 @@ Remote Debugging Protocol versions
 
 Currently it is not possible to fetch the protocol descriptor
 ([`protocol.json`][local-json]) directly from the instrumented Chrome instance
-(see [#10][issue-10]). Rather, that file can be fetched from the proper [source
-repository][remote-json] at every connection. By default, the [local
-version][local-json] is used. That file is manually updated from time to time
-using `scripts/update-protocol.sh` and pushed to this repository.
+(see [#10][issue-10]). Rather, that file can be fetched from the
+proper [source repository][remote-json] at every connection. By default,
+the [local version][local-json] is used. That file is manually updated from time
+to time using `scripts/update-protocol.sh` and pushed to this repository.
 
 To override the above behavior there are basically three options:
 
@@ -303,8 +304,8 @@ API
 
 ### module([options], [callback])
 
-Connects to a remote instance of Chrome using the [Remote Debugging
-Protocol][rdp].
+Connects to a remote instance of Chrome using
+the [Remote Debugging Protocol][rdp].
 
 `options` is an object with the following optional properties:
 
@@ -372,9 +373,9 @@ Fetch the [Remote Debugging Protocol][rdp] descriptor.
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
-- `remote`: a boolean indicating whether the protocol must be fetched
-  *remotely* or if the local version must be returned. If it is not possible to
-  fulfill the request then the local version is used. Defaults to `false`.
+- `remote`: a boolean indicating whether the protocol must be fetched *remotely*
+  or if the local version must be returned. If it is not possible to fulfill the
+  request then the local version is used. Defaults to `false`.
 
 `callback` is executed when the protocol is fetched, it gets the following
 arguments:
@@ -437,8 +438,7 @@ Create a new tab in the remote Chrome instance.
 - `port`: HTTP frontend port. Defaults to `9222`;
 - `url`: URL to load in the new tab. Defaults to `about:blank`.
 
-`callback` is executed when the tab is created, it gets the
-following arguments:
+`callback` is executed when the tab is created, it gets the following arguments:
 
 - `err`: a `Error` object indicating the success status;
 - `tab`: the object returned by `http://host:port/json/new` containing the tab.
@@ -494,8 +494,8 @@ Close an open tab of the remote Chrome instance.
 - `port`: HTTP frontend port. Defaults to `9222`;
 - `id`: Tab id. Required, no default.
 
-`callback` is executed when the response to the close request is
-received. It gets the following arguments:
+`callback` is executed when the response to the close request is received. It
+gets the following arguments:
 
 - `err`: a `Error` object indicating the success status;
 
@@ -560,7 +560,8 @@ Emitted when Chrome sends a notification through the WebSocket.
   `'Network.requestWillBeSent'`);
 - `params`: an object containing the payload.
 
-Refer to the [Remote Debugging Protocol specifications][rdp] for more information.
+Refer to the [Remote Debugging Protocol specifications][rdp] for more
+information.
 
 For example:
 
@@ -634,8 +635,9 @@ following arguments:
 When `callback` is omitted a `Promise` object is returned instead, with the
 fulfilled/rejected states implemented according to the `error` parameter.
 
-Note that the field `id` mentioned in the [Remote Debugging Protocol
-specifications][rdp] is managed internally and it's not exposed to the user.
+Note that the field `id` mentioned in
+the [Remote Debugging Protocol specifications][rdp] is managed internally and
+it's not exposed to the user.
 
 For example:
 
