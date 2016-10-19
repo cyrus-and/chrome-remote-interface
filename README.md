@@ -72,8 +72,9 @@ Implementation             | Protocol version   | [Protocol] | [List] | [New] | 
 Setup
 -----
 
-Either Chrome itself or another implementation needs to be running on a known
-port in order to use this module (defaults to `localhost:9222`).
+An instance of either Chrome itself or another implementation needs to be
+running on a known port in order to use this module (defaults to
+`localhost:9222`).
 
 ### Chrome/Chromium
 
@@ -107,7 +108,7 @@ Bundled client
 --------------
 
 This module comes with a bundled client application that can be used to
-interactively control Chrome.
+interactively control a remote instance.
 
 ### Tab management
 
@@ -305,7 +306,7 @@ API
 
 ### module([options], [callback])
 
-Connects to a remote instance of Chrome using the [Chrome Debugging Protocol].
+Connects to a remote instance using the [Chrome Debugging Protocol].
 
 `options` is an object with the following optional properties:
 
@@ -341,7 +342,7 @@ The `EventEmitter` supports the following events:
 function (chrome) {}
 ```
 
-Emitted when the connection to Chrome is established.
+Emitted when the connection to the WebSocket is established.
 
 `chrome` is an instance of the `Chrome` class.
 
@@ -351,8 +352,10 @@ Emitted when the connection to Chrome is established.
 function () {}
 ```
 
-Emitted when Chrome closes the connection, e.g., if the user opens the DevTools
-for the currently inspected tab.
+Emitted when an instance closes the WebSocket connection.
+
+This may happen for example when the user opens DevTools for the currently
+inspected Chrome tab.
 
 #### Event: 'error'
 
@@ -401,7 +404,7 @@ Chrome.Protocol(function (err, protocol) {
 
 ### module.List([options], [callback])
 
-Request the list of the available open tabs of the remote Chrome instance.
+Request the list of the available open tabs of the remote instance.
 
 `options` is an object with the following optional properties:
 
@@ -430,7 +433,7 @@ Chrome.List(function (err, tabs) {
 
 ### module.New([options], [callback])
 
-Create a new tab in the remote Chrome instance.
+Create a new tab in the remote instance.
 
 `options` is an object with the following optional properties:
 
@@ -486,7 +489,7 @@ Chrome.Activate({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
 
 ### module.Close([options], [callback])
 
-Close an open tab of the remote Chrome instance.
+Close an open tab of the remote instance.
 
 `options` is an object with the following properties:
 
@@ -517,7 +520,7 @@ actual removal will occur asynchronously.
 
 ### module.Version([options], [callback])
 
-Request version information from the remote Chrome instance.
+Request version information from the remote instance.
 
 `options` is an object with the following optional properties:
 
@@ -552,7 +555,7 @@ Chrome.Version(function (err, info) {
 function (message) {}
 ```
 
-Emitted when Chrome sends a notification through the WebSocket.
+Emitted when the remote instance sends any notification through the WebSocket.
 
 `message` is the object received, it has the following properties:
 
@@ -578,7 +581,8 @@ chrome.on('event', function (message) {
 function (params) {}
 ```
 
-Emitted when Chrome sends a notification for `<method>` through the WebSocket.
+Emitted when the remote instance sends a notification for `<method>` through the
+WebSocket.
 
 `params` is an object containing the payload.
 
@@ -596,10 +600,10 @@ function () {}
 ```
 
 Emitted every time that there are no more pending commands waiting for a
-response from Chrome. Note that the interaction with Chrome is asynchronous so
-the only way to serialize a sequence of commands is to use the callback provided
-by the `chrome.send` method. This event acts as a barrier and it is useful to
-avoid the callback hell in certain simple situations.
+response from the remote instance. The interaction is asynchronous so the only
+way to serialize a sequence of commands is to use the callback provided by the
+`chrome.send` method. This event acts as a barrier and it is useful to avoid the
+callback hell in certain simple situations.
 
 For example to load a URL only after having enabled the notifications of both
 `Network` and `Page` domains:
@@ -613,23 +617,25 @@ chrome.once('ready', function () {
 ```
 
 In this particular case, not enforcing this kind of serialization may cause that
-Chrome does not properly deliver the desired notifications the client.
+the remote instance does not properly deliver the desired notifications the
+client.
 
 #### chrome.send(method, [params], [callback])
 
-Issue a command to Chrome.
+Issue a command to the remote instance.
 
 `method` is a string describing the command.
 
 `params` is an object containing the payload.
 
-`callback` is executed when Chrome sends a response to this command, it gets the
-following arguments:
+`callback` is executed when the remote instance sends a response to this
+command, it gets the following arguments:
 
-- `error`: a boolean value indicating the success status, as reported by Chrome;
-- `response`: an object containing either the response sent from Chrome
-  (`result` field, if `error === false`) or the indication of the error (`error`
-  field, if `error === true`).
+- `error`: a boolean value indicating the success status, as reported by the
+  remote instance;
+- `response`: an object containing either the response (`result` field, if
+  `error === false`) or the indication of the error (`error` field, if `error
+  === true`).
 
 When `callback` is omitted a `Promise` object is returned instead, with the
 fulfilled/rejected states implemented according to the `error` parameter.
@@ -673,7 +679,7 @@ chrome.Network.requestWillBeSent(console.log);
 
 #### chrome.close([callback])
 
-Close the connection to Chrome.
+Close the connection to the remote instance.
 
 `callback` is executed when the WebSocket is successfully closed.
 
