@@ -360,8 +360,8 @@ for the currently inspected tab.
 function (err) {}
 ```
 
-Emitted if `http://host:port/json` can't be reached or if it's not possible to
-connect to the WebSocket.
+Emitted when `http://host:port/json` cannot be reached or if it is not possible
+to connect to the WebSocket.
 
 `err` is an instance of `Error`.
 
@@ -560,7 +560,7 @@ Emitted when Chrome sends a notification through the WebSocket.
   `'Network.requestWillBeSent'`);
 - `params`: an object containing the payload.
 
-Refer to the [Chrome Debugging Protocol][cdp] specifications for more
+Refer to the [Chrome Debugging Protocol][cdp] specification for more
 information.
 
 For example:
@@ -614,7 +614,7 @@ chrome.once('ready', function () {
 ```
 
 In this particular case, not enforcing this kind of serialization may cause that
-Chrome doesn't properly deliver the desired notifications the client.
+Chrome does not properly deliver the desired notifications the client.
 
 #### chrome.send(method, [params], [callback])
 
@@ -636,7 +636,7 @@ When `callback` is omitted a `Promise` object is returned instead, with the
 fulfilled/rejected states implemented according to the `error` parameter.
 
 Note that the field `id` mentioned in the [Chrome Debugging Protocol][cdp]
-specifications is managed internally and it's not exposed to the user.
+specification is managed internally and it is not exposed to the user.
 
 For example:
 
