@@ -222,7 +222,7 @@ program
     .command('inspect [<target>]')
     .description('inspect a target (defaults to the current tab)')
     .option('-w, --web-socket', 'interpret <target> as a WebSocket URL instead of a tab id')
-    .option('-j, --protocol <file.json>', 'Remote Debugging Protocol descriptor (overrides `--remote`)')
+    .option('-j, --protocol <file.json>', 'Chrome Debugging Protocol descriptor (overrides `--remote`)')
     .option('-r, --remote', 'Attempt to fetch the protocol descriptor remotely')
     .action(function (target, args) {
         action = inspect.bind(null, target, args);

@@ -6,8 +6,8 @@
         "Andrey Sidorov <sidoares@yandex.ru>",
         "Greg Cochard <greg@gregcochard.com>"
     ],
-    "description": "Chrome Remote Debugging Protocol interface",
-    "keywords": ["chrome", "remote", "debug", "interface"],
+    "description": "Chrome Debugging Protocol interface",
+    "keywords": ["chrome", "debug", "protocol", "remote", "interface"],
     "homepage": "https://github.com/cyrus-and/chrome-remote-interface",
     "version": "0.15.0",
     "repository": {

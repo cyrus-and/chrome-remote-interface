@@ -1,12 +1,12 @@
 chrome-remote-interface
 =======================
 
-[Remote Debugging Protocol][rdp] interface that helps to instrument Chrome by
+[Chrome Debugging Protocol][cdp] interface that helps to instrument Chrome by
 providing a simple abstraction of the two main objects exposed by the protocol
 in a Node.js fashion: commands and notifications.
 
 `chrome-remote-interface` is listed
-among [third-party Chrome debugging protocol clients][clients-cri].
+among [third-party Chrome Debugging Protocol clients][clients-cri].
 
 [clients-cri]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
 
@@ -42,9 +42,9 @@ Installation
 Implementations
 ---------------
 
-This module should work with every application implementing the
-Chrome [Remote Debugging Protocol][rdp]. In particular, it has been tested
-against the following implementations:
+This module should work with every application implementing
+the [Chrome Debugging Protocol][cdp]. In particular, it has been tested against
+the following implementations:
 
 Implementation             | Protocol version   | [Protocol] | [List] | [New] | [Activate] | [Close] | [Version]
 ---------------------------|--------------------|------------|--------|-------|------------|---------|-----------
@@ -192,7 +192,7 @@ Embedded documentation
 ----------------------
 
 In both the REPL and the regular API every object of the protocol is *decorated*
-with the information available through the [Remote Debugging Protocol][rdp]. The
+with the information available through the [Chrome Debugging Protocol][cdp]. The
 `category` field determines if the member is a `command`, an `event` or a
 `type`.
 
@@ -275,7 +275,7 @@ are named in upper camel case) type:
         description: 'Priority of the resource request at the time request is sent.' } } }
 ```
 
-Remote Debugging Protocol versions
+Chrome Debugging Protocol versions
 ----------------------------------
 
 Currently it is not possible to fetch the protocol descriptor
@@ -305,7 +305,7 @@ API
 ### module([options], [callback])
 
 Connects to a remote instance of Chrome using
-the [Remote Debugging Protocol][rdp].
+the [Chrome Debugging Protocol][cdp].
 
 `options` is an object with the following optional properties:
 
@@ -322,7 +322,7 @@ the [Remote Debugging Protocol][rdp].
 
   Defaults to a function which returns the currently active tab (`function
   (tabs) { return 0; }`);
-- `protocol`: [Remote Debugging Protocol][rdp] descriptor object. Defaults to
+- `protocol`: [Chrome Debugging Protocol][cdp] descriptor object. Defaults to
   use the protocol chosen according to the `remote` option;
 - `remote`: a boolean indicating whether the protocol must be fetched *remotely*
   or if the local version must be used. It has no effect if the `protocol`
@@ -361,13 +361,13 @@ function (err) {}
 ```
 
 Emitted if `http://host:port/json` can't be reached or if it's not possible to
-connect to Chrome's remote debugging WebSocket.
+connect to the WebSocket.
 
 `err` is an instance of `Error`.
 
 ### module.Protocol([options], [callback])
 
-Fetch the [Remote Debugging Protocol][rdp] descriptor.
+Fetch the [Chrome Debugging Protocol][cdp] descriptor.
 
 `options` is an object with the following optional properties:
 
@@ -384,7 +384,7 @@ arguments:
 - `protocol`: an object with the following properties:
    - `remote`: a boolean indicating whether the returned descriptor is the
      remote version or not (due to user choice or error);
-   - `descriptor`: the [Remote Debugging Protocol][rdp] descriptor.
+   - `descriptor`: the [Chrome Debugging Protocol][cdp] descriptor.
 
 When `callback` is omitted a `Promise` object is returned.
 
@@ -560,7 +560,7 @@ Emitted when Chrome sends a notification through the WebSocket.
   `'Network.requestWillBeSent'`);
 - `params`: an object containing the payload.
 
-Refer to the [Remote Debugging Protocol specifications][rdp] for more
+Refer to the [Chrome Debugging Protocol][cdp] specifications for more
 information.
 
 For example:
@@ -635,9 +635,8 @@ following arguments:
 When `callback` is omitted a `Promise` object is returned instead, with the
 fulfilled/rejected states implemented according to the `error` parameter.
 
-Note that the field `id` mentioned in
-the [Remote Debugging Protocol specifications][rdp] is managed internally and
-it's not exposed to the user.
+Note that the field `id` mentioned in the [Chrome Debugging Protocol][cdp]
+specifications is managed internally and it's not exposed to the user.
 
 For example:
 
@@ -690,12 +689,12 @@ Contributors
 Resources
 ---------
 
-- [Chrome Debugging Protocol][rdp]
-- [Chrome Debugging Protocol Viewer][rdp-viewer]
+- [Chrome Debugging Protocol][cdp]
+- [Chrome Debugging Protocol Viewer][cdp-viewer]
 - [Chrome Debugging Protocol Google group][goole-group]
 - [Showcase Chrome Debugging Protocol Clients][clients]
 
-[rdp]: https://developer.chrome.com/devtools/docs/debugger-protocol
-[rdp-viewer]: https://chromedevtools.github.io/debugger-protocol-viewer/
+[cdp]: https://developer.chrome.com/devtools/docs/debugger-protocol
+[cdp-viewer]: https://chromedevtools.github.io/debugger-protocol-viewer/
 [goole-group]: https://groups.google.com/forum/#!forum/chrome-debugging-protocol
 [clients]: https://developer.chrome.com/devtools/docs/debugging-clients
