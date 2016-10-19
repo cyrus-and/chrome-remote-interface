@@ -703,5 +703,6 @@ Resources
 - [Chrome Debugging Protocol Viewer](https://chromedevtools.github.io/debugger-protocol-viewer/)
 - [Chrome Debugging Protocol Google group](https://groups.google.com/forum/#!forum/chrome-debugging-protocol)
 - [Showcase Chrome Debugging Protocol Clients](https://developer.chrome.com/devtools/docs/debugging-clients)
+- [Awesome chrome-devtools](https://github.com/ChromeDevTools/awesome-chrome-devtools)
 
 [Chrome Debugging Protocol]: https://developer.chrome.com/devtools/docs/debugger-protocol
