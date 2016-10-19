@@ -280,26 +280,31 @@ are named in upper camel case) type:
 Chrome Debugging Protocol versions
 ----------------------------------
 
-Currently it is not possible to fetch the protocol descriptor
-([`protocol.json`][local-json]) directly from the instrumented Chrome instance
-(see [#10][issue-10]). Rather, that file can be fetched from the
-proper [source repository][remote-json] at every connection. By default,
-the [local version][local-json] is used. That file is manually updated from time
-to time using `scripts/update-protocol.sh` and pushed to this repository.
+`chrome-remote-interface` uses the [local version] of the protocol descriptor by
+default. This file is manually updated from time to time using
+`scripts/update-protocol.sh` and pushed to this repository.
+
+This behavior can be changed by setting the `remote` option to `true`
+upon [connection](#moduleoptions-callback), in which case the remote instance is
+*asked* to provide its own protocol descriptor.
+
+Currently Chrome is not able to do that (see [#10]), so the protocol descriptor
+is fetched from the proper [source repository].
 
 To override the above behavior there are basically three options:
 
-1. pass a custom protocol descriptor upon [connection](#moduleoptions-callback);
+- pass a custom protocol descriptor upon [connection](#moduleoptions-callback)
+  (`protocol` option);
 
-2. use the *raw* version of the [commands](#chromesendmethod-params-callback)
-   and [events](#event-method) interface;
+- use the *raw* version of the [commands](#chromesendmethod-params-callback)
+  and [events](#event-method) interface;
 
-3. update the local copy with `scripts/update-protocol.sh` (not present when
-   fetched with `npm install`).
+- update the local copy with `scripts/update-protocol.sh` (not present when
+  fetched with `npm install`).
 
-[issue-10]: https://github.com/cyrus-and/chrome-remote-interface/issues/10
-[local-json]: lib/protocol.json
-[remote-json]: https://chromium.googlesource.com/chromium/src/+/master/third_party/WebKit/Source/
+[local version]: lib/protocol.json
+[#10]: https://github.com/cyrus-and/chrome-remote-interface/issues/10
+[source repository]: https://chromium.googlesource.com/chromium/src/+/master/third_party/WebKit/Source/
 
 API
 ---
