@@ -1,9 +1,10 @@
 chrome-remote-interface
 =======================
 
-[Chrome Debugging Protocol] interface that helps to instrument Chrome by
-providing a simple abstraction of the two main objects exposed by the protocol
-in a Node.js fashion: commands and notifications.
+[Chrome Debugging Protocol] interface that helps to instrument Chrome (or any
+other suitable [implementation](#implementations)) by providing a simple
+abstraction of commands and notifications using a straightforward JavaScript
+API.
 
 `chrome-remote-interface` is listed
 among [third-party Chrome Debugging Protocol clients][3rd-party].
