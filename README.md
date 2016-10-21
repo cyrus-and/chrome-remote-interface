@@ -6,8 +6,7 @@ other suitable [implementation](#implementations)) by providing a simple
 abstraction of commands and notifications using a straightforward JavaScript
 API.
 
-`chrome-remote-interface` is listed
-among [third-party Chrome Debugging Protocol clients][3rd-party].
+This module is one of the many [third-party protocol clients][3rd-party].
 
 [3rd-party]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
 
@@ -40,6 +39,8 @@ Installation
 
     npm install chrome-remote-interface
 
+Install globally (`-g`) to just use the [bundled client](#bundled-client).
+
 Implementations
 ---------------
 
@@ -50,7 +51,7 @@ following implementations:
 Implementation             | Protocol version   | [Protocol] | [List] | [New] | [Activate] | [Close] | [Version]
 ---------------------------|--------------------|------------|--------|-------|------------|---------|-----------
 [Google Chrome][1.1]       | [tip-of-tree][1.2] | yes        | yes    | yes   | yes        | yes     | yes
-[Microsoft Edge][2.1]      | [partial][2.2]     | yes        | yes    | no    | no         | no      | yes
+[Microsoft Edge][2.1]      | [*partial*][2.2]   | yes        | yes    | no    | no         | no      | yes
 [Node.js][3.1] ([v6.3.0]+) | [node][3.2]        | yes        | no     | no    | no         | no      | yes
 
 [1.1]: https://www.chromium.org/
@@ -141,6 +142,8 @@ of the commands and the message of the events. Also, the event binding is
 simplified here, executing a shorthand method (e.g., `Page.loadEventFired()`)
 toggles the event registration.
 
+Remember that the REPL interface provides completion.
+
 Here is a sample session:
 
 ```javascript
@@ -194,12 +197,11 @@ Embedded documentation
 ----------------------
 
 In both the REPL and the regular API every object of the protocol is *decorated*
-with the information available through the [Chrome Debugging Protocol]. The
-`category` field determines if the member is a `command`, an `event` or a
-`type`.
+with the meta information found within the descriptor. In addition The
+`category` field is added, which determines if the member is a `command`, an
+`event` or a `type`.
 
-Remember that the REPL interface provides completion. For example to learn how
-to call `Page.navigate`:
+For example to learn how to call `Page.navigate`:
 
 ```javascript
 >>> Page.navigate
