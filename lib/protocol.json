@@ -208,6 +208,18 @@
                             "description": "Resource mimeType as determined by the browser."
                         },
                         {
+                            "name": "lastModified",
+                            "$ref": "Network.Timestamp",
+                            "description": "last-modified timestamp as reported by server.",
+                            "optional": true
+                        },
+                        {
+                            "name": "contentSize",
+                            "type": "number",
+                            "description": "Resource content size.",
+                            "optional": true
+                        },
+                        {
                             "name": "failed",
                             "type": "boolean",
                             "optional": true,
@@ -1453,15 +1465,17 @@
                             "name": "offsetX",
                             "type": "number",
                             "optional": true,
+                            "deprecated": true,
                             "experimental": true,
-                            "description": "X offset to shift resulting view image by. Ignored in |fitWindow| mode."
+                            "description": "Not used."
                         },
                         {
                             "name": "offsetY",
                             "type": "number",
                             "optional": true,
+                            "deprecated": true,
                             "experimental": true,
-                            "description": "Y offset to shift resulting view image by. Ignored in |fitWindow| mode."
+                            "description": "Not used."
                         },
                         {
                             "name": "screenWidth",
@@ -1510,6 +1524,33 @@
                     ]
                 },
                 {
+                    "name": "forceViewport",
+                    "description": "Overrides the visible area of the page. The change is hidden from the page, i.e. the observable scroll position and page scale does not change. In effect, the command moves the specified area of the page into the top-left corner of the frame.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "x",
+                            "type": "number",
+                            "description": "X coordinate of top-left corner of the area (CSS pixels)."
+                        },
+                        {
+                            "name": "y",
+                            "type": "number",
+                            "description": "Y coordinate of top-left corner of the area (CSS pixels)."
+                        },
+                        {
+                            "name": "scale",
+                            "type": "number",
+                            "description": "Scale to apply to the area (relative to a page scale of 1.0)."
+                        }
+                    ]
+                },
+                {
+                    "name": "resetViewport",
+                    "description": "Resets the visible area of the page to the original viewport, undoing any effects of the <code>forceViewport</code> command.",
+                    "experimental": true
+                },
+                {
                     "name": "resetPageScaleFactor",
                     "experimental": true,
                     "description": "Requests that page scale factor is reset to initial values."
@@ -1529,6 +1570,7 @@
                 {
                     "name": "setVisibleSize",
                     "description": "Resizes the frame/viewport of the page. Note that this does not affect the frame's container (e.g. browser window). Can be used to produce screenshots of the specified size. Not supported on Android.",
+                    "experimental": true,
                     "parameters": [
                         {
                             "name": "width",
@@ -1725,27 +1767,36 @@
                             "description": "Full text explanation of the factor."
                         },
                         {
-                            "name": "certificateId",
-                            "$ref": "CertificateId",
-                            "optional": true,
-                            "description": "Associated certificate id."
+                            "name": "hasCertificate",
+                            "type": "boolean",
+                            "description": "True if the page has a certificate."
                         }
                     ],
                     "description": "An explanation of an factor contributing to the security state."
                 },
                 {
-                    "id": "MixedContentStatus",
+                    "id": "InsecureContentStatus",
                     "type": "object",
                     "properties": [
                         {
-                            "name": "ranInsecureContent",
+                            "name": "ranMixedContent",
                             "type": "boolean",
-                            "description": "True if the page ran insecure content such as scripts."
+                            "description": "True if the page was loaded over HTTPS and ran mixed (HTTP) content such as scripts."
                         },
                         {
-                            "name": "displayedInsecureContent",
+                            "name": "displayedMixedContent",
                             "type": "boolean",
-                            "description": "True if the page displayed insecure content such as images."
+                            "description": "True if the page was loaded over HTTPS and displayed mixed (HTTP) content such as images."
+                        },
+                        {
+                            "name": "ranContentWithCertErrors",
+                            "type": "boolean",
+                            "description": "True if the page was loaded over HTTPS without certificate errors, and ran content such as scripts that were loaded with certificate errors."
+                        },
+                        {
+                            "name": "displayedContentWithCertErrors",
+                            "type": "boolean",
+                            "description": "True if the page was loaded over HTTPS without certificate errors, and displayed content such as images that were loaded with certificate errors."
                         },
                         {
                             "name": "ranInsecureContentStyle",
@@ -1758,7 +1809,7 @@
                             "description": "Security state representing a page that displayed insecure content."
                         }
                     ],
-                    "description": "Information about mixed content on the page."
+                    "description": "Information about insecure content on the page."
                 }
             ],
             "commands": [
@@ -1772,6 +1823,13 @@
                 {
                     "name": "disable",
                     "description": "Disables tracking security state changes.",
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "showCertificateViewer",
+                    "description": "Displays native dialog with the certificate details.",
                     "handlers": [
                         "browser"
                     ]
@@ -1797,9 +1855,9 @@
                             "optional": true
                         },
                         {
-                            "name": "mixedContentStatus",
-                            "$ref": "MixedContentStatus",
-                            "description": "Information about mixed content on the page.",
+                            "name": "insecureContentStatus",
+                            "$ref": "InsecureContentStatus",
+                            "description": "Information about insecure content on the page.",
                             "optional": true
                         },
                         {
@@ -2016,61 +2074,6 @@
                     ]
                 },
                 {
-                    "id": "CertificateSubject",
-                    "type": "object",
-                    "description": "Subject of a certificate.",
-                    "properties": [
-                        {
-                            "name": "name",
-                            "type": "string",
-                            "description": "Certificate subject name."
-                        },
-                        {
-                            "name": "sanDnsNames",
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "description": "Subject Alternative Name (SAN) DNS names."
-                        },
-                        {
-                            "name": "sanIpAddresses",
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "description": "Subject Alternative Name (SAN) IP addresses."
-                        }
-                    ]
-                },
-                {
-                    "id": "CertificateDetails",
-                    "type": "object",
-                    "description": "Details about a request's certificate.",
-                    "properties": [
-                        {
-                            "name": "subject",
-                            "$ref": "CertificateSubject",
-                            "description": "Certificate subject."
-                        },
-                        {
-                            "name": "issuer",
-                            "type": "string",
-                            "description": "Name of the issuing CA."
-                        },
-                        {
-                            "name": "validFrom",
-                            "$ref": "Timestamp",
-                            "description": "Certificate valid from date."
-                        },
-                        {
-                            "name": "validTo",
-                            "$ref": "Timestamp",
-                            "description": "Certificate valid to (expiration) date"
-                        }
-                    ]
-                },
-                {
                     "id": "SignedCertificateTimestamp",
                     "type": "object",
                     "description": "Details of a signed certificate timestamp (SCT).",
@@ -2130,7 +2133,13 @@
                         {
                             "name": "keyExchange",
                             "type": "string",
-                            "description": "Key Exchange used by the connection."
+                            "description": "Key Exchange used by the connection, or the empty string if not applicable."
+                        },
+                        {
+                            "name": "keyExchangeGroup",
+                            "type": "string",
+                            "optional": true,
+                            "description": "(EC)DH group used by the connection, if applicable."
                         },
                         {
                             "name": "cipher",
@@ -2147,6 +2156,34 @@
                             "name": "certificateId",
                             "$ref": "Security.CertificateId",
                             "description": "Certificate ID value."
+                        },
+                        {
+                            "name": "subjectName",
+                            "type": "string",
+                            "description": "Certificate subject name."
+                        },
+                        {
+                            "name": "sanList",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Subject Alternative Name (SAN) DNS names and IP addresses."
+                        },
+                        {
+                            "name": "issuer",
+                            "type": "string",
+                            "description": "Name of the issuing CA."
+                        },
+                        {
+                            "name": "validFrom",
+                            "$ref": "Timestamp",
+                            "description": "Certificate valid from date."
+                        },
+                        {
+                            "name": "validTo",
+                            "$ref": "Timestamp",
+                            "description": "Certificate valid to (expiration) date"
                         },
                         {
                             "name": "signedCertificateTimestampList",
@@ -2506,19 +2543,11 @@
                             "experimental": true,
                             "description": "Per-resource buffer size in bytes to use when preserving network payloads (XHRs, etc)."
                         }
-                    ],
-                    "handlers": [
-                        "renderer",
-                        "browser"
                     ]
                 },
                 {
                     "name": "disable",
-                    "description": "Disables network tracking, prevents network events from being sent to the client.",
-                    "handlers": [
-                        "renderer",
-                        "browser"
-                    ]
+                    "description": "Disables network tracking, prevents network events from being sent to the client."
                 },
                 {
                     "name": "setUserAgentOverride",
@@ -2851,39 +2880,28 @@
                     "experimental": true
                 },
                 {
-                    "name": "getCertificateDetails",
-                    "description": "Returns details for the given certificate.",
+                    "name": "getCertificate",
+                    "description": "Returns the DER-encoded certificate.",
                     "parameters": [
                         {
-                            "name": "certificateId",
-                            "$ref": "Security.CertificateId",
-                            "description": "ID of the certificate to get details for."
+                            "name": "origin",
+                            "type": "string",
+                            "description": "Origin to get certificate for."
                         }
                     ],
                     "returns": [
                         {
-                            "name": "result",
-                            "$ref": "CertificateDetails",
-                            "description": "Certificate details."
+                            "name": "tableNames",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     ],
                     "handlers": [
-                        "browser"
-                    ]
-                },
-                {
-                    "name": "showCertificateViewer",
-                    "description": "Displays native dialog with the certificate details.",
-                    "parameters": [
-                        {
-                            "name": "certificateId",
-                            "$ref": "Security.CertificateId",
-                            "description": "Certificate id."
-                        }
+                        "renderer"
                     ],
-                    "handlers": [
-                        "browser"
-                    ]
+                    "experimental": true
                 }
             ],
             "events": [
@@ -4739,6 +4757,22 @@
                 },
                 {
                     "name": "getDocument",
+                    "parameters": [
+                        {
+                            "name": "depth",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0.",
+                            "experimental": true
+                        },
+                        {
+                            "name": "traverseFrames",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Whether or not iframes should be traversed when returning the subtree (default is false).",
+                            "experimental": true
+                        }
+                    ],
                     "returns": [
                         {
                             "name": "root",
@@ -4746,7 +4780,29 @@
                             "description": "Resulting node."
                         }
                     ],
-                    "description": "Returns the root DOM node to the caller."
+                    "description": "Returns the root DOM node (and optionally the subtree) to the caller."
+                },
+                {
+                    "name": "collectClassNamesFromSubtree",
+                    "parameters": [
+                        {
+                            "name": "nodeId",
+                            "$ref": "NodeId",
+                            "description": "Id of the node to collect class names."
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "classNames",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Class name list."
+                        }
+                    ],
+                    "description": "Collects class names for the node with given id and all of it's child nodes.",
+                    "experimental": true
                 },
                 {
                     "name": "requestChildNodes",
@@ -4761,6 +4817,13 @@
                             "type": "integer",
                             "optional": true,
                             "description": "The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0.",
+                            "experimental": true
+                        },
+                        {
+                            "name": "traverseFrames",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Whether or not iframes should be traversed when returning the sub-tree (default is false).",
                             "experimental": true
                         }
                     ],
@@ -6326,6 +6389,83 @@
                         }
                     ],
                     "description": "A descriptor of operation to mutate style declaration text."
+                },
+                {
+                    "id": "InlineTextBox",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "boundingBox",
+                            "$ref": "DOM.Rect",
+                            "description": "The absolute position bounding box."
+                        },
+                        {
+                            "name": "startCharacterIndex",
+                            "type": "integer",
+                            "description": "The starting index in characters, for this post layout textbox substring."
+                        },
+                        {
+                            "name": "numCharacters",
+                            "type": "integer",
+                            "description": "The number of characters in this post layout textbox substring."
+                        }
+                    ],
+                    "description": "Details of post layout rendered text positions. The exact layout should not be regarded as stable and may change between versions.",
+                    "experimental": true
+                },
+                {
+                    "id": "LayoutTreeNode",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "backendNodeId",
+                            "$ref": "DOM.BackendNodeId",
+                            "description": "The BackendNodeId of the related DOM node."
+                        },
+                        {
+                            "name": "boundingBox",
+                            "$ref": "DOM.Rect",
+                            "description": "The absolute position bounding box."
+                        },
+                        {
+                            "name": "layoutText",
+                            "type": "string",
+                            "optional": true,
+                            "description": "Contents of the LayoutText if any"
+                        },
+                        {
+                            "name": "inlineTextNodes",
+                            "type": "array",
+                            "optional": true,
+                            "items": {
+                                "$ref": "InlineTextBox"
+                            },
+                            "description": "The post layout inline text nodes, if any."
+                        },
+                        {
+                            "name": "styleIndex",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "Index into the computedStyles array returned by getLayoutTreeAndStyles."
+                        }
+                    ],
+                    "description": "Details of an element in the DOM tree with a LayoutObject.",
+                    "experimental": true
+                },
+                {
+                    "id": "ComputedStyle",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "properties",
+                            "type": "array",
+                            "items": {
+                                "$ref": "CSSComputedStyleProperty"
+                            }
+                        }
+                    ],
+                    "description": "A subset of the full ComputedStyle as defined by the request whitelist.",
+                    "experimental": true
                 }
             ],
             "commands": [
@@ -6479,6 +6619,27 @@
                         }
                     ],
                     "description": "Returns the current textual content and the URL for a stylesheet."
+                },
+                {
+                    "name": "collectClassNames",
+                    "parameters": [
+                        {
+                            "name": "styleSheetId",
+                            "$ref": "StyleSheetId"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "classNames",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Class name list."
+                        }
+                    ],
+                    "description": "Returns all class names from specified stylesheet.",
+                    "experimental": true
                 },
                 {
                     "name": "setStyleSheetText",
@@ -6725,6 +6886,37 @@
                             "optional": true
                         }
                     ],
+                    "experimental": true
+                },
+                {
+                    "name": "getLayoutTreeAndStyles",
+                    "parameters": [
+                        {
+                            "name": "computedStyleWhitelist",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Whitelist of computed styles to return."
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "layoutTreeNodes",
+                            "type": "array",
+                            "items": {
+                                "$ref": "LayoutTreeNode"
+                            }
+                        },
+                        {
+                            "name": "computedStyles",
+                            "type": "array",
+                            "items": {
+                                "$ref": "ComputedStyle"
+                            }
+                        }
+                    ],
+                    "description": "For the main document and any content documents, return the LayoutTreeNodes and a whitelisted subset of the computed style.",
                     "experimental": true
                 }
             ],
@@ -7067,6 +7259,265 @@
             ]
         },
         {
+            "domain": "Target",
+            "description": "Supports additional targets discovery and allows to attach to them.",
+            "experimental": true,
+            "types": [
+                {
+                    "id": "TargetID",
+                    "type": "string"
+                },
+                {
+                    "id": "TargetInfo",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "targetId",
+                            "$ref": "TargetID"
+                        },
+                        {
+                            "name": "type",
+                            "type": "string"
+                        },
+                        {
+                            "name": "title",
+                            "type": "string"
+                        },
+                        {
+                            "name": "url",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "RemoteLocation",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "host",
+                            "type": "string"
+                        },
+                        {
+                            "name": "port",
+                            "type": "integer"
+                        }
+                    ]
+                }
+            ],
+            "commands": [
+                {
+                    "name": "setDiscoverTargets",
+                    "description": "Controls whether to discover available targets and notify via <code>targetCreated/targetDestroyed</code> events.",
+                    "parameters": [
+                        {
+                            "name": "discover",
+                            "type": "boolean",
+                            "description": "Whether to discover available targets."
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "setAutoAttach",
+                    "description": "Controls whether to automatically attach to new targets which are considered to be related to this one. When turned on, attaches to all existing related targets as well. When turned off, automatically detaches from all currently attached targets.",
+                    "parameters": [
+                        {
+                            "name": "autoAttach",
+                            "type": "boolean",
+                            "description": "Whether to auto-attach to related targets."
+                        },
+                        {
+                            "name": "waitForDebuggerOnStart",
+                            "type": "boolean",
+                            "description": "Whether to pause new targets when attaching to them. Use <code>Runtime.runIfWaitingForDebugger</code> to run paused targets."
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "setAttachToFrames",
+                    "parameters": [
+                        {
+                            "name": "value",
+                            "type": "boolean",
+                            "description": "Whether to attach to frames."
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "setRemoteLocations",
+                    "parameters": [
+                        {
+                            "name": "locations",
+                            "type": "array",
+                            "items": {
+                                "$ref": "RemoteLocation"
+                            },
+                            "description": "List of remote locations."
+                        }
+                    ],
+                    "description": "Enables target discovery for the specified locations, when <code>setDiscoverTargets</code> was set to <code>true</code>.",
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "sendMessageToTarget",
+                    "parameters": [
+                        {
+                            "name": "targetId",
+                            "type": "string"
+                        },
+                        {
+                            "name": "message",
+                            "type": "string"
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "getTargetInfo",
+                    "parameters": [
+                        {
+                            "name": "targetId",
+                            "$ref": "TargetID"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "targetInfo",
+                            "$ref": "TargetInfo"
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "activateTarget",
+                    "parameters": [
+                        {
+                            "name": "targetId",
+                            "$ref": "TargetID"
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "attachToTarget",
+                    "parameters": [
+                        {
+                            "name": "targetId",
+                            "$ref": "TargetID"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "success",
+                            "type": "boolean",
+                            "description": "Whether attach succeeded."
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "detachFromTarget",
+                    "parameters": [
+                        {
+                            "name": "targetId",
+                            "$ref": "TargetID"
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
+                }
+            ],
+            "events": [
+                {
+                    "name": "targetCreated",
+                    "parameters": [
+                        {
+                            "name": "targetInfo",
+                            "$ref": "TargetInfo"
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "targetDestroyed",
+                    "parameters": [
+                        {
+                            "name": "targetId",
+                            "$ref": "TargetID"
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "attachedToTarget",
+                    "parameters": [
+                        {
+                            "name": "targetInfo",
+                            "$ref": "TargetInfo"
+                        },
+                        {
+                            "name": "waitingForDebugger",
+                            "type": "boolean"
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "detachedFromTarget",
+                    "parameters": [
+                        {
+                            "name": "targetId",
+                            "$ref": "TargetID"
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
+                },
+                {
+                    "name": "receivedMessageFromTarget",
+                    "parameters": [
+                        {
+                            "name": "targetId",
+                            "$ref": "TargetID"
+                        },
+                        {
+                            "name": "message",
+                            "type": "string"
+                        }
+                    ],
+                    "handlers": [
+                        "browser"
+                    ]
+                }
+            ]
+        },
+        {
             "domain": "Worker",
             "experimental": true,
             "types": [],
@@ -7188,10 +7639,6 @@
                     ]
                 },
                 {
-                    "id": "TargetID",
-                    "type": "string"
-                },
-                {
                     "id": "ServiceWorkerVersion",
                     "type": "object",
                     "description": "ServiceWorker version.",
@@ -7233,8 +7680,13 @@
                             "type": "array",
                             "optional": true,
                             "items": {
-                                "$ref": "TargetID"
+                                "$ref": "Target.TargetID"
                             }
+                        },
+                        {
+                            "name": "targetId",
+                            "$ref": "Target.TargetID",
+                            "optional": true
                         }
                     ]
                 },
@@ -7268,28 +7720,6 @@
                             "type": "integer"
                         }
                     ]
-                },
-                {
-                    "id": "TargetInfo",
-                    "type": "object",
-                    "properties": [
-                        {
-                            "name": "id",
-                            "$ref": "TargetID"
-                        },
-                        {
-                            "name": "type",
-                            "type": "string"
-                        },
-                        {
-                            "name": "title",
-                            "type": "string"
-                        },
-                        {
-                            "name": "url",
-                            "type": "string"
-                        }
-                    ]
                 }
             ],
             "commands": [
@@ -7301,34 +7731,6 @@
                 },
                 {
                     "name": "disable",
-                    "handlers": [
-                        "browser"
-                    ]
-                },
-                {
-                    "name": "sendMessage",
-                    "parameters": [
-                        {
-                            "name": "workerId",
-                            "type": "string"
-                        },
-                        {
-                            "name": "message",
-                            "type": "string"
-                        }
-                    ],
-                    "handlers": [
-                        "browser"
-                    ]
-                },
-                {
-                    "name": "stop",
-                    "parameters": [
-                        {
-                            "name": "workerId",
-                            "type": "string"
-                        }
-                    ],
                     "handlers": [
                         "browser"
                     ]
@@ -7460,87 +7862,9 @@
                     "handlers": [
                         "browser"
                     ]
-                },
-                {
-                    "name": "getTargetInfo",
-                    "parameters": [
-                        {
-                            "name": "targetId",
-                            "$ref": "TargetID"
-                        }
-                    ],
-                    "returns": [
-                        {
-                            "name": "targetInfo",
-                            "$ref": "TargetInfo"
-                        }
-                    ],
-                    "handlers": [
-                        "browser"
-                    ]
-                },
-                {
-                    "name": "activateTarget",
-                    "parameters": [
-                        {
-                            "name": "targetId",
-                            "$ref": "TargetID"
-                        }
-                    ],
-                    "handlers": [
-                        "browser"
-                    ]
                 }
             ],
             "events": [
-                {
-                    "name": "workerCreated",
-                    "parameters": [
-                        {
-                            "name": "workerId",
-                            "type": "string"
-                        },
-                        {
-                            "name": "url",
-                            "type": "string"
-                        },
-                        {
-                            "name": "versionId",
-                            "type": "string"
-                        }
-                    ],
-                    "handlers": [
-                        "browser"
-                    ]
-                },
-                {
-                    "name": "workerTerminated",
-                    "parameters": [
-                        {
-                            "name": "workerId",
-                            "type": "string"
-                        }
-                    ],
-                    "handlers": [
-                        "browser"
-                    ]
-                },
-                {
-                    "name": "dispatchMessage",
-                    "parameters": [
-                        {
-                            "name": "workerId",
-                            "type": "string"
-                        },
-                        {
-                            "name": "message",
-                            "type": "string"
-                        }
-                    ],
-                    "handlers": [
-                        "browser"
-                    ]
-                },
                 {
                     "name": "workerRegistrationUpdated",
                     "parameters": [
@@ -8490,6 +8814,7 @@
         },
         {
             "domain": "Tracing",
+            "experimental": true,
             "types": [
                 {
                     "id": "MemoryDumpConfig",
@@ -9410,20 +9735,27 @@
             ],
             "commands": [
                 {
-                    "name": "getAXNode",
+                    "name": "getAXNodeChain",
                     "parameters": [
                         {
                             "name": "nodeId",
                             "$ref": "DOM.NodeId",
                             "description": "ID of node to get accessibility node for."
+                        },
+                        {
+                            "name": "fetchAncestors",
+                            "type": "boolean",
+                            "description": "Whether to also push down a partial tree (parent chain)."
                         }
                     ],
                     "returns": [
                         {
-                            "name": "accessibilityNode",
-                            "$ref": "AXNode",
-                            "description": "The <code>Accessibility.AXNode</code> for this DOM node, if it exists.",
-                            "optional": true
+                            "name": "nodes",
+                            "type": "array",
+                            "items": {
+                                "$ref": "AXNode"
+                            },
+                            "description": "The <code>Accessibility.AXNode</code> for this DOM node, if it exists, plus ancestors if requested."
                         }
                     ],
                     "description": "Fetches the accessibility node for this DOM node, if it exists.",
@@ -9732,7 +10064,8 @@
                     "description": "Returns target information for all potential targets.",
                     "handlers": [
                         "browser"
-                    ]
+                    ],
+                    "async": true
                 },
                 {
                     "name": "attach",
@@ -9744,9 +10077,17 @@
                             "description": "Target id."
                         }
                     ],
+                    "returns": [
+                        {
+                            "name": "success",
+                            "type": "boolean",
+                            "description": "Whether attach succeeded."
+                        }
+                    ],
                     "handlers": [
                         "browser"
-                    ]
+                    ],
+                    "async": true
                 },
                 {
                     "name": "detach",
@@ -9755,6 +10096,13 @@
                         {
                             "name": "targetId",
                             "$ref": "TargetID"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "success",
+                            "type": "boolean",
+                            "description": "Whether detach succeeded."
                         }
                     ],
                     "handlers": [
