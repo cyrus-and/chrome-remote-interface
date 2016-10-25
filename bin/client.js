@@ -55,9 +55,34 @@ function inspect(target, args, options) {
             'writer': display
         });
 
-        // make the history persistent
-        const history_file = path.join(process.env.HOME, '.cri_history');
-        require('repl.history')(chromeRepl, history_file);
+        const historyFile = path.join(process.env.HOME, '.cri_history');
+        const historySize = 10000;
+
+        function loadHistory() {
+            // attempt to open the history file
+            var fd;
+            try {
+                fd = fs.openSync(historyFile, 'r');
+            } catch (err) {
+                return; // no history file present
+            }
+            // populate the REPL history
+            fs.readFileSync(fd, 'utf8')
+                .split('\n')
+                .filter(function (entry) {
+                    return entry.trim();
+                })
+                .reverse() // to be compatible with repl.history files
+                .forEach(function (entry) {
+                    chromeRepl.history.push(entry);
+                });
+        }
+
+        function saveHistory() {
+            // only store the last chunk
+            const entries = chromeRepl.history.slice(0, historySize).reverse().join('\n');
+            fs.writeFileSync(historyFile, entries + '\n');
+        }
 
         function overridePrompt(string) {
             // hack to get rid of the prompt (clean line and reposition cursor)
@@ -112,15 +137,20 @@ function inspect(target, args, options) {
             return override;
         }
 
+        // enable history
+        loadHistory();
+
         // disconnect on exit
         chromeRepl.on('exit', function () {
             console.log();
             chrome.close();
+            saveHistory();
         });
 
         // exit on disconnection
         this.on('disconnect', function () {
             console.error('Disconnected.');
+            saveHistory();
             process.exit(1);
         });
 

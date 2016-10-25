@@ -22,8 +22,7 @@
     },
     "dependencies": {
         "ws": "1.x.x",
-        "commander": "2.1.x",
-        "repl.history": "0.1.x"
+        "commander": "2.1.x"
     },
     "files": [
         "lib",
