@@ -18,7 +18,7 @@
         "url" : "http://github.com/cyrus-and/chrome-remote-interface/issues"
     },
     "engines": {
-        "node": ">=0.12.15"
+        "node": ">=4"
     },
     "dependencies": {
         "ws": "1.x.x",
