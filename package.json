@@ -35,5 +35,8 @@
     "devDependencies": {
         "mocha": "3.x.x",
         "eslint": "3.x.x"
+    },
+    "scripts": {
+        "test": "./scripts/run-tests.sh"
     }
 }
