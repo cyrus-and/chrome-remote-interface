@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-exec eslint .
+exec node_modules/.bin/eslint .

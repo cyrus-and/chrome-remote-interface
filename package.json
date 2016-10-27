@@ -33,6 +33,7 @@
         "chrome-remote-interface": "./bin/client.js"
     },
     "devDependencies": {
-        "mocha": "3.x.x"
+        "mocha": "3.x.x",
+        "eslint": "3.x.x"
     }
 }
