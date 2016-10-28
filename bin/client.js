@@ -63,7 +63,7 @@ function inspect(target, args, options) {
 
         function loadHistory() {
             // attempt to open the history file
-            var fd;
+            let fd;
             try {
                 fd = fs.openSync(historyFile, 'r');
             } catch (err) {
@@ -164,7 +164,7 @@ function inspect(target, args, options) {
             chromeRepl.context[domainName] = {};
             Object.keys(chrome[domainName]).forEach(function (itemName) {
                 // walk the items in the domain and override commands and events
-                var item = chrome[domainName][itemName];
+                let item = chrome[domainName][itemName];
                 switch (item.category) {
                 case 'command':
                     item = overrideCommand(item);
@@ -245,7 +245,7 @@ function protocol(args, options) {
 
 ///
 
-var action;
+let action;
 
 program
     .option('-t, --host <host>', 'HTTP frontend host')

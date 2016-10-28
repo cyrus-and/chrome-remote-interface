@@ -47,6 +47,7 @@
             "error",
             "always"
         ],
+        "no-var": "error",
         "no-console": 0
     }
 }
