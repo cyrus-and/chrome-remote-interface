@@ -43,6 +43,10 @@
                 "args": "none"
             }
         ],
+        "eqeqeq": [
+            "error",
+            "always"
+        ],
         "no-console": 0
     }
 }
