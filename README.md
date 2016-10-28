@@ -22,7 +22,9 @@ Chrome(function (chrome) {
         Network.requestWillBeSent(function (params) {
             console.log(params.request.url);
         });
-        Page.loadEventFired(close);
+        Page.loadEventFired(function () {
+            close();
+        });
         Network.enable();
         Page.enable();
         once('ready', function () {
