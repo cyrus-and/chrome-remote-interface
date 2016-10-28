@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+'use strict';
+
 const repl = require('repl');
 const util = require('util');
 const fs = require('fs');
@@ -50,7 +52,7 @@ function inspect(target, args, options) {
         const registeredEvents = {};
 
         const chromeRepl = repl.start({
-            'prompt': '\033[32m>>>\033[0m ',
+            'prompt': '\x1b[32m>>>\x1b[0m ',
             'ignoreUndefined': true,
             'writer': display
         });
@@ -87,7 +89,7 @@ function inspect(target, args, options) {
 
         function overridePrompt(string) {
             // hack to get rid of the prompt (clean line and reposition cursor)
-            console.log('\033[2K\033[G%s', string);
+            console.log('\x1b[2K\x1b[G%s', string);
             chromeRepl.displayPrompt(true);
         }
 

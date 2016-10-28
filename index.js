@@ -1,3 +1,5 @@
+'use strict';
+
 const EventEmitter = require('events');
 
 const devtools = require('./lib/devtools.js');
