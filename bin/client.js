@@ -55,7 +55,8 @@ function inspect(target, args, options) {
             'writer': display
         });
 
-        const historyFile = path.join(process.env.HOME, '.cri_history');
+        const homePath = process.env.HOME || process.env.USERPROFILE;
+        const historyFile = path.join(homePath, '.cri_history');
         const historySize = 10000;
 
         function loadHistory() {
