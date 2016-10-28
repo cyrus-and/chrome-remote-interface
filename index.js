@@ -1,4 +1,4 @@
-const events = require('events');
+const EventEmitter = require('events');
 
 const devtools = require('./lib/devtools.js');
 const Chrome = require('./lib/chrome.js');
@@ -8,7 +8,7 @@ module.exports = function (options, callback) {
         callback = options;
         options = undefined;
     }
-    const notifier = new events.EventEmitter();
+    const notifier = new EventEmitter();
     if (typeof callback === 'function') {
         // allow to register the error callback later
         process.nextTick(function () {
