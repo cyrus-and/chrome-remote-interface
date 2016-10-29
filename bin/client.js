@@ -222,7 +222,7 @@ function close(args, options) {
     });
 }
 
-function version(args, options) {
+function version(options) {
     Chrome.Version(options, function (err, info) {
         if (err) {
             console.error(err.toString());
