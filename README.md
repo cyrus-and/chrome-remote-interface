@@ -55,6 +55,7 @@ Implementation             | Protocol version   | [Protocol] | [List] | [New] | 
 [Google Chrome][1.1]       | [tip-of-tree][1.2] | yes        | yes    | yes   | yes        | yes     | yes
 [Microsoft Edge][2.1]      | [*partial*][2.2]   | yes        | yes    | no    | no         | no      | yes
 [Node.js][3.1] ([v6.3.0]+) | [node][3.2]        | yes        | no     | no    | no         | no      | yes
+[Safari (iOS)][4.1]        | [*partial*][4.2]   | no         | yes    | no    | no         | no      | no
 
 [1.1]: https://www.chromium.org/
 [1.2]: https://chromedevtools.github.io/debugger-protocol-viewer/tot/
@@ -62,6 +63,8 @@ Implementation             | Protocol version   | [Protocol] | [List] | [New] | 
 [2.2]: https://github.com/Microsoft/edge-diagnostics-adapter/wiki/Supported-features-and-API
 [3.1]: https://nodejs.org/
 [3.2]: https://chromedevtools.github.io/debugger-protocol-viewer/v8/
+[4.1]: https://www.apple.com/safari/
+[4.2]: http://trac.webkit.org/browser/trunk/Source/JavaScriptCore/inspector/protocol
 
 [v6.3.0]: https://nodejs.org/en/blog/release/v6.3.0/
 
@@ -106,6 +109,12 @@ Install and run the [Edge Diagnostics Adapter][edge-adapter].
 Start Node.js with the `--inspect` option, for example:
 
     node --inspect=9222 script.js
+
+### Safari (iOS)
+
+Install and run the [iOS WebKit Debug Proxy][iwdp].
+
+[iwdp]: https://github.com/google/ios-webkit-debug-proxy
 
 Bundled client
 --------------
