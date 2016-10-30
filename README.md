@@ -57,13 +57,16 @@ Implementation             | Protocol version   | [Protocol] | [List] | [New] | 
 [Node.js][3.1] ([v6.3.0]+) | [node][3.2]        | yes        | no     | no    | no         | no      | yes
 [Safari (iOS)][4.1]        | [*partial*][4.2]   | no         | yes    | no    | no         | no      | no
 
-[1.1]: https://www.chromium.org/
+[1.1]: #chromechromium
 [1.2]: https://chromedevtools.github.io/debugger-protocol-viewer/tot/
-[2.1]: https://www.microsoft.com/windows/microsoft-edge
+
+[2.1]: #edge
 [2.2]: https://github.com/Microsoft/edge-diagnostics-adapter/wiki/Supported-features-and-API
-[3.1]: https://nodejs.org/
+
+[3.1]: #nodejs
 [3.2]: https://chromedevtools.github.io/debugger-protocol-viewer/v8/
-[4.1]: https://www.apple.com/safari/
+
+[4.1]: #safari-ios
 [4.2]: http://trac.webkit.org/browser/trunk/Source/JavaScriptCore/inspector/protocol
 
 [v6.3.0]: https://nodejs.org/en/blog/release/v6.3.0/
