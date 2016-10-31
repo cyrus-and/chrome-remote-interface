@@ -4,6 +4,7 @@ matrix:
     - node_js: "node"
     - node_js: "6"
     - node_js: "4"
+sudo: required # this seems to be required in order to use caches...
 cache:
   directories:
     - node_modules
