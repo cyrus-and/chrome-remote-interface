@@ -9,8 +9,8 @@ cache:
     - node_modules
     - chrome
 before_script:
-  # fetch and extract chrome if not cached
-  - if [ ! -e chrome/ ]; then
+  # fetch and extract Chrome if not cached
+  - if [ ! -x chrome/opt/google/chrome/chrome ]; then
         wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb &&
         dpkg -x google-chrome-stable_current_amd64.deb chrome;
     fi
