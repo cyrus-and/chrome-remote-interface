@@ -13,7 +13,8 @@ before_script:
   # fetch and extract Chrome if not cached
   - if [ ! -x chrome/opt/google/chrome/chrome ]; then
         wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb &&
-        dpkg -x google-chrome-stable_current_amd64.deb chrome;
+        dpkg -x google-chrome-stable_current_amd64.deb chrome &&
+        rm -f google-chrome-stable_current_amd64.deb
     else
         echo 'Using cached Google Chrome';
     fi
