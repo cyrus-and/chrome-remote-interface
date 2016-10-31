@@ -9,11 +9,20 @@ cache:
     - node_modules
     - chrome
 before_script:
-  - if [ ! -e chrome/ ]; then wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg -x google-chrome-stable_current_amd64.deb chrome; fi
+  # fetch and extract chrome if not cached
+  - if [ ! -e chrome/ ]; then \
+        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+        dpkg -x google-chrome-stable_current_amd64.deb chrome; \
+    fi
+  # dump the current versions
   - chrome/opt/google/chrome/chrome --version
   - npm list
+  # prepare the headless environment
   - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - sleep 5
-  - chrome/opt/google/chrome/chrome --no-sandbox --no-first-run --disable-extensions --user-data-dir=$(mktemp -d) --remote-debugging-port=9222 about:blank &
+  - sh -e /etc/init.d/xvfb start && sleep 5
+  # start a fresh new Chrome instance
+  - chrome/opt/google/chrome/chrome \
+        --user-data-dir=$(mktemp -d) \
+        --no-sandbox --no-first-run --disable-extensions --remote-debugging-port=9222 \
+        about:blank &
   - sleep 5
