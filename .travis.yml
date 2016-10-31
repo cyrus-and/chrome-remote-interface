@@ -13,6 +13,8 @@ before_script:
   - if [ ! -x chrome/opt/google/chrome/chrome ]; then
         wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb &&
         dpkg -x google-chrome-stable_current_amd64.deb chrome;
+    else
+        echo 'Using cached Google Chrome';
     fi
   # dump the current versions
   - chrome/opt/google/chrome/chrome --version
