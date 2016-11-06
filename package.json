@@ -21,7 +21,7 @@
         "node": ">=4"
     },
     "dependencies": {
-        "ws": "1.x.x",
+        "ws": "1.1.x",
         "commander": "2.1.x"
     },
     "files": [
@@ -33,8 +33,8 @@
         "chrome-remote-interface": "./bin/client.js"
     },
     "devDependencies": {
-        "mocha": "3.x.x",
-        "eslint": "3.x.x"
+        "mocha": "3.1.x",
+        "eslint": "3.9.x"
     },
     "scripts": {
         "test": "./scripts/run-tests.sh"
