@@ -5,7 +5,7 @@ const EventEmitter = require('events');
 const devtools = require('./lib/devtools.js');
 const Chrome = require('./lib/chrome.js');
 
-module.exports = function (options, callback) {
+function connect(options, callback) {
     if (typeof options === 'function') {
         callback = options;
         options = undefined;
@@ -27,13 +27,15 @@ module.exports = function (options, callback) {
             new Chrome(options, notifier);
         });
     }
-};
+}
 
 // for backward compatibility
+module.exports = connect;
 module.exports.listTabs = devtools.List;
 module.exports.spawnTab = devtools.New;
 module.exports.closeTab = devtools.Close;
 
+module.exports.connect = connect;
 module.exports.Protocol = devtools.Protocol;
 module.exports.List = devtools.List;
 module.exports.New = devtools.New;
