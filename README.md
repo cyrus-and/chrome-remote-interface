@@ -101,6 +101,20 @@ Plug the device and enable the [port forwarding][adb], for example:
 
 [adb]: https://developer.chrome.com/devtools/docs/remote-debugging-legacy
 
+##### WebView
+
+In order to be inspectable, a WebView must
+be [configured for debugging][webview] and the corresponding process ID must be
+known. There are several ways to obtain it, for example:
+
+    adb shell grep -a webview_devtools_remote /proc/net/unix
+
+Finally, port forwarding can be enabled as follows:
+
+    adb forward tcp:9222 localabstract:webview_devtools_remote_<pid>
+
+[webview]: https://developers.google.com/web/tools/chrome-devtools/remote-debugging/webviews#configure_webviews_for_debugging
+
 ### Edge
 
 Install and run the [Edge Diagnostics Adapter][edge-adapter].
