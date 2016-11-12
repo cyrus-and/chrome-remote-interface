@@ -9,7 +9,7 @@ const path = require('path');
 
 const program = require('commander');
 
-const Chrome = require('../');
+const CDP = require('../');
 
 function display(object) {
     return util.inspect(object, {
@@ -47,11 +47,11 @@ function inspect(target, args, options) {
         options.protocol = JSON.parse(fs.readFileSync(args.protocol));
     }
 
-    Chrome(options, function (chrome) {
+    CDP(options, function (client) {
         // keep track of registered events
         const registeredEvents = {};
 
-        const chromeRepl = repl.start({
+        const cdpRepl = repl.start({
             'prompt': '\x1b[32m>>>\x1b[0m ',
             'ignoreUndefined': true,
             'writer': display
@@ -77,20 +77,20 @@ function inspect(target, args, options) {
                 })
                 .reverse() // to be compatible with repl.history files
                 .forEach(function (entry) {
-                    chromeRepl.history.push(entry);
+                    cdpRepl.history.push(entry);
                 });
         }
 
         function saveHistory() {
             // only store the last chunk
-            const entries = chromeRepl.history.slice(0, historySize).reverse().join('\n');
+            const entries = cdpRepl.history.slice(0, historySize).reverse().join('\n');
             fs.writeFileSync(historyFile, entries + '\n');
         }
 
         function overridePrompt(string) {
             // hack to get rid of the prompt (clean line and reposition cursor)
             console.log('\x1b[2K\x1b[G%s', string);
-            chromeRepl.displayPrompt(true);
+            cdpRepl.displayPrompt(true);
         }
 
         function overrideCommand(command) {
@@ -107,13 +107,13 @@ function inspect(target, args, options) {
             return override;
         }
 
-        function overrideEvent(chrome, domainName, itemName) {
-            const event = chrome[domainName][itemName];
+        function overrideEvent(client, domainName, itemName) {
+            const event = client[domainName][itemName];
             const eventName = domainName + '.' + itemName;
             // hard code a callback to display the event data
             const override = function (filter) {
                 // remove all the listeners (just one actually) anyway
-                chrome.removeAllListeners(eventName);
+                client.removeAllListeners(eventName);
                 const status = {};
                 // a filter will always enable/update the listener
                 if (!filter && registeredEvents[eventName]) {
@@ -144,9 +144,9 @@ function inspect(target, args, options) {
         loadHistory();
 
         // disconnect on exit
-        chromeRepl.on('exit', function () {
+        cdpRepl.on('exit', function () {
             console.log();
-            chrome.close();
+            client.close();
             saveHistory();
         });
 
@@ -158,31 +158,31 @@ function inspect(target, args, options) {
         });
 
         // add protocol API
-        chrome.protocol.domains.forEach(function (domainObject) {
+        client.protocol.domains.forEach(function (domainObject) {
             // walk the domain names
             const domainName = domainObject.domain;
-            chromeRepl.context[domainName] = {};
-            Object.keys(chrome[domainName]).forEach(function (itemName) {
+            cdpRepl.context[domainName] = {};
+            Object.keys(client[domainName]).forEach(function (itemName) {
                 // walk the items in the domain and override commands and events
-                let item = chrome[domainName][itemName];
+                let item = client[domainName][itemName];
                 switch (item.category) {
                 case 'command':
                     item = overrideCommand(item);
                     break;
                 case 'event':
-                    item = overrideEvent(chrome, domainName, itemName);
+                    item = overrideEvent(client, domainName, itemName);
                     break;
                 }
-                chromeRepl.context[domainName][itemName] = item;
+                cdpRepl.context[domainName][itemName] = item;
             });
         });
     }).on('error', function (err) {
-        console.error('Cannot connect to Chrome:', err.toString());
+        console.error('Cannot connect to remote endpoint:', err.toString());
     });
 }
 
 function list(options) {
-    Chrome.List(options, function (err, tabs) {
+    CDP.List(options, function (err, tabs) {
         if (err) {
             console.error(err.toString());
             process.exit(1);
@@ -193,7 +193,7 @@ function list(options) {
 
 function _new(url, options) {
     options.url = url;
-    Chrome.New(options, function (err, tab) {
+    CDP.New(options, function (err, tab) {
         if (err) {
             console.error(err.toString());
             process.exit(1);
@@ -204,7 +204,7 @@ function _new(url, options) {
 
 function activate(args, options) {
     options.id = args;
-    Chrome.Activate(options, function (err) {
+    CDP.Activate(options, function (err) {
         if (err) {
             console.error(err.toString());
             process.exit(1);
@@ -214,7 +214,7 @@ function activate(args, options) {
 
 function close(args, options) {
     options.id = args;
-    Chrome.Close(options, function (err) {
+    CDP.Close(options, function (err) {
         if (err) {
             console.error(err.toString());
             process.exit(1);
@@ -223,7 +223,7 @@ function close(args, options) {
 }
 
 function version(options) {
-    Chrome.Version(options, function (err, info) {
+    CDP.Version(options, function (err, info) {
         if (err) {
             console.error(err.toString());
             process.exit(1);
@@ -234,7 +234,7 @@ function version(options) {
 
 function protocol(args, options) {
     options.remote = args.remote;
-    Chrome.Protocol(options, function (err, protocol) {
+    CDP.Protocol(options, function (err, protocol) {
         if (err) {
             console.error(err.toString());
             process.exit(1);

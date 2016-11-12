@@ -16,9 +16,9 @@ Sample API usage
 The following snippet loads `https://github.com` and dumps every request made:
 
 ```javascript
-const Chrome = require('chrome-remote-interface');
-Chrome(function (chrome) {
-    with (chrome) {
+const CDP = require('chrome-remote-interface');
+CDP(function (client) {
+    with (client) {
         Network.requestWillBeSent(function (params) {
             console.log(params.request.url);
         });
@@ -32,7 +32,7 @@ Chrome(function (chrome) {
         });
     }
 }).on('error', function (err) {
-    console.error('Cannot connect to Chrome:', err);
+    console.error('Cannot connect to remote endpoint:', err);
 });
 ```
 
@@ -71,12 +71,12 @@ Implementation             | Protocol version   | [Protocol] | [List] | [New] | 
 
 [v6.3.0]: https://nodejs.org/en/blog/release/v6.3.0/
 
-[Protocol]: #moduleprotocoloptions-callback
-[List]: #modulelistoptions-callback
-[New]: #modulenewoptions-callback
-[Activate]: #moduleactivateoptions-callback
-[Close]: #modulecloseoptions-callback
-[Version]: #moduleversionoptions-callback
+[Protocol]: #cdpprotocoloptions-callback
+[List]: #cdplistoptions-callback
+[New]: #cdpnewoptions-callback
+[Activate]: #cdpactivateoptions-callback
+[Close]: #cdpcloseoptions-callback
+[Version]: #cdpversionoptions-callback
 
 Setup
 -----
@@ -142,8 +142,8 @@ interactively control a remote instance.
 ### Tab management
 
 The bundled client exposes subcommands to interact with the HTTP frontend
-(e.g., [List](#modulelistoptions-callback), [New](#modulenewoptions-callback),
-etc.), run with `--help` to display the list of available options.
+(e.g., [List](#cdplistoptions-callback), [New](#cdpnewoptions-callback), etc.),
+run with `--help` to display the list of available options.
 
 Here are some examples:
 
@@ -163,8 +163,8 @@ $ chrome-remote-interface close 'b049bb56-de7d-424c-a331-6ae44cf7ae01'
 ### Inspection
 
 Using the `inspect` subcommand it is possible to
-perform [command execution](#chromedomainmethodparams-callback)
-and [event binding](#chromedomaineventcallback) in a REPL fashion. But unlike
+perform [command execution](#clientdomainmethodparams-callback)
+and [event binding](#clientdomaineventcallback) in a REPL fashion. But unlike
 the regular API the callbacks are overridden to conveniently display the result
 of the commands and the message of the events. Also, the event binding is
 simplified here, executing a shorthand method (e.g., `Page.loadEventFired()`)
@@ -315,7 +315,7 @@ default. This file is manually updated from time to time using
 `scripts/update-protocol.sh` and pushed to this repository.
 
 This behavior can be changed by setting the `remote` option to `true`
-upon [connection](#moduleoptions-callback), in which case the remote instance is
+upon [connection](#cdpoptions-callback), in which case the remote instance is
 *asked* to provide its own protocol descriptor.
 
 Currently Chrome is not able to do that (see [#10]), so the protocol descriptor
@@ -323,10 +323,10 @@ is fetched from the proper [source repository].
 
 To override the above behavior there are basically three options:
 
-- pass a custom protocol descriptor upon [connection](#moduleoptions-callback)
+- pass a custom protocol descriptor upon [connection](#cdpoptions-callback)
   (`protocol` option);
 
-- use the *raw* version of the [commands](#chromesendmethod-params-callback)
+- use the *raw* version of the [commands](#clientsendmethod-params-callback)
   and [events](#event-method) interface;
 
 - update the local copy with `scripts/update-protocol.sh` (not present when
@@ -339,7 +339,7 @@ To override the above behavior there are basically three options:
 API
 ---
 
-### module([options], [callback])
+### CDP([options], [callback])
 
 Connects to a remote instance using the [Chrome Debugging Protocol].
 
@@ -347,7 +347,7 @@ Connects to a remote instance using the [Chrome Debugging Protocol].
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
-- `chooseTab`: determines which tab this instance should attach to. The behavior
+- `chooseTab`: determines which tab this client should attach to. The behavior
   changes according to the type:
 
   - a `function` that takes the array returned by the `List` method and returns
@@ -374,12 +374,12 @@ The `EventEmitter` supports the following events:
 #### Event: 'connect'
 
 ```javascript
-function (chrome) {}
+function (client) {}
 ```
 
 Emitted when the connection to the WebSocket is established.
 
-`chrome` is an instance of the `Chrome` class.
+`client` is an instance of the `CDP` class.
 
 #### Event: 'disconnect'
 
@@ -403,7 +403,7 @@ to connect to the WebSocket.
 
 `err` is an instance of `Error`.
 
-### module.Protocol([options], [callback])
+### CDP.Protocol([options], [callback])
 
 Fetch the [Chrome Debugging Protocol] descriptor.
 
@@ -429,15 +429,15 @@ When `callback` is omitted a `Promise` object is returned.
 For example:
 
 ```javascript
-const Chrome = require('chrome-remote-interface');
-Chrome.Protocol(function (err, protocol) {
+const CDP = require('chrome-remote-interface');
+CDP.Protocol(function (err, protocol) {
     if (!err) {
         console.log(JSON.stringify(protocol.descriptor, null, 4));
     }
 });
 ```
 
-### module.List([options], [callback])
+### CDP.List([options], [callback])
 
 Request the list of the available open tabs of the remote instance.
 
@@ -458,15 +458,15 @@ When `callback` is omitted a `Promise` object is returned.
 For example:
 
 ```javascript
-const Chrome = require('chrome-remote-interface');
-Chrome.List(function (err, tabs) {
+const CDP = require('chrome-remote-interface');
+CDP.List(function (err, tabs) {
     if (!err) {
         console.log(tabs);
     }
 });
 ```
 
-### module.New([options], [callback])
+### CDP.New([options], [callback])
 
 Create a new tab in the remote instance.
 
@@ -486,15 +486,15 @@ When `callback` is omitted a `Promise` object is returned.
 For example:
 
 ```javascript
-const Chrome = require('chrome-remote-interface');
-Chrome.New(function (err, tab) {
+const CDP = require('chrome-remote-interface');
+CDP.New(function (err, tab) {
     if (!err) {
         console.log(tab);
     }
 });
 ```
 
-### module.Activate([options], [callback])
+### CDP.Activate([options], [callback])
 
 Activate an open tab of the remote instance.
 
@@ -514,15 +514,15 @@ When `callback` is omitted a `Promise` object is returned.
 For example:
 
 ```javascript
-const Chrome = require('chrome-remote-interface');
-Chrome.Activate({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
+const CDP = require('chrome-remote-interface');
+CDP.Activate({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
     if (!err) {
         console.log('success! tab is closing');
     }
 });
 ```
 
-### module.Close([options], [callback])
+### CDP.Close([options], [callback])
 
 Close an open tab of the remote instance.
 
@@ -542,8 +542,8 @@ When `callback` is omitted a `Promise` object is returned.
 For example:
 
 ```javascript
-const Chrome = require('chrome-remote-interface');
-Chrome.Close({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
+const CDP = require('chrome-remote-interface');
+CDP.Close({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
     if (!err) {
         console.log('success! tab is closing');
     }
@@ -553,7 +553,7 @@ Chrome.Close({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
 Note that the callback is fired when the tab is *queued* for removal, but the
 actual removal will occur asynchronously.
 
-### module.Version([options], [callback])
+### CDP.Version([options], [callback])
 
 Request version information from the remote instance.
 
@@ -574,15 +574,15 @@ When `callback` is omitted a `Promise` object is returned.
 For example:
 
 ```javascript
-const Chrome = require('chrome-remote-interface');
-Chrome.Version(function (err, info) {
+const CDP = require('chrome-remote-interface');
+CDP.Version(function (err, info) {
     if (!err) {
         console.log(info);
     }
 });
 ```
 
-### Class: Chrome
+### Class: CDP
 
 #### Event: 'event'
 
@@ -603,7 +603,7 @@ Refer to the [Chrome Debugging Protocol] specification for more information.
 For example:
 
 ```javascript
-chrome.on('event', function (message) {
+client.on('event', function (message) {
     if (message.method === 'Network.requestWillBeSent') {
         console.log(message.params);
     }
@@ -625,7 +625,7 @@ This is just a utility event which allows to easily listen for specific
 notifications (see [`'event'`](#event-event)), for example:
 
 ```javascript
-chrome.on('Network.requestWillBeSent', console.log);
+client.on('Network.requestWillBeSent', console.log);
 ```
 
 #### Event: 'ready'
@@ -637,7 +637,7 @@ function () {}
 Emitted every time that there are no more pending commands waiting for a
 response from the remote instance. The interaction is asynchronous so the only
 way to serialize a sequence of commands is to use the callback provided by
-the [`send`](#chromesendmethod-params-callback) method. This event acts as a
+the [`send`](#clientsendmethod-params-callback) method. This event acts as a
 barrier and it is useful to avoid the callback hell in certain simple
 situations.
 
@@ -645,10 +645,10 @@ For example to load a URL only after having enabled the notifications of both
 `Network` and `Page` domains:
 
 ```javascript
-chrome.Network.enable();
-chrome.Page.enable();
-chrome.once('ready', function () {
-    chrome.Page.navigate({'url': 'https://github.com'});
+client.Network.enable();
+client.Page.enable();
+client.once('ready', function () {
+    client.Page.navigate({'url': 'https://github.com'});
 });
 ```
 
@@ -656,7 +656,7 @@ In this particular case, not enforcing this kind of serialization may cause that
 the remote instance does not properly deliver the desired notifications the
 client.
 
-#### chrome.send(method, [params], [callback])
+#### client.send(method, [params], [callback])
 
 Issue a command to the remote instance.
 
@@ -682,38 +682,38 @@ specification is managed internally and it is not exposed to the user.
 For example:
 
 ```javascript
-chrome.send('Page.navigate', {'url': 'https://github.com'}, console.log);
+client.send('Page.navigate', {'url': 'https://github.com'}, console.log);
 ```
 
-#### chrome.`<domain>`.`<method>`([params], [callback])
+#### client.`<domain>`.`<method>`([params], [callback])
 
 Just a shorthand for:
 
 ```javascript
-chrome.send('<domain>.<method>', params, callback);
+client.send('<domain>.<method>', params, callback);
 ```
 
 For example:
 
 ```javascript
-chrome.Page.navigate({'url': 'https://github.com'}, console.log);
+client.Page.navigate({'url': 'https://github.com'}, console.log);
 ```
 
-#### chrome.`<domain>`.`<event>`(callback)
+#### client.`<domain>`.`<event>`(callback)
 
 Just a shorthand for:
 
 ```javascript
-chrome.on('<domain>.<event>', callback);
+client.on('<domain>.<event>', callback);
 ```
 
 For example:
 
 ```javascript
-chrome.Network.requestWillBeSent(console.log);
+client.Network.requestWillBeSent(console.log);
 ```
 
-#### chrome.close([callback])
+#### client.close([callback])
 
 Close the connection to the remote instance.
 
