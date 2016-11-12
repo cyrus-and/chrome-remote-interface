@@ -339,6 +339,16 @@ To override the above behavior there are basically three options:
 API
 ---
 
+The API consists of three parts:
+
+- *DevTools* methods (for those [implementations](#implementations) that support
+  them, e.g., [List](#cdplistoptions-callback), [New](#cdpnewoptions-callback),
+  etc.);
+
+- [connection](#cdpoptions-callback) establishment;
+
+- the actual [protocol interaction](#class-cdp).
+
 ### CDP([options], [callback])
 
 Connects to a remote instance using the [Chrome Debugging Protocol].
