@@ -3,7 +3,7 @@
 const EventEmitter = require('events');
 
 const devtools = require('./lib/devtools.js');
-const Chrome = require('./lib/chrome.js');
+const CDPProxy = require('./lib/chrome.js');
 
 function connect(options, callback) {
     if (typeof options === 'function') {
@@ -14,7 +14,7 @@ function connect(options, callback) {
     if (typeof callback === 'function') {
         // allow to register the error callback later
         process.nextTick(function () {
-            new Chrome(options, notifier);
+            new CDPProxy(options, notifier);
         });
         return notifier.on('connect', callback);
     } else {
@@ -24,7 +24,7 @@ function connect(options, callback) {
             notifier.on('disconnect', function () {
                 reject(new Error('Disconnected'));
             });
-            new Chrome(options, notifier);
+            new CDPProxy(options, notifier);
         });
     }
 }
