@@ -527,7 +527,7 @@ For example:
 const CDP = require('chrome-remote-interface');
 CDP.Activate({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
     if (!err) {
-        console.log('success! tab is closing');
+        console.log('success! tab is activated');
     }
 });
 ```
