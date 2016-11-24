@@ -5,7 +5,7 @@ header() {
 }
 
 run-suite() {
-    node_modules/.bin/mocha -b -t 10000
+    PATH="node_modules/.bin:$PATH" mocha -b -t 10000
 }
 
 set -e
