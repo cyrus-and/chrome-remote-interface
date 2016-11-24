@@ -32,10 +32,10 @@ function inspect(target, args, options) {
     if (target) {
         if (args.webSocket) {
             // by WebSocket URL
-            options.chooseTab = target;
+            options.tab = target;
         } else {
             // by tab id
-            options.chooseTab = function (tabs) {
+            options.tab = function (tabs) {
                 return tabs.findIndex(function (tab) {
                     return tab.id === target;
                 });

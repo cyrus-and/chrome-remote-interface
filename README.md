@@ -357,8 +357,8 @@ Connects to a remote instance using the [Chrome Debugging Protocol].
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
-- `chooseTab`: determines which tab this client should attach to. The behavior
-  changes according to the type:
+- `tab`: determines which tab this client should attach to. The behavior changes
+  according to the type:
 
   - a `function` that takes the array returned by the `List` method and returns
     the numeric index of a tab;

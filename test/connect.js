@@ -42,7 +42,7 @@ describe('connecting to Chrome', function () {
                 });
             });
             it('should fail (wrong tab)', function (done) {
-                Chrome({'chooseTab': function () { return -1; }}, function () {
+                Chrome({'tab': function () { return -1; }}, function () {
                     assert(false);
                 }).on('error', function (err) {
                     assert(err instanceof Error);
@@ -102,7 +102,7 @@ describe('connecting to Chrome', function () {
                 });
             });
             it('should fail (wrong tab)', function (done) {
-                Chrome({'chooseTab': function () { return -1; }}).then(function () {
+                Chrome({'tab': function () { return -1; }}).then(function () {
                     assert(false);
                 }).catch(function (err) {
                     assert(err instanceof Error);
