@@ -11,17 +11,11 @@
             "commands": [
                 {
                     "name": "enable",
-                    "description": "Enables inspector domain notifications.",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "description": "Enables inspector domain notifications."
                 },
                 {
                     "name": "disable",
-                    "description": "Disables inspector domain notifications.",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "description": "Disables inspector domain notifications."
                 }
             ],
             "events": [
@@ -34,17 +28,11 @@
                             "type": "string",
                             "description": "The reason why connection has been terminated."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
                     "name": "targetCrashed",
-                    "description": "Fired when debugging target has crashed",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "description": "Fired when debugging target has crashed"
                 }
             ]
         },
@@ -89,9 +77,6 @@
                             "type": "boolean",
                             "description": "If true, memory pressure notifications will be suppressed."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -103,9 +88,6 @@
                             "$ref": "PressureLevel",
                             "description": "Memory pressure level of the notification."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 }
             ]
@@ -394,24 +376,87 @@
                         "CancelAndIgnore"
                     ],
                     "experimental": true
+                },
+                {
+                    "id": "LayoutViewport",
+                    "type": "object",
+                    "description": "Layout viewport position and dimensions.",
+                    "experimental": true,
+                    "properties": [
+                        {
+                            "name": "pageX",
+                            "type": "integer",
+                            "description": "Horizontal offset relative to the document (CSS pixels)."
+                        },
+                        {
+                            "name": "pageY",
+                            "type": "integer",
+                            "description": "Vertical offset relative to the document (CSS pixels)."
+                        },
+                        {
+                            "name": "clientWidth",
+                            "type": "integer",
+                            "description": "Width (CSS pixels), excludes scrollbar if present."
+                        },
+                        {
+                            "name": "clientHeight",
+                            "type": "integer",
+                            "description": "Height (CSS pixels), excludes scrollbar if present."
+                        }
+                    ]
+                },
+                {
+                    "id": "VisualViewport",
+                    "type": "object",
+                    "description": "Visual viewport position, dimensions, and scale.",
+                    "experimental": true,
+                    "properties": [
+                        {
+                            "name": "offsetX",
+                            "type": "number",
+                            "description": "Horizontal offset relative to the layout viewport (CSS pixels)."
+                        },
+                        {
+                            "name": "offsetY",
+                            "type": "number",
+                            "description": "Vertical offset relative to the layout viewport (CSS pixels)."
+                        },
+                        {
+                            "name": "pageX",
+                            "type": "number",
+                            "description": "Horizontal offset relative to the document (CSS pixels)."
+                        },
+                        {
+                            "name": "pageY",
+                            "type": "number",
+                            "description": "Vertical offset relative to the document (CSS pixels)."
+                        },
+                        {
+                            "name": "clientWidth",
+                            "type": "number",
+                            "description": "Width (CSS pixels), excludes scrollbar if present."
+                        },
+                        {
+                            "name": "clientHeight",
+                            "type": "number",
+                            "description": "Height (CSS pixels), excludes scrollbar if present."
+                        },
+                        {
+                            "name": "scale",
+                            "type": "number",
+                            "description": "Scale relative to the ideal viewport (size at width=device-width)."
+                        }
+                    ]
                 }
             ],
             "commands": [
                 {
                     "name": "enable",
-                    "description": "Enables page domain notifications.",
-                    "handlers": [
-                        "browser",
-                        "renderer"
-                    ]
+                    "description": "Enables page domain notifications."
                 },
                 {
                     "name": "disable",
-                    "description": "Disables page domain notifications.",
-                    "handlers": [
-                        "browser",
-                        "renderer"
-                    ]
+                    "description": "Disables page domain notifications."
                 },
                 {
                     "name": "addScriptToEvaluateOnLoad",
@@ -468,11 +513,7 @@
                             "description": "If set, the script will be injected into all frames of the inspected page after reload."
                         }
                     ],
-                    "description": "Reloads given page optionally ignoring the cache.",
-                    "handlers": [
-                        "browser",
-                        "renderer"
-                    ]
+                    "description": "Reloads given page optionally ignoring the cache."
                 },
                 {
                     "name": "navigate",
@@ -491,11 +532,7 @@
                             "description": "Frame id that will be navigated."
                         }
                     ],
-                    "description": "Navigates current page to the given URL.",
-                    "handlers": [
-                        "browser",
-                        "renderer"
-                    ]
+                    "description": "Navigates current page to the given URL."
                 },
                 {
                     "name": "getNavigationHistory",
@@ -515,10 +552,7 @@
                         }
                     ],
                     "description": "Returns navigation history for the current page.",
-                    "experimental": true,
-                    "handlers": [
-                        "browser"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "navigateToHistoryEntry",
@@ -530,10 +564,7 @@
                         }
                     ],
                     "description": "Navigates current page to the given history entry.",
-                    "experimental": true,
-                    "handlers": [
-                        "browser"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "getCookies",
@@ -548,10 +579,6 @@
                         }
                     ],
                     "description": "Returns all browser cookies. Depending on the backend support, will return detailed cookie information in the <code>cookies</code> field.",
-                    "handlers": [
-                        "browser"
-                    ],
-                    "async": true,
                     "experimental": true,
                     "redirect": "Network"
                 },
@@ -570,10 +597,6 @@
                         }
                     ],
                     "description": "Deletes browser cookie with given name, domain and path.",
-                    "handlers": [
-                        "browser"
-                    ],
-                    "async": true,
                     "experimental": true,
                     "redirect": "Network"
                 },
@@ -591,7 +614,6 @@
                 },
                 {
                     "name": "getResourceContent",
-                    "async": true,
                     "description": "Returns content of the given resource.",
                     "parameters": [
                         {
@@ -621,7 +643,6 @@
                 },
                 {
                     "name": "searchInResource",
-                    "async": true,
                     "description": "Searches for given string in resource content.",
                     "parameters": [
                         {
@@ -759,18 +780,12 @@
                             "description": "Screen orientation override."
                         }
                     ],
-                    "handlers": [
-                        "browser"
-                    ],
                     "redirect": "Emulation",
                     "experimental": true
                 },
                 {
                     "name": "clearDeviceMetricsOverride",
                     "description": "Clears the overriden device metrics.",
-                    "handlers": [
-                        "browser"
-                    ],
                     "redirect": "Emulation",
                     "experimental": true
                 },
@@ -797,18 +812,12 @@
                             "description": "Mock accuracy"
                         }
                     ],
-                    "redirect": "Emulation",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "redirect": "Emulation"
                 },
                 {
                     "name": "clearGeolocationOverride",
                     "description": "Clears the overriden Geolocation Position and Error.",
-                    "redirect": "Emulation",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "redirect": "Emulation"
                 },
                 {
                     "name": "setDeviceOrientationOverride",
@@ -860,15 +869,10 @@
                     ],
                     "description": "Toggles mouse event-based touch event emulation.",
                     "experimental": true,
-                    "redirect": "Emulation",
-                    "handlers": [
-                        "browser",
-                        "renderer"
-                    ]
+                    "redirect": "Emulation"
                 },
                 {
                     "name": "captureScreenshot",
-                    "async": true,
                     "description": "Capture page screenshot.",
                     "returns": [
                         {
@@ -877,10 +881,7 @@
                             "description": "Base64-encoded image data (PNG)."
                         }
                     ],
-                    "experimental": true,
-                    "handlers": [
-                        "browser"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "startScreencast",
@@ -921,20 +922,12 @@
                             "description": "Send every n-th frame."
                         }
                     ],
-                    "experimental": true,
-                    "handlers": [
-                        "browser",
-                        "renderer"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "stopScreencast",
                     "description": "Stops sending each frame in the <code>screencastFrame</code>.",
-                    "experimental": true,
-                    "handlers": [
-                        "browser",
-                        "renderer"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "screencastFrameAck",
@@ -946,10 +939,7 @@
                             "description": "Frame number."
                         }
                     ],
-                    "experimental": true,
-                    "handlers": [
-                        "browser"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "handleJavaScriptDialog",
@@ -966,9 +956,6 @@
                             "optional": true,
                             "description": "The text to enter into the dialog prompt before accepting. Used only if this is a prompt dialog."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -981,10 +968,7 @@
                         }
                     ],
                     "description": "Shows / hides color picker",
-                    "experimental": true,
-                    "handlers": [
-                        "browser"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "configureOverlay",
@@ -1027,28 +1011,11 @@
                             "optional": true,
                             "description": "Manifest content."
                         }
-                    ],
-                    "handlers": [
-                        "none"
                     ]
                 },
                 {
                     "name": "requestAppBanner",
-                    "experimental": true,
-                    "handlers": [
-                        "browser"
-                    ]
-                },
-                {
-                    "name": "setBlockedEventsWarningThreshold",
-                    "experimental": true,
-                    "parameters": [
-                        {
-                            "name": "threshold",
-                            "type": "number",
-                            "description": "If set to a positive number, specifies threshold in seconds for input event latency that will cause a console warning about blocked event to be issued. If zero or less, the warning is disabled."
-                        }
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "setControlNavigations",
@@ -1059,10 +1026,7 @@
                         }
                     ],
                     "description": "Toggles navigation throttling which allows programatic control over navigation and redirect response.",
-                    "experimental": true,
-                    "handlers": [
-                        "browser"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "processNavigation",
@@ -1077,9 +1041,23 @@
                         }
                     ],
                     "description": "Should be sent in response to a navigationRequested or a redirectRequested event, telling the browser how to handle the navigation.",
+                    "experimental": true
+                },
+                {
+                    "name": "getLayoutMetrics",
+                    "description": "Returns metrics relating to the layouting of the page, such as viewport bounds/scale.",
                     "experimental": true,
-                    "handlers": [
-                        "browser"
+                    "returns": [
+                        {
+                            "name": "layoutViewport",
+                            "$ref": "LayoutViewport",
+                            "description": "Metrics relating to the layout viewport."
+                        },
+                        {
+                            "name": "visualViewport",
+                            "$ref": "VisualViewport",
+                            "description": "Metrics relating to the visual viewport."
+                        }
                     ]
                 }
             ],
@@ -1244,10 +1222,7 @@
                             "description": "Frame number."
                         }
                     ],
-                    "experimental": true,
-                    "handlers": [
-                        "browser"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "screencastVisibilityChanged",
@@ -1259,10 +1234,7 @@
                             "description": "True if the page is visible."
                         }
                     ],
-                    "experimental": true,
-                    "handlers": [
-                        "browser"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "colorPicked",
@@ -1274,24 +1246,15 @@
                             "description": "RGBA of the picked color."
                         }
                     ],
-                    "experimental": true,
-                    "handlers": [
-                        "browser"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "interstitialShown",
-                    "description": "Fired when interstitial page was shown",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "description": "Fired when interstitial page was shown"
                 },
                 {
                     "name": "interstitialHidden",
-                    "description": "Fired when interstitial page was hidden",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "description": "Fired when interstitial page was hidden"
                 },
                 {
                     "name": "navigationRequested",
@@ -1316,9 +1279,6 @@
                             "type": "string",
                             "description": "URL of requested navigation."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 }
             ]
@@ -1511,17 +1471,11 @@
                             "optional": true,
                             "description": "Screen orientation override."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
                     "name": "clearDeviceMetricsOverride",
-                    "description": "Clears the overriden device metrics.",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "description": "Clears the overriden device metrics."
                 },
                 {
                     "name": "forceViewport",
@@ -1582,9 +1536,6 @@
                             "type": "integer",
                             "description": "Frame height (DIP)."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -1622,18 +1573,12 @@
                             "optional": true,
                             "description": "Mock accuracy"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
                     "name": "clearGeolocationOverride",
                     "description": "Clears the overriden Geolocation Position and Error.",
-                    "experimental": true,
-                    "handlers": [
-                        "browser"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "setTouchEmulationEnabled",
@@ -1654,11 +1599,7 @@
                             "description": "Touch/gesture events configuration. Default: current platform."
                         }
                     ],
-                    "description": "Toggles mouse event-based touch event emulation.",
-                    "handlers": [
-                        "browser",
-                        "renderer"
-                    ]
+                    "description": "Toggles mouse event-based touch event emulation."
                 },
                 {
                     "name": "setEmulatedMedia",
@@ -1693,10 +1634,7 @@
                             "description": "True if emulation is supported."
                         }
                     ],
-                    "experimental": true,
-                    "handlers": [
-                        "browser"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "setVirtualTimePolicy",
@@ -1815,24 +1753,15 @@
             "commands": [
                 {
                     "name": "enable",
-                    "description": "Enables tracking security state changes.",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "description": "Enables tracking security state changes."
                 },
                 {
                     "name": "disable",
-                    "description": "Disables tracking security state changes.",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "description": "Disables tracking security state changes."
                 },
                 {
                     "name": "showCertificateViewer",
-                    "description": "Displays native dialog with the certificate details.",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "description": "Displays native dialog with the certificate details."
                 }
             ],
             "events": [
@@ -1866,9 +1795,6 @@
                             "description": "True if the page was loaded over cryptographic transport such as HTTPS.",
                             "optional": true
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 }
             ]
@@ -2573,7 +2499,6 @@
                 },
                 {
                     "name": "getResponseBody",
-                    "async": true,
                     "description": "Returns content served for the given request.",
                     "parameters": [
                         {
@@ -2656,10 +2581,7 @@
                 },
                 {
                     "name": "clearBrowserCache",
-                    "description": "Clears browser cache.",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "description": "Clears browser cache."
                 },
                 {
                     "name": "canClearBrowserCookies",
@@ -2674,10 +2596,7 @@
                 },
                 {
                     "name": "clearBrowserCookies",
-                    "description": "Clears browser cookies.",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "description": "Clears browser cookies."
                 },
                 {
                     "name": "getCookies",
@@ -2692,10 +2611,6 @@
                         }
                     ],
                     "description": "Returns all browser cookies. Depending on the backend support, will return detailed cookie information in the <code>cookies</code> field.",
-                    "handlers": [
-                        "browser"
-                    ],
-                    "async": true,
                     "experimental": true
                 },
                 {
@@ -2713,10 +2628,6 @@
                         }
                     ],
                     "description": "Deletes browser cookie with given name, domain and path.",
-                    "handlers": [
-                        "browser"
-                    ],
-                    "async": true,
                     "experimental": true
                 },
                 {
@@ -2782,10 +2693,6 @@
                         }
                     ],
                     "description": "Sets a cookie with the given cookie data; may overwrite equivalent cookies if they exist.",
-                    "handlers": [
-                        "browser"
-                    ],
-                    "async": true,
                     "experimental": true
                 },
                 {
@@ -2798,10 +2705,7 @@
                             "description": "True if emulation of network conditions is supported."
                         }
                     ],
-                    "experimental": true,
-                    "handlers": [
-                        "browser"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "emulateNetworkConditions",
@@ -2833,10 +2737,6 @@
                             "optional": true,
                             "description": "Connection type if known."
                         }
-                    ],
-                    "handlers": [
-                        "browser",
-                        "renderer"
                     ]
                 },
                 {
@@ -2897,9 +2797,6 @@
                                 "type": "string"
                             }
                         }
-                    ],
-                    "handlers": [
-                        "renderer"
                     ],
                     "experimental": true
                 }
@@ -3397,7 +3294,6 @@
                 },
                 {
                     "name": "executeSQL",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "databaseId",
@@ -3674,7 +3570,6 @@
                 },
                 {
                     "name": "requestDatabaseNames",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "securityOrigin",
@@ -3696,7 +3591,6 @@
                 },
                 {
                     "name": "requestDatabase",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "securityOrigin",
@@ -3720,7 +3614,6 @@
                 },
                 {
                     "name": "requestData",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "securityOrigin",
@@ -3778,7 +3671,6 @@
                 },
                 {
                     "name": "clearObjectStore",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "securityOrigin",
@@ -3853,7 +3745,6 @@
             "commands": [
                 {
                     "name": "requestCacheNames",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "securityOrigin",
@@ -3875,7 +3766,6 @@
                 },
                 {
                     "name": "requestEntries",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "cacheId",
@@ -3912,7 +3802,6 @@
                 },
                 {
                     "name": "deleteCache",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "cacheId",
@@ -3924,7 +3813,6 @@
                 },
                 {
                     "name": "deleteEntry",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "cacheId",
@@ -4349,6 +4237,12 @@
                             "description": "Node identifier that is passed into the rest of the DOM messages as the <code>nodeId</code>. Backend will only push node with given <code>id</code> once. It is aware of all requested nodes and will only fire DOM events for nodes known to the client."
                         },
                         {
+                            "name": "backendNodeId",
+                            "$ref": "BackendNodeId",
+                            "description": "The BackendNodeId for this node.",
+                            "experimental": true
+                        },
+                        {
                             "name": "nodeType",
                             "type": "integer",
                             "description": "<code>Node</code>'s nodeType."
@@ -4766,10 +4660,10 @@
                             "experimental": true
                         },
                         {
-                            "name": "traverseFrames",
+                            "name": "pierce",
                             "type": "boolean",
                             "optional": true,
-                            "description": "Whether or not iframes should be traversed when returning the subtree (default is false).",
+                            "description": "Whether or not iframes and shadow roots should be traversed when returning the subtree (default is false).",
                             "experimental": true
                         }
                     ],
@@ -4820,10 +4714,10 @@
                             "experimental": true
                         },
                         {
-                            "name": "traverseFrames",
+                            "name": "pierce",
                             "type": "boolean",
                             "optional": true,
-                            "description": "Whether or not iframes should be traversed when returning the sub-tree (default is false).",
+                            "description": "Whether or not iframes and shadow roots should be traversed when returning the sub-tree (default is false).",
                             "experimental": true
                         }
                     ],
@@ -5457,11 +5351,7 @@
                         }
                     ],
                     "description": "Sets files for the given file input element.",
-                    "experimental": true,
-                    "handlers": [
-                        "browser",
-                        "renderer"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "getBoxModel",
@@ -6032,6 +5922,29 @@
                     "description": "CSS rule representation."
                 },
                 {
+                    "id": "RuleUsage",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "styleSheetId",
+                            "$ref": "StyleSheetId",
+                            "description": "The css style sheet identifier (absent for user agent stylesheet and user-specified stylesheet rules) this rule came from."
+                        },
+                        {
+                            "name": "range",
+                            "$ref": "SourceRange",
+                            "description": "Style declaration range in the enclosing stylesheet (if available)."
+                        },
+                        {
+                            "name": "used",
+                            "type": "boolean",
+                            "description": "Indicates whether the rule was actually used by some element in the page."
+                        }
+                    ],
+                    "description": "CSS rule usage information.",
+                    "experimental": true
+                },
+                {
                     "id": "SourceRange",
                     "type": "object",
                     "properties": [
@@ -6418,9 +6331,9 @@
                     "type": "object",
                     "properties": [
                         {
-                            "name": "backendNodeId",
-                            "$ref": "DOM.BackendNodeId",
-                            "description": "The BackendNodeId of the related DOM node."
+                            "name": "nodeId",
+                            "$ref": "DOM.NodeId",
+                            "description": "The id of the related DOM node matching one from DOM.GetDocument."
                         },
                         {
                             "name": "boundingBox",
@@ -6471,7 +6384,6 @@
             "commands": [
                 {
                     "name": "enable",
-                    "async": true,
                     "description": "Enables the CSS agent for the given page. Clients should not assume that the CSS agent has been enabled until the result of this command is received."
                 },
                 {
@@ -6916,7 +6828,26 @@
                             }
                         }
                     ],
-                    "description": "For the main document and any content documents, return the LayoutTreeNodes and a whitelisted subset of the computed style.",
+                    "description": "For the main document and any content documents, return the LayoutTreeNodes and a whitelisted subset of the computed style. It only returns pushed nodes, on way to pull all nodes is to call DOM.getDocument with a depth of -1.",
+                    "experimental": true
+                },
+                {
+                    "name": "startRuleUsageTracking",
+                    "description": "Enables the selector recording.",
+                    "experimental": true
+                },
+                {
+                    "name": "stopRuleUsageTracking",
+                    "returns": [
+                        {
+                            "name": "ruleUsage",
+                            "type": "array",
+                            "items": {
+                                "$ref": "RuleUsage"
+                            }
+                        }
+                    ],
+                    "description": "The list of rules with an indication of whether these were used",
                     "experimental": true
                 }
             ],
@@ -6992,7 +6923,6 @@
                 {
                     "name": "read",
                     "description": "Read a chunk of the stream",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "handle",
@@ -7023,9 +6953,6 @@
                             "type": "boolean",
                             "description": "Set if the end-of-file condition occured while reading."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -7037,9 +6964,6 @@
                             "$ref": "StreamHandle",
                             "description": "Handle of the stream to close."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 }
             ]
@@ -7081,6 +7005,11 @@
                             "name": "passive",
                             "type": "boolean",
                             "description": "<code>EventListener</code>'s passive flag."
+                        },
+                        {
+                            "name": "once",
+                            "type": "boolean",
+                            "description": "<code>EventListener</code>'s once flag."
                         },
                         {
                             "name": "scriptId",
@@ -7268,6 +7197,10 @@
                     "type": "string"
                 },
                 {
+                    "id": "BrowserContextID",
+                    "type": "string"
+                },
+                {
                     "id": "TargetInfo",
                     "type": "object",
                     "properties": [
@@ -7314,9 +7247,6 @@
                             "type": "boolean",
                             "description": "Whether to discover available targets."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -7333,9 +7263,6 @@
                             "type": "boolean",
                             "description": "Whether to pause new targets when attaching to them. Use <code>Runtime.runIfWaitingForDebugger</code> to run paused targets."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -7346,13 +7273,11 @@
                             "type": "boolean",
                             "description": "Whether to attach to frames."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
                     "name": "setRemoteLocations",
+                    "description": "Enables target discovery for the specified locations, when <code>setDiscoverTargets</code> was set to <code>true</code>.",
                     "parameters": [
                         {
                             "name": "locations",
@@ -7362,14 +7287,11 @@
                             },
                             "description": "List of remote locations."
                         }
-                    ],
-                    "description": "Enables target discovery for the specified locations, when <code>setDiscoverTargets</code> was set to <code>true</code>.",
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
                     "name": "sendMessageToTarget",
+                    "description": "Sends protocol message to the target with given id.",
                     "parameters": [
                         {
                             "name": "targetId",
@@ -7379,13 +7301,11 @@
                             "name": "message",
                             "type": "string"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
                     "name": "getTargetInfo",
+                    "description": "Returns information about a target.",
                     "parameters": [
                         {
                             "name": "targetId",
@@ -7397,25 +7317,37 @@
                             "name": "targetInfo",
                             "$ref": "TargetInfo"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
                     "name": "activateTarget",
+                    "description": "Activates (focuses) the target.",
+                    "parameters": [
+                        {
+                            "name": "targetId",
+                            "$ref": "TargetID"
+                        }
+                    ]
+                },
+                {
+                    "name": "closeTarget",
+                    "description": "Closes the target. If the target is a page that gets closed too.",
                     "parameters": [
                         {
                             "name": "targetId",
                             "$ref": "TargetID"
                         }
                     ],
-                    "handlers": [
-                        "browser"
+                    "returns": [
+                        {
+                            "name": "success",
+                            "type": "boolean"
+                        }
                     ]
                 },
                 {
                     "name": "attachToTarget",
+                    "description": "Attaches to the target with given id.",
                     "parameters": [
                         {
                             "name": "targetId",
@@ -7428,51 +7360,120 @@
                             "type": "boolean",
                             "description": "Whether attach succeeded."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
                     "name": "detachFromTarget",
+                    "description": "Detaches from the target with given id.",
                     "parameters": [
                         {
                             "name": "targetId",
                             "$ref": "TargetID"
                         }
+                    ]
+                },
+                {
+                    "name": "createBrowserContext",
+                    "description": "Creates a new empty BrowserContext. Similar to an incognito profile but you can have more than one.",
+                    "returns": [
+                        {
+                            "name": "browserContextId",
+                            "$ref": "BrowserContextID",
+                            "description": "The id of the context created."
+                        }
+                    ]
+                },
+                {
+                    "name": "disposeBrowserContext",
+                    "description": "Deletes a BrowserContext, will fail of any open page uses it.",
+                    "parameters": [
+                        {
+                            "name": "browserContextId",
+                            "$ref": "BrowserContextID"
+                        }
                     ],
-                    "handlers": [
-                        "browser"
+                    "returns": [
+                        {
+                            "name": "success",
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
+                    "name": "createTarget",
+                    "description": "Creates a new page.",
+                    "parameters": [
+                        {
+                            "name": "url",
+                            "type": "string",
+                            "description": "The initial URL the page will be navigated to."
+                        },
+                        {
+                            "name": "width",
+                            "type": "integer",
+                            "description": "Frame width in DIP (headless chrome only).",
+                            "optional": true
+                        },
+                        {
+                            "name": "height",
+                            "type": "integer",
+                            "description": "Frame height in DIP (headless chrome only).",
+                            "optional": true
+                        },
+                        {
+                            "name": "browserContextId",
+                            "$ref": "BrowserContextID",
+                            "description": "The browser context to create the page in (headless chrome only).",
+                            "optional": true
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "targetId",
+                            "$ref": "TargetID",
+                            "description": "The id of the page opened."
+                        }
+                    ]
+                },
+                {
+                    "name": "getTargets",
+                    "description": "Retrieves a list of available targets.",
+                    "returns": [
+                        {
+                            "name": "targetInfos",
+                            "type": "array",
+                            "items": {
+                                "$ref": "TargetInfo"
+                            },
+                            "description": "The list of targets."
+                        }
                     ]
                 }
             ],
             "events": [
                 {
                     "name": "targetCreated",
+                    "description": "Issued when a possible inspection target is created.",
                     "parameters": [
                         {
                             "name": "targetInfo",
                             "$ref": "TargetInfo"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
                     "name": "targetDestroyed",
+                    "description": "Issued when a target is destroyed.",
                     "parameters": [
                         {
                             "name": "targetId",
                             "$ref": "TargetID"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
                     "name": "attachedToTarget",
+                    "description": "Issued when attached to target because of auto-attach or <code>attachToTarget</code> command.",
                     "parameters": [
                         {
                             "name": "targetInfo",
@@ -7482,108 +7483,25 @@
                             "name": "waitingForDebugger",
                             "type": "boolean"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
                     "name": "detachedFromTarget",
+                    "description": "Issued when detached from target for any reason (including <code>detachFromTarget</code> command).",
                     "parameters": [
                         {
                             "name": "targetId",
                             "$ref": "TargetID"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
                     "name": "receivedMessageFromTarget",
+                    "description": "Notifies about new protocol message from attached target.",
                     "parameters": [
                         {
                             "name": "targetId",
                             "$ref": "TargetID"
-                        },
-                        {
-                            "name": "message",
-                            "type": "string"
-                        }
-                    ],
-                    "handlers": [
-                        "browser"
-                    ]
-                }
-            ]
-        },
-        {
-            "domain": "Worker",
-            "experimental": true,
-            "types": [],
-            "commands": [
-                {
-                    "name": "enable"
-                },
-                {
-                    "name": "disable"
-                },
-                {
-                    "name": "sendMessageToWorker",
-                    "parameters": [
-                        {
-                            "name": "workerId",
-                            "type": "string"
-                        },
-                        {
-                            "name": "message",
-                            "type": "string"
-                        }
-                    ]
-                },
-                {
-                    "name": "setWaitForDebuggerOnStart",
-                    "parameters": [
-                        {
-                            "name": "value",
-                            "type": "boolean"
-                        }
-                    ]
-                }
-            ],
-            "events": [
-                {
-                    "name": "workerCreated",
-                    "parameters": [
-                        {
-                            "name": "workerId",
-                            "type": "string"
-                        },
-                        {
-                            "name": "url",
-                            "type": "string"
-                        },
-                        {
-                            "name": "waitingForDebugger",
-                            "type": "boolean"
-                        }
-                    ]
-                },
-                {
-                    "name": "workerTerminated",
-                    "parameters": [
-                        {
-                            "name": "workerId",
-                            "type": "string"
-                        }
-                    ]
-                },
-                {
-                    "name": "dispatchMessageFromWorker",
-                    "parameters": [
-                        {
-                            "name": "workerId",
-                            "type": "string"
                         },
                         {
                             "name": "message",
@@ -7724,16 +7642,10 @@
             ],
             "commands": [
                 {
-                    "name": "enable",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "name": "enable"
                 },
                 {
-                    "name": "disable",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "name": "disable"
                 },
                 {
                     "name": "unregister",
@@ -7742,9 +7654,6 @@
                             "name": "scopeURL",
                             "type": "string"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -7754,9 +7663,6 @@
                             "name": "scopeURL",
                             "type": "string"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -7766,9 +7672,6 @@
                             "name": "scopeURL",
                             "type": "string"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -7778,9 +7681,6 @@
                             "name": "scopeURL",
                             "type": "string"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -7790,9 +7690,6 @@
                             "name": "versionId",
                             "type": "string"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -7802,9 +7699,6 @@
                             "name": "versionId",
                             "type": "string"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -7814,9 +7708,6 @@
                             "name": "forceUpdateOnPageLoad",
                             "type": "boolean"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -7834,9 +7725,6 @@
                             "name": "data",
                             "type": "string"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -7858,9 +7746,6 @@
                             "name": "lastChance",
                             "type": "boolean"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 }
             ],
@@ -7875,9 +7760,6 @@
                                 "$ref": "ServiceWorkerRegistration"
                             }
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -7890,9 +7772,6 @@
                                 "$ref": "ServiceWorkerVersion"
                             }
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -7902,9 +7781,6 @@
                             "name": "errorMessage",
                             "$ref": "ServiceWorkerErrorMessage"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 }
             ]
@@ -8070,10 +7946,7 @@
                             "description": "Whether the event was a system key event (default: false)."
                         }
                     ],
-                    "description": "Dispatches a key event to the page.",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "description": "Dispatches a key event to the page."
                 },
                 {
                     "name": "dispatchMouseEvent",
@@ -8129,10 +8002,7 @@
                             "description": "Number of times the mouse button was clicked (default: 0)."
                         }
                     ],
-                    "description": "Dispatches a mouse event to the page.",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "description": "Dispatches a mouse event to the page."
                 },
                 {
                     "name": "dispatchTouchEvent",
@@ -8237,14 +8107,10 @@
                             "description": "Number of times the mouse button was clicked (default: 0)."
                         }
                     ],
-                    "description": "Emulates touch event from the mouse event parameters.",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "description": "Emulates touch event from the mouse event parameters."
                 },
                 {
                     "name": "synthesizePinchGesture",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "x",
@@ -8275,14 +8141,10 @@
                         }
                     ],
                     "description": "Synthesizes a pinch gesture over a time period by issuing appropriate touch events.",
-                    "experimental": true,
-                    "handlers": [
-                        "browser"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "synthesizeScrollGesture",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "x",
@@ -8356,14 +8218,10 @@
                         }
                     ],
                     "description": "Synthesizes a scroll gesture over a time period by issuing appropriate touch events.",
-                    "experimental": true,
-                    "handlers": [
-                        "browser"
-                    ]
+                    "experimental": true
                 },
                 {
                     "name": "synthesizeTapGesture",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "x",
@@ -8395,10 +8253,7 @@
                         }
                     ],
                     "description": "Synthesizes a tap gesture over a time period by issuing appropriate touch events.",
-                    "experimental": true,
-                    "handlers": [
-                        "browser"
-                    ]
+                    "experimental": true
                 }
             ],
             "events": []
@@ -8814,6 +8669,9 @@
         },
         {
             "domain": "Tracing",
+            "dependencies": [
+                "IO"
+            ],
             "experimental": true,
             "types": [
                 {
@@ -8894,7 +8752,6 @@
             "commands": [
                 {
                     "name": "start",
-                    "async": true,
                     "description": "Start trace events collection.",
                     "parameters": [
                         {
@@ -8933,24 +8790,14 @@
                             "optional": true,
                             "description": ""
                         }
-                    ],
-                    "handlers": [
-                        "browser",
-                        "renderer"
                     ]
                 },
                 {
                     "name": "end",
-                    "async": true,
-                    "description": "Stop trace events collection.",
-                    "handlers": [
-                        "browser",
-                        "renderer"
-                    ]
+                    "description": "Stop trace events collection."
                 },
                 {
                     "name": "getCategories",
-                    "async": true,
                     "description": "Gets supported tracing categories.",
                     "returns": [
                         {
@@ -8961,14 +8808,10 @@
                             },
                             "description": "A list of supported tracing categories."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
                     "name": "requestMemoryDump",
-                    "async": true,
                     "description": "Request a global memory dump.",
                     "returns": [
                         {
@@ -8981,9 +8824,6 @@
                             "type": "boolean",
                             "description": "True iff the global memory dump succeeded."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -8995,9 +8835,6 @@
                             "type": "string",
                             "description": "The ID of this clock sync marker"
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 }
             ],
@@ -9013,10 +8850,7 @@
                             }
                         }
                     ],
-                    "description": "Contains an bucket of collected trace events. When tracing is stopped collected events will be send as a sequence of dataCollected events followed by tracingComplete event.",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "description": "Contains an bucket of collected trace events. When tracing is stopped collected events will be send as a sequence of dataCollected events followed by tracingComplete event."
                 },
                 {
                     "name": "tracingComplete",
@@ -9028,9 +8862,6 @@
                             "optional": true,
                             "description": "A handle of the stream that holds resulting trace data."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
@@ -9054,9 +8885,6 @@
                             "optional": true,
                             "description": "A number in range [0..1] that indicates the used size of event buffer as a fraction of its total size."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 }
             ]
@@ -9538,9 +9366,9 @@
                     "type": "object",
                     "properties": [
                         {
-                            "name": "backendNodeId",
+                            "name": "backendDOMNodeId",
                             "$ref": "DOM.BackendNodeId",
-                            "description": "The BackendNodeId of the related node."
+                            "description": "The BackendNodeId of the related DOM node."
                         },
                         {
                             "name": "idref",
@@ -9728,6 +9556,21 @@
                             },
                             "description": "All other properties",
                             "optional": true
+                        },
+                        {
+                            "name": "childIds",
+                            "type": "array",
+                            "items": {
+                                "$ref": "AXNodeId"
+                            },
+                            "description": "IDs for each of this node's child nodes.",
+                            "optional": true
+                        },
+                        {
+                            "name": "backendDOMNodeId",
+                            "$ref": "DOM.BackendNodeId",
+                            "description": "The backend ID for the associated DOM node, if any.",
+                            "optional": true
                         }
                     ],
                     "description": "A node in the accessibility tree."
@@ -9735,17 +9578,18 @@
             ],
             "commands": [
                 {
-                    "name": "getAXNodeChain",
+                    "name": "getPartialAXTree",
                     "parameters": [
                         {
                             "name": "nodeId",
                             "$ref": "DOM.NodeId",
-                            "description": "ID of node to get accessibility node for."
+                            "description": "ID of node to get the partial accessibility tree for."
                         },
                         {
-                            "name": "fetchAncestors",
+                            "name": "fetchRelatives",
                             "type": "boolean",
-                            "description": "Whether to also push down a partial tree (parent chain)."
+                            "description": "Whether to fetch this nodes ancestors, siblings and children. Defaults to true.",
+                            "optional": true
                         }
                     ],
                     "returns": [
@@ -9755,10 +9599,10 @@
                             "items": {
                                 "$ref": "AXNode"
                             },
-                            "description": "The <code>Accessibility.AXNode</code> for this DOM node, if it exists, plus ancestors if requested."
+                            "description": "The <code>Accessibility.AXNode</code> for this DOM node, if it exists, plus its ancestors, siblings and children, if requested."
                         }
                     ],
-                    "description": "Fetches the accessibility node for this DOM node, if it exists.",
+                    "description": "Fetches the accessibility node and partial accessibility tree for this DOM node, if it exists.",
                     "experimental": true
                 }
             ]
@@ -9800,10 +9644,7 @@
                             "description": "Comma separated origin names."
                         }
                     ],
-                    "description": "Clears storage for origin.",
-                    "handlers": [
-                        "browser"
-                    ]
+                    "description": "Clears storage for origin."
                 }
             ]
         },
@@ -9812,8 +9653,7 @@
             "description": "Provides access to log entries.",
             "dependencies": [
                 "Runtime",
-                "Network",
-                "Worker"
+                "Network"
             ],
             "experimental": true,
             "types": [
@@ -9835,6 +9675,7 @@
                                 "security",
                                 "deprecation",
                                 "worker",
+                                "violation",
                                 "other"
                             ],
                             "description": "Log entry source."
@@ -9892,6 +9733,31 @@
                             "description": "Identifier of the worker associated with this entry."
                         }
                     ]
+                },
+                {
+                    "id": "ViolationSetting",
+                    "type": "object",
+                    "description": "Violation configuration setting.",
+                    "properties": [
+                        {
+                            "name": "name",
+                            "type": "string",
+                            "enum": [
+                                "longTask",
+                                "longLayout",
+                                "blockedEvent",
+                                "blockedParser",
+                                "handler",
+                                "recurringHandler"
+                            ],
+                            "description": "Violation type."
+                        },
+                        {
+                            "name": "threshold",
+                            "type": "number",
+                            "description": "Time threshold to trigger upon."
+                        }
+                    ]
                 }
             ],
             "commands": [
@@ -9906,6 +9772,24 @@
                 {
                     "name": "clear",
                     "description": "Clears the log."
+                },
+                {
+                    "name": "startViolationsReport",
+                    "parameters": [
+                        {
+                            "name": "config",
+                            "type": "array",
+                            "items": {
+                                "$ref": "ViolationSetting"
+                            },
+                            "description": "Configuration for violations."
+                        }
+                    ],
+                    "description": "start violation reporting."
+                },
+                {
+                    "name": "stopViolationsReport",
+                    "description": "Stop violation reporting."
                 }
             ],
             "events": [
@@ -9919,231 +9803,6 @@
                         }
                     ],
                     "description": "Issued when new message was logged."
-                }
-            ]
-        },
-        {
-            "domain": "Browser",
-            "description": "The Browser domain allows listing, creating, activating and attaching to the targets.",
-            "experimental": true,
-            "types": [
-                {
-                    "id": "BrowserContextID",
-                    "type": "string"
-                },
-                {
-                    "id": "TargetID",
-                    "type": "string"
-                },
-                {
-                    "id": "TargetInfo",
-                    "type": "object",
-                    "properties": [
-                        {
-                            "name": "targetId",
-                            "$ref": "TargetID"
-                        },
-                        {
-                            "name": "type",
-                            "type": "string"
-                        },
-                        {
-                            "name": "title",
-                            "type": "string"
-                        },
-                        {
-                            "name": "url",
-                            "type": "string"
-                        }
-                    ]
-                }
-            ],
-            "commands": [
-                {
-                    "name": "createBrowserContext",
-                    "description": "Creates a new empty BrowserContext. Similar to an incognito profile but you can have more than one.",
-                    "returns": [
-                        {
-                            "name": "browserContextId",
-                            "$ref": "BrowserContextID",
-                            "description": "The id of the context created."
-                        }
-                    ],
-                    "handlers": [
-                        "browser"
-                    ]
-                },
-                {
-                    "name": "disposeBrowserContext",
-                    "description": "Deletes a BrowserContext, will fail of any open page uses it.",
-                    "parameters": [
-                        {
-                            "name": "browserContextId",
-                            "$ref": "BrowserContextID"
-                        }
-                    ],
-                    "returns": [
-                        {
-                            "name": "success",
-                            "type": "boolean"
-                        }
-                    ],
-                    "handlers": [
-                        "browser"
-                    ]
-                },
-                {
-                    "name": "createTarget",
-                    "description": "Creates a new page.",
-                    "parameters": [
-                        {
-                            "name": "url",
-                            "type": "string",
-                            "description": "The initial URL the page will be navigated to."
-                        },
-                        {
-                            "name": "width",
-                            "type": "integer",
-                            "description": "Frame width in DIP (headless chrome only).",
-                            "optional": true
-                        },
-                        {
-                            "name": "height",
-                            "type": "integer",
-                            "description": "Frame height in DIP (headless chrome only).",
-                            "optional": true
-                        },
-                        {
-                            "name": "browserContextId",
-                            "$ref": "BrowserContextID",
-                            "description": "The browser context to create the page in (headless chrome only).",
-                            "optional": true
-                        }
-                    ],
-                    "returns": [
-                        {
-                            "name": "targetId",
-                            "$ref": "TargetID",
-                            "description": "The id of the page opened."
-                        }
-                    ],
-                    "handlers": [
-                        "browser"
-                    ]
-                },
-                {
-                    "name": "closeTarget",
-                    "description": "Closes the target. If the target is a page that gets closed too.",
-                    "parameters": [
-                        {
-                            "name": "targetId",
-                            "$ref": "TargetID"
-                        }
-                    ],
-                    "returns": [
-                        {
-                            "name": "success",
-                            "type": "boolean"
-                        }
-                    ],
-                    "handlers": [
-                        "browser"
-                    ]
-                },
-                {
-                    "name": "getTargets",
-                    "returns": [
-                        {
-                            "name": "targetInfo",
-                            "type": "array",
-                            "items": {
-                                "$ref": "TargetInfo"
-                            }
-                        }
-                    ],
-                    "description": "Returns target information for all potential targets.",
-                    "handlers": [
-                        "browser"
-                    ],
-                    "async": true
-                },
-                {
-                    "name": "attach",
-                    "description": "Attaches to the target with given id.",
-                    "parameters": [
-                        {
-                            "name": "targetId",
-                            "$ref": "TargetID",
-                            "description": "Target id."
-                        }
-                    ],
-                    "returns": [
-                        {
-                            "name": "success",
-                            "type": "boolean",
-                            "description": "Whether attach succeeded."
-                        }
-                    ],
-                    "handlers": [
-                        "browser"
-                    ],
-                    "async": true
-                },
-                {
-                    "name": "detach",
-                    "description": "Detaches from the target with given id.",
-                    "parameters": [
-                        {
-                            "name": "targetId",
-                            "$ref": "TargetID"
-                        }
-                    ],
-                    "returns": [
-                        {
-                            "name": "success",
-                            "type": "boolean",
-                            "description": "Whether detach succeeded."
-                        }
-                    ],
-                    "handlers": [
-                        "browser"
-                    ]
-                },
-                {
-                    "name": "sendMessage",
-                    "description": "Sends protocol message to the target with given id.",
-                    "parameters": [
-                        {
-                            "name": "targetId",
-                            "$ref": "TargetID"
-                        },
-                        {
-                            "name": "message",
-                            "type": "string"
-                        }
-                    ],
-                    "handlers": [
-                        "browser"
-                    ]
-                }
-            ],
-            "events": [
-                {
-                    "name": "dispatchMessage",
-                    "description": "Dispatches protocol message from the target with given id.",
-                    "parameters": [
-                        {
-                            "name": "targetId",
-                            "$ref": "TargetID"
-                        },
-                        {
-                            "name": "message",
-                            "type": "string"
-                        }
-                    ],
-                    "handlers": [
-                        "browser"
-                    ]
                 }
             ]
         },
@@ -10218,7 +9877,6 @@
             "commands": [
                 {
                     "name": "getInfo",
-                    "async": true,
                     "description": "Returns information about the system.",
                     "returns": [
                         {
@@ -10236,9 +9894,6 @@
                             "type": "string",
                             "description": "A platform-dependent description of the version of the machine. On Mac OS, this is, for example, '10.1'. Will be the empty string if not supported."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 }
             ]
@@ -10250,7 +9905,6 @@
             "commands": [
                 {
                     "name": "bind",
-                    "async": true,
                     "description": "Request browser port binding.",
                     "parameters": [
                         {
@@ -10258,14 +9912,10 @@
                             "type": "integer",
                             "description": "Port number to bind."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 },
                 {
                     "name": "unbind",
-                    "async": true,
                     "description": "Request browser port unbinding.",
                     "parameters": [
                         {
@@ -10273,9 +9923,6 @@
                             "type": "integer",
                             "description": "Port number to unbind."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 }
             ],
@@ -10294,9 +9941,6 @@
                             "type": "string",
                             "description": "Connection id to be used."
                         }
-                    ],
-                    "handlers": [
-                        "browser"
                     ]
                 }
             ]
@@ -10893,7 +10537,6 @@
             "commands": [
                 {
                     "name": "evaluate",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "expression",
@@ -10968,7 +10611,6 @@
                 },
                 {
                     "name": "awaitPromise",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "promiseObjectId",
@@ -11005,7 +10647,6 @@
                 },
                 {
                     "name": "callFunctionOn",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "objectId",
@@ -11222,7 +10863,6 @@
                 },
                 {
                     "name": "runScript",
-                    "async": true,
                     "parameters": [
                         {
                             "name": "scriptId",
@@ -11533,7 +11173,8 @@
                                 "closure",
                                 "catch",
                                 "block",
-                                "script"
+                                "script",
+                                "eval"
                             ],
                             "description": "Scope type."
                         },
@@ -11701,6 +11342,34 @@
                         }
                     ],
                     "description": "Removes JavaScript breakpoint."
+                },
+                {
+                    "name": "getPossibleBreakpoints",
+                    "parameters": [
+                        {
+                            "name": "start",
+                            "$ref": "Location",
+                            "description": "Start of range to search possible breakpoint locations in."
+                        },
+                        {
+                            "name": "end",
+                            "$ref": "Location",
+                            "optional": true,
+                            "description": "End of range to search possible breakpoint locations in (excluding). When not specifed, end of scripts is used as end of range."
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "locations",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Location"
+                            },
+                            "description": "List of the possible breakpoint locations."
+                        }
+                    ],
+                    "description": "Returns possible locations for breakpoint. scriptId in start and end range locations should be the same.",
+                    "experimental": true
                 },
                 {
                     "name": "continueToLocation",
