@@ -3,9 +3,9 @@
 const EventEmitter = require('events');
 
 const devtools = require('./lib/devtools.js');
-const Chrome = require('./lib/chrome.js');
+const CDPProxy = require('./lib/chrome.js');
 
-module.exports = function (options, callback) {
+function connect(options, callback) {
     if (typeof options === 'function') {
         callback = options;
         options = undefined;
@@ -14,7 +14,7 @@ module.exports = function (options, callback) {
     if (typeof callback === 'function') {
         // allow to register the error callback later
         process.nextTick(function () {
-            new Chrome(options, notifier);
+            new CDPProxy(options, notifier);
         });
         return notifier.on('connect', callback);
     } else {
@@ -24,16 +24,18 @@ module.exports = function (options, callback) {
             notifier.on('disconnect', function () {
                 reject(new Error('Disconnected'));
             });
-            new Chrome(options, notifier);
+            new CDPProxy(options, notifier);
         });
     }
-};
+}
 
 // for backward compatibility
+module.exports = connect;
 module.exports.listTabs = devtools.List;
 module.exports.spawnTab = devtools.New;
 module.exports.closeTab = devtools.Close;
 
+module.exports.connect = connect;
 module.exports.Protocol = devtools.Protocol;
 module.exports.List = devtools.List;
 module.exports.New = devtools.New;
