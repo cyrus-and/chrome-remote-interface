@@ -336,6 +336,30 @@ To override the above behavior there are basically three options:
 [#10]: https://github.com/cyrus-and/chrome-remote-interface/issues/10
 [source repository]: https://chromium.googlesource.com/chromium/src/+/master/third_party/WebKit/Source/
 
+Browser usage
+-------------
+
+This module is able to run within a web context, with obvious limitations
+though, namely external HTTP requests
+([List](#cdplistoptions-callback), [New](#cdpnewoptions-callback), etc.) cannot
+be performed directly, for this reason the user must provide a global
+`criRequest` function *before* including this script in order to use them:
+
+```js
+function criRequest(_, options, callback)
+```
+
+`options` is the same object used by the Node.js `http` module and `callback` is
+a function taking two arguments: `err` (JavaScript `Error` object or `null`) and
+`data` (string result).
+
+To generate the bundle run `npm install && npm run webpack` in the root
+directory. The resulting file can be included in a `<script>` tag:
+
+```html
+<script src="chrome-remote-interface.js"></script>
+```
+
 API
 ---
 
