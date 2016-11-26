@@ -14,8 +14,8 @@
         "type": "git",
         "url": "git://github.com/cyrus-and/chrome-remote-interface.git"
     },
-    "bugs" : {
-        "url" : "http://github.com/cyrus-and/chrome-remote-interface/issues"
+    "bugs": {
+        "url": "http://github.com/cyrus-and/chrome-remote-interface/issues"
     },
     "engines": {
         "node": ">=4"
