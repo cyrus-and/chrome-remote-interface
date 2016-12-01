@@ -27,11 +27,15 @@
     "files": [
         "lib",
         "bin",
-        "index.js"
+        "index.js",
+        "chrome-remote-interface.js",
+        "webpack.config.js",
+        "webpack.entry.js"
     ],
     "bin": {
         "chrome-remote-interface": "./bin/client.js"
     },
+    "browser": "chrome-remote-interface.js",
     "devDependencies": {
         "mocha": "3.1.x",
         "eslint": "3.9.x",
@@ -43,6 +47,7 @@
     },
     "scripts": {
         "test": "./scripts/run-tests.sh",
-        "webpack": "webpack"
+        "webpack": "webpack",
+        "prepublish": "webpack"
     }
 }

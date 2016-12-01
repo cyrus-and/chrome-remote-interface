@@ -1,10 +1,16 @@
 const webpack = require('webpack');
 
+function criWrapper(_, options, callback) {
+    window.criRequest(options, callback);
+}
+
 module.exports = {
-    externals: {
-        'ws': 'window.ws',
-        './externalRequest.js': 'window.criRequest'
-    },
+    externals: [
+        {
+            'ws': './lib/websocket-wrapper',
+            './externalRequest.js': `(${criWrapper})`
+        }
+    ],
     module: {
         loaders: [
             {
@@ -29,9 +35,9 @@ module.exports = {
             }
         })
     ],
-    entry: './webpack.entry.js',
+    entry: './index.js',
     output: {
-        libraryTarget: 'var',
+        libraryTarget: 'commonjs2',
         library: 'CDP',
         filename: 'chrome-remote-interface.js'
     }

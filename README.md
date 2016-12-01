@@ -353,12 +353,18 @@ function criRequest(_, options, callback)
 a function taking two arguments: `err` (JavaScript `Error` object or `null`) and
 `data` (string result).
 
-To generate the bundle run `npm install && npm run webpack` in the root
-directory. The resulting file can be included in a `<script>` tag:
+You can use this library, by requiring just as you would in node.
 
-```html
-<script src="chrome-remote-interface.js"></script>
+```js
+const CDP = CDP("chrome-remote-interface");
+CDP.List().then(tabs => console.log);
 ```
+
+If you'd like to include chrome-remote-interface with a `<script>` tag:
+
+1. npm install chrome-remote-interface
+2. change the webpack config `libraryTarget` from commonjs2 to var
+3. run `npm run webpack`
 
 API
 ---
