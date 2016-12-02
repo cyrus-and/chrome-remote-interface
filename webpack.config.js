@@ -7,7 +7,7 @@ function criWrapper(_, options, callback) {
 module.exports = {
     externals: [
         {
-            'ws': './lib/websocket-wrapper',
+            'ws': 'window.ws',
             './external-request.js': `(${criWrapper})`
         }
     ],
@@ -35,9 +35,9 @@ module.exports = {
             }
         })
     ],
-    entry: './index.js',
+    entry: './webpack.entry.js',
     output: {
-        libraryTarget: 'commonjs2',
+        libraryTarget: process.env.TARGET || 'commonjs2',
         library: 'CDP',
         filename: 'chrome-remote-interface.js'
     }

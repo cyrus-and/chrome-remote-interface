@@ -346,26 +346,37 @@ be performed directly, for this reason the user must provide a global
 `criRequest` function *before* including this script in order to use them:
 
 ```js
-function criRequest(options, callback)
+function criRequest(options, callback) {}
 ```
 
 `options` is the same object used by the Node.js `http` module and `callback` is
 a function taking two arguments: `err` (JavaScript `Error` object or `null`) and
 `data` (string result).
 
-You can use this library, by requiring just as you would in node.
+### Using [`webpack`](https://webpack.github.io/)
+
+It just works, simply require this module:
 
 ```js
-const CDP = CDP("chrome-remote-interface");
-CDP.List().then(tabs => console.log);
+const CDP = require('chrome-remote-interface');
 ```
 
-If you'd like to include chrome-remote-interface with a `<script>` tag:
+### Using *vanilla* JavaScript
 
-1. npm install chrome-remote-interface
-2. change the webpack config `libraryTarget` from commonjs2 to var
-3. run `npm run webpack`
+To generate a JavaScript file that can be used with a `<script>` element:
 
+1. run `npm install` from the root directory;
+
+2. manually run webpack with `TARGET=var npm run webpack`
+
+3. use as:
+
+    ```html
+    <script>
+      function criRequest(options, callback) { /*...*/ }
+    </script>
+    <script src="chrome-remote-interface.js"></script>
+    ```
 API
 ---
 
