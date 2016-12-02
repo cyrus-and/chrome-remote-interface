@@ -346,7 +346,7 @@ be performed directly, for this reason the user must provide a global
 `criRequest` function *before* including this script in order to use them:
 
 ```js
-function criRequest(_, options, callback)
+function criRequest(options, callback)
 ```
 
 `options` is the same object used by the Node.js `http` module and `callback` is
