@@ -12,7 +12,7 @@ module.exports = {
     },
     externals: [
         {
-            './external-request.js': `(${criWrapper})`
+            './external-request.js': `var (${criWrapper})`
         }
     ],
     module: {
