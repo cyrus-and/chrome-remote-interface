@@ -367,7 +367,7 @@ To generate a JavaScript file that can be used with a `<script>` element:
 
 1. run `npm install` from the root directory;
 
-2. manually run webpack with `TARGET=var npm run webpack`
+2. manually run webpack with `TARGET=var npm run webpack` or `TARGET=var COMPRESS=true npm run webpack` if you'd like a minified script.
 
 3. use as:
 

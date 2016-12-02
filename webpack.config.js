@@ -4,7 +4,7 @@ function criWrapper(_, options, callback) {
     window.criRequest(options, callback);
 }
 
-module.exports = {
+let webpackConfig = {
     resolve: {
         alias: {
             'ws': './websocket-wrapper.js'
@@ -29,15 +29,6 @@ module.exports = {
         ]
     },
     plugins: [
-        new webpack.optimize.UglifyJsPlugin({
-            mangle: true,
-            compress: {
-                warnings: false
-            },
-            output: {
-                comments: false
-            }
-        })
     ],
     entry: './index.js',
     output: {
@@ -46,3 +37,17 @@ module.exports = {
         filename: 'chrome-remote-interface.js'
     }
 };
+
+if (process.env.COMPRESS) {
+    webpackConfig.plugins.push(new webpack.optimize.UglifyJsPlugin({
+        mangle: true,
+        compress: {
+            warnings: false
+        },
+        output: {
+            comments: false
+        }
+    }));
+}
+
+module.exports = webpackConfig;
