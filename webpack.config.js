@@ -1,10 +1,12 @@
+'use strict';
+
 const webpack = require('webpack');
 
 function criWrapper(_, options, callback) {
     window.criRequest(options, callback);
 }
 
-let webpackConfig = {
+const webpackConfig = {
     resolve: {
         alias: {
             'ws': './websocket-wrapper.js'
