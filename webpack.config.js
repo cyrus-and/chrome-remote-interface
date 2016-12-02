@@ -8,7 +8,7 @@ module.exports = {
     externals: [
         {
             'ws': './lib/websocket-wrapper',
-            './externalRequest.js': `(${criWrapper})`
+            './external-request.js': `(${criWrapper})`
         }
     ],
     module: {
