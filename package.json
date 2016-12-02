@@ -29,8 +29,7 @@
         "bin",
         "index.js",
         "chrome-remote-interface.js",
-        "webpack.config.js",
-        "webpack.entry.js"
+        "webpack.config.js"
     ],
     "bin": {
         "chrome-remote-interface": "./bin/client.js"

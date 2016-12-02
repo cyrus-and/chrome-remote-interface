@@ -5,9 +5,13 @@ function criWrapper(_, options, callback) {
 }
 
 module.exports = {
+    resolve: {
+        alias: {
+            'ws': './websocket-wrapper.js'
+        }
+    },
     externals: [
         {
-            'ws': 'window.ws',
             './external-request.js': `(${criWrapper})`
         }
     ],
@@ -35,7 +39,7 @@ module.exports = {
             }
         })
     ],
-    entry: './webpack.entry.js',
+    entry: './index.js',
     output: {
         libraryTarget: process.env.TARGET || 'commonjs2',
         library: 'CDP',
