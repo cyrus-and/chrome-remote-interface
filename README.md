@@ -353,7 +353,7 @@ function criRequest(options, callback) {}
 a function taking two arguments: `err` (JavaScript `Error` object or `null`) and
 `data` (string result).
 
-### Using [`webpack`](https://webpack.github.io/)
+### Using [webpack](https://webpack.github.io/)
 
 It just works, simply require this module:
 
