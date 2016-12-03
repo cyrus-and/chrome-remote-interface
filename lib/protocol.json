@@ -535,6 +535,11 @@
                     "description": "Navigates current page to the given URL."
                 },
                 {
+                    "name": "stopLoading",
+                    "description": "Force the page stop all navigations and pending resource fetches.",
+                    "experimental": true
+                },
+                {
                     "name": "getNavigationHistory",
                     "returns": [
                         {
@@ -4635,7 +4640,6 @@
                     "enum": [
                         "searchForNode",
                         "searchForUAShadowDOM",
-                        "showLayoutEditor",
                         "none"
                     ]
                 }
@@ -6891,21 +6895,6 @@
                         }
                     ],
                     "description": "Fired whenever an active document stylesheet is removed."
-                },
-                {
-                    "name": "layoutEditorChange",
-                    "parameters": [
-                        {
-                            "name": "styleSheetId",
-                            "$ref": "StyleSheetId",
-                            "description": "Identifier of the stylesheet where the modification occurred."
-                        },
-                        {
-                            "name": "changeRange",
-                            "$ref": "SourceRange",
-                            "description": "Range where the modification occurred."
-                        }
-                    ]
                 }
             ]
         },
