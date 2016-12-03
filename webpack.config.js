@@ -40,7 +40,7 @@ const webpackConfig = {
     }
 };
 
-if (process.env.COMPRESS) {
+if (process.env.DEBUG !== 'true') {
     webpackConfig.plugins.push(new webpack.optimize.UglifyJsPlugin({
         mangle: true,
         compress: {
