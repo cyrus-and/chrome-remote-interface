@@ -343,7 +343,7 @@ This module is able to run within a web context, with obvious limitations
 though, namely external HTTP requests
 ([List](#cdplistoptions-callback), [New](#cdpnewoptions-callback), etc.) cannot
 be performed directly, for this reason the user must provide a global
-`criRequest` function *before* including this script in order to use them:
+`criRequest` in order to use them:
 
 ```js
 function criRequest(options, callback) {}
@@ -384,6 +384,7 @@ To generate a JavaScript file that can be used with a `<script>` element:
     </script>
     <script src="chrome-remote-interface.js"></script>
     ```
+
 API
 ---
 
