@@ -29,4 +29,5 @@ before_script:
         --user-data-dir=$(mktemp -d)
         --no-sandbox --no-first-run --disable-extensions --remote-debugging-port=9222
         about:blank &
-  - sleep 5
+  # wait for Chrome to start up
+  - while ! curl http://localhost:9222 >/dev/null; do sleep 1; done
