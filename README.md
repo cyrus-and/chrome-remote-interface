@@ -15,23 +15,23 @@ Sample API usage
 
 The following snippet loads `https://github.com` and dumps every request made:
 
-```javascript
+```js
 const CDP = require('chrome-remote-interface');
-CDP(function (client) {
-    with (client) {
-        Network.requestWillBeSent(function (params) {
-            console.log(params.request.url);
-        });
-        Page.loadEventFired(function () {
-            close();
-        });
-        Network.enable();
-        Page.enable();
-        once('ready', function () {
-            Page.navigate({'url': 'https://github.com'});
-        });
-    }
-}).on('error', function (err) {
+
+CDP((client) => {
+    const {Page, Network} = client;
+    Network.requestWillBeSent((params) => {
+        console.log(params.request.url);
+    });
+    Page.loadEventFired(() => {
+        client.close();
+    });
+    Network.enable();
+    Page.enable();
+    client.once('ready', () => {
+        Page.navigate({'url': 'https://github.com'});
+    });
+}).on('error', (err) => {
     console.error('Cannot connect to remote endpoint:', err);
 });
 ```
