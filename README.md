@@ -36,6 +36,10 @@ CDP(function (client) {
 });
 ```
 
+Find more examples in the [wiki].
+
+[wiki]: https://github.com/cyrus-and/chrome-remote-interface/wiki
+
 Installation
 ------------
 
