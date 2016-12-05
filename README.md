@@ -19,17 +19,24 @@ The following snippet loads `https://github.com` and dumps every request made:
 const CDP = require('chrome-remote-interface');
 
 CDP((client) => {
-    const {Page, Network} = client;
+    // extract domains
+    const {Network, Page} = client;
+    // setup handlers
     Network.requestWillBeSent((params) => {
         console.log(params.request.url);
     });
     Page.loadEventFired(() => {
         client.close();
     });
-    Network.enable();
-    Page.enable();
-    client.once('ready', () => {
-        Page.navigate({'url': 'https://github.com'});
+    // enable events then start!
+    Promise.all([
+        Network.enable(),
+        Page.enable()
+    ]).then(() => {
+        return Page.navigate({url: 'https://github.com'});
+    }).catch((err) => {
+        console.error(`ERROR: ${err.message}`);
+        client.close();
     });
 }).on('error', (err) => {
     console.error('Cannot connect to remote endpoint:', err);
