@@ -703,8 +703,11 @@ Emitted every time that there are no more pending commands waiting for a
 response from the remote instance. The interaction is asynchronous so the only
 way to serialize a sequence of commands is to use the callback provided by
 the [`send`](#clientsendmethod-params-callback) method. This event acts as a
-barrier and it is useful to avoid the callback hell in certain simple
+barrier and it is useful to avoid the *callback hell* in certain simple
 situations.
+
+Users are encouraged to extensively check the response of each method and should
+prefer the promises API when dealing with complex asynchronous program flows.
 
 For example to load a URL only after having enabled the notifications of both
 `Network` and `Page` domains:
