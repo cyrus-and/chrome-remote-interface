@@ -9,7 +9,10 @@
     "rules": {
         "indent": [
             "error",
-            4
+            4,
+            {
+                "ArrayExpression": "first"
+            }
         ],
         "linebreak-style": [
             "error",
