@@ -2,8 +2,8 @@
 
 const EventEmitter = require('events');
 
-const devtools = require('./lib/devtools.js');
-const Chrome = require('./lib/chrome.js');
+const devtools = require('./lib/devtools');
+const Chrome = require('./lib/chrome');
 
 module.exports = function (options, callback) {
     if (typeof options === 'function') {
