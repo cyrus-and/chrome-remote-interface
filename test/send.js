@@ -81,7 +81,9 @@ describe('sending a command', function () {
             Chrome(function (chrome) {
                 chrome.send('Network.getResponseBody').then(function () {
                     assert(false);
-                }).catch(function () {
+                }).catch(function (error) {
+                    assert(error instanceof Error);
+                    assert(!!error.code);
                     chrome.close(done);
                 });
             });
