@@ -1780,24 +1780,27 @@
                             "description": "Security state."
                         },
                         {
+                            "name": "schemeIsCryptographic",
+                            "type": "boolean",
+                            "description": "True if the page was loaded over cryptographic transport such as HTTPS."
+                        },
+                        {
                             "name": "explanations",
                             "type": "array",
                             "items": {
                                 "$ref": "SecurityStateExplanation"
                             },
-                            "description": "List of explanations for the security state. If the overall security state is `insecure` or `warning`, at least one corresponding explanation should be included.",
-                            "optional": true
+                            "description": "List of explanations for the security state. If the overall security state is `insecure` or `warning`, at least one corresponding explanation should be included."
                         },
                         {
                             "name": "insecureContentStatus",
                             "$ref": "InsecureContentStatus",
-                            "description": "Information about insecure content on the page.",
-                            "optional": true
+                            "description": "Information about insecure content on the page."
                         },
                         {
-                            "name": "schemeIsCryptographic",
-                            "type": "boolean",
-                            "description": "True if the page was loaded over cryptographic transport such as HTTPS.",
+                            "name": "summary",
+                            "type": "string",
+                            "description": "Overrides user-visible description of the state.",
                             "optional": true
                         }
                     ]
@@ -2001,6 +2004,19 @@
                             "name": "initialPriority",
                             "$ref": "ResourcePriority",
                             "description": "Priority of the resource request at the time request is sent."
+                        },
+                        {
+                            "name": "referrerPolicy",
+                            "type": "string",
+                            "enum": [
+                                "unsafe-url",
+                                "no-referrer-when-downgrade",
+                                "no-referrer",
+                                "origin",
+                                "origin-when-cross-origin",
+                                "no-referrer-when-downgrade-origin-when-cross-origin"
+                            ],
+                            "description": "The referrer policy of the request, as defined in https://www.w3.org/TR/referrer-policy/"
                         }
                     ]
                 },
@@ -2605,6 +2621,21 @@
                 },
                 {
                     "name": "getCookies",
+                    "returns": [
+                        {
+                            "name": "cookies",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Cookie"
+                            },
+                            "description": "Array of cookie objects."
+                        }
+                    ],
+                    "description": "Returns all browser cookies for the current URL. Depending on the backend support, will return detailed cookie information in the <code>cookies</code> field.",
+                    "experimental": true
+                },
+                {
+                    "name": "getAllCookies",
                     "returns": [
                         {
                             "name": "cookies",
@@ -4406,6 +4437,13 @@
                             },
                             "optional": true,
                             "description": "Distributed nodes for given insertion point.",
+                            "experimental": true
+                        },
+                        {
+                            "name": "isSVG",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Whether the node is SVG.",
                             "experimental": true
                         }
                     ],
@@ -9665,6 +9703,7 @@
                                 "deprecation",
                                 "worker",
                                 "violation",
+                                "intervention",
                                 "other"
                             ],
                             "description": "Log entry source."
@@ -9942,7 +9981,6 @@
                     "id": "Domain",
                     "type": "object",
                     "description": "Description of the protocol domain.",
-                    "exported": true,
                     "properties": [
                         {
                             "name": "name",
@@ -10007,7 +10045,6 @@
                     "id": "RemoteObject",
                     "type": "object",
                     "description": "Mirror object referencing original JavaScript object.",
-                    "exported": true,
                     "properties": [
                         {
                             "name": "type",
@@ -10498,7 +10535,6 @@
                     "id": "StackTrace",
                     "type": "object",
                     "description": "Call frames for assertions or error messages.",
-                    "exported": true,
                     "properties": [
                         {
                             "name": "description",
@@ -11163,7 +11199,8 @@
                                 "catch",
                                 "block",
                                 "script",
-                                "eval"
+                                "eval",
+                                "module"
                             ],
                             "description": "Scope type."
                         },
@@ -11196,7 +11233,6 @@
                     "id": "SearchMatch",
                     "type": "object",
                     "description": "Search match for resource.",
-                    "exported": true,
                     "properties": [
                         {
                             "name": "lineNumber",
@@ -11852,8 +11888,7 @@
                                 "promiseRejection",
                                 "other"
                             ],
-                            "description": "Pause reason.",
-                            "exported": true
+                            "description": "Pause reason."
                         },
                         {
                             "name": "data",
