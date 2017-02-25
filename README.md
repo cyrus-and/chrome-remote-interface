@@ -35,11 +35,11 @@ CDP((client) => {
     ]).then(() => {
         return Page.navigate({url: 'https://github.com'});
     }).catch((err) => {
-        console.error(`ERROR: ${err.message}`);
+        console.error(err);
         client.close();
     });
 }).on('error', (err) => {
-    console.error('Cannot connect to remote endpoint:', err);
+    console.error(err);
 });
 ```
 
