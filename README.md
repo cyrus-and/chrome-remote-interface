@@ -39,6 +39,7 @@ CDP((client) => {
         client.close();
     });
 }).on('error', (err) => {
+    // cannot connect to the remote endpoint
     console.error(err);
 });
 ```
