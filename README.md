@@ -44,9 +44,11 @@ CDP((client) => {
 });
 ```
 
-Find more examples in the [wiki].
+Find more examples in the [wiki], in particular notice how the above can be
+rewritten using the [`async`/`await`][async-await-example] primitives.
 
 [wiki]: https://github.com/cyrus-and/chrome-remote-interface/wiki
+[async-await-example]: https://github.com/cyrus-and/chrome-remote-interface/wiki/Async-await-example
 
 Installation
 ------------
