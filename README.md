@@ -107,6 +107,18 @@ Start Chrome with the `--remote-debugging-port` option, for example:
 
     google-chrome --remote-debugging-port=9222
 
+##### Headless
+
+Since version 57, additionally use the `--headless` option, for example:
+
+    google-chrome --headless --remote-debugging-port=9222
+
+Please note that currently the *DevTools* methods are not properly supported in
+headless mode; use the [Target domain] instead. See [#84] for more information.
+
+[#84]: https://github.com/cyrus-and/chrome-remote-interface/issues/84
+[Target domain]: https://chromedevtools.github.io/debugger-protocol-viewer/tot/Target/
+
 #### Android
 
 Plug the device and enable the [port forwarding][adb], for example:
