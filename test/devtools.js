@@ -46,9 +46,9 @@ describe('devtool interaction', function () {
                 });
             });
             it('should fail if remote is not available', function (done) {
-                Chrome.Protocol({'remote': true, 'port': 1}, function (err, protocol) {
-                    assert(err !== null);
-                    assert(!protocol);
+                Chrome.Protocol({'remote': true, 'port': 1}).then(function (protocol) {
+                    assert(false);
+                }).catch(function () {
                     done();
                 });
             });
