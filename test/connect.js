@@ -52,8 +52,11 @@ describe('connecting to Chrome', function () {
         });
         describe('two times', function () {
             it('should fail', function (done) {
-                Chrome(function (chrome) {
-                    Chrome(function () {
+                const options = {
+                    chooseTab: () => 0
+                };
+                Chrome(options, function (chrome) {
+                    Chrome(options, function () {
                         assert(false);
                     }).on('error', function (err) {
                         assert(err instanceof Error);
@@ -112,8 +115,11 @@ describe('connecting to Chrome', function () {
         });
         describe('two times', function () {
             it('should fail', function (done) {
-                Chrome(function (chrome) {
-                    Chrome().then(function () {
+                const options = {
+                    chooseTab: () => 0
+                };
+                Chrome(options, function (chrome) {
+                    Chrome(options).then(function () {
                         done(new Error());
                     }).catch(function (err) {
                         assert(err instanceof Error);

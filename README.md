@@ -441,8 +441,9 @@ Connects to a remote instance using the [Chrome Debugging Protocol].
   - a `string` representing the raw WebSocket URL, in this case `host` and
     `port` are not used to fetch the tab list.
 
-  Defaults to a function which returns the currently active tab (`function
-  (tabs) { return 0; }`);
+  Defaults to a function which returns the first available tab starting from the
+  currently active one (note that at most one connection can be established to
+  the same tab);
 - `protocol`: [Chrome Debugging Protocol] descriptor object. Defaults to use the
   protocol chosen according to the `remote` option;
 - `remote`: a boolean indicating whether the protocol must be fetched *remotely*
