@@ -87,7 +87,7 @@ describe('connecting to Chrome', function () {
         describe('with custom (wrong) parameters', function () {
             it('should fail (wrong port)', function (done) {
                 Chrome({'port': 1}).then(function () {
-                    assert(false);
+                    done(new Error());
                 }).catch(function (err) {
                     assert(err instanceof Error);
                     done();
@@ -95,7 +95,7 @@ describe('connecting to Chrome', function () {
             });
             it('should fail (wrong host)', function (done) {
                 Chrome({'host': '255.255.255.255'}).then(function () {
-                    assert(false);
+                    done(new Error());
                 }).catch(function (err) {
                     assert(err instanceof Error);
                     done();
@@ -103,7 +103,7 @@ describe('connecting to Chrome', function () {
             });
             it('should fail (wrong tab)', function (done) {
                 Chrome({'tab': function () { return -1; }}).then(function () {
-                    assert(false);
+                    done(new Error());
                 }).catch(function (err) {
                     assert(err instanceof Error);
                     done();
@@ -114,7 +114,7 @@ describe('connecting to Chrome', function () {
             it('should fail', function (done) {
                 Chrome(function (chrome) {
                     Chrome().then(function () {
-                        assert(false);
+                        done(new Error());
                     }).catch(function (err) {
                         assert(err instanceof Error);
                         chrome.close(done);

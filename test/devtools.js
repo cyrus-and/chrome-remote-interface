@@ -37,27 +37,35 @@ describe('devtool interaction', function () {
         describe('without callback', function () {
             it('should return the local protocol descriptor', function (done) {
                 Chrome.Protocol().then(function (protocol) {
-                    assert(!protocol.remote);
-                    assert.equal(typeof protocol.descriptor, 'object');
-                    assert.equal(typeof protocol.descriptor.version, 'object');
-                    done();
+                    try {
+                        assert(!protocol.remote);
+                        assert.equal(typeof protocol.descriptor, 'object');
+                        assert.equal(typeof protocol.descriptor.version, 'object');
+                        done();
+                    } catch (err) {
+                        done(err);
+                    }
                 }).catch(function () {
                     assert(false);
                 });
             });
             it('should fail if remote is not available', function (done) {
                 Chrome.Protocol({'remote': true, 'port': 1}).then(function (protocol) {
-                    assert(false);
+                    done(new Error());
                 }).catch(function () {
                     done();
                 });
             });
             it('should return the remote protocol descriptor', function (done) {
                 Chrome.Protocol({'remote': true}).then(function (protocol) {
-                    assert(protocol.remote);
-                    assert.equal(typeof protocol.descriptor, 'object');
-                    assert.equal(typeof protocol.descriptor.version, 'object');
-                    done();
+                    try {
+                        assert(protocol.remote);
+                        assert.equal(typeof protocol.descriptor, 'object');
+                        assert.equal(typeof protocol.descriptor.version, 'object');
+                        done();
+                    } catch (err) {
+                        done(err);
+                    }
                 }).catch(function () {
                     assert(false);
                 });
@@ -77,8 +85,12 @@ describe('devtool interaction', function () {
         describe('without callback', function () {
             it('should return the tab list', function (done) {
                 Chrome.List().then(function (tabs) {
-                    assert(util.isArray(tabs));
-                    done();
+                    try {
+                        assert(util.isArray(tabs));
+                        done();
+                    } catch (err) {
+                        done(err);
+                    }
                 }).catch(function () {
                     assert(false);
                 });
@@ -118,29 +130,37 @@ describe('devtool interaction', function () {
         describe('without callback', function () {
             it('should spawn a tab to a specific URL', function (done) {
                 Chrome.New({url: 'chrome://newtab/'}).then(function (tab) {
-                    assert(tab.id);
-                    Chrome.List(function (err, tabs) {
-                        assert(tabs.some(function (t) {
-                            return t.id === tab.id;
-                        }));
-                        assert(util.isArray(tabs));
-                        assert.equal(tab.url, 'chrome://newtab/');
-                        done();
-                    });
+                    try {
+                        assert(tab.id);
+                        Chrome.List(function (err, tabs) {
+                            assert(tabs.some(function (t) {
+                                return t.id === tab.id;
+                            }));
+                            assert(util.isArray(tabs));
+                            assert.equal(tab.url, 'chrome://newtab/');
+                            done();
+                        });
+                    } catch (err) {
+                        done(err);
+                    }
                 }).catch(function () {
                     assert(false);
                 });
             });
             it('should spawn a new tab', function (done) {
                 Chrome.New().then(function (tab) {
-                    assert(tab.id);
-                    Chrome.List(function (err, tabs) {
-                        assert(tabs.some(function (t) {
-                            return t.id === tab.id;
-                        }));
-                        assert(util.isArray(tabs));
-                        done();
-                    });
+                    try {
+                        assert(tab.id);
+                        Chrome.List(function (err, tabs) {
+                            assert(tabs.some(function (t) {
+                                return t.id === tab.id;
+                            }));
+                            assert(util.isArray(tabs));
+                            done();
+                        });
+                    } catch (err) {
+                        done(err);
+                    }
                 }).catch(function (err) {
                     assert(false);
                 });
@@ -218,8 +238,12 @@ describe('devtool interaction', function () {
         describe('without callback', function () {
             it('should return the version information', function (done) {
                 Chrome.Version().then(function (info) {
-                    assert(util.isObject(info));
-                    done();
+                    try {
+                        assert(util.isObject(info));
+                        done();
+                    } catch (err) {
+                        done(err);
+                    }
                 }).catch(function () {
                     assert(false);
                 });

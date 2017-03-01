@@ -80,7 +80,7 @@ describe('sending a command', function () {
         it('should reject the promise if the command fails', function (done) {
             Chrome(function (chrome) {
                 chrome.send('Network.getResponseBody').then(function () {
-                    assert(false);
+                    done(new Error());
                 }).catch(function (error) {
                     assert(error instanceof Error);
                     assert(!!error.code);
@@ -102,7 +102,7 @@ describe('sending a command', function () {
         it('should reject the promise if the command fails', function (done) {
             Chrome(function (chrome) {
                 chrome.Network.getResponseBody().then(function () {
-                    assert(false);
+                    done(new Error());
                 }).catch(function () {
                     chrome.close(done);
                 });
