@@ -114,8 +114,10 @@ Since version 57, additionally use the `--headless` option, for example:
     google-chrome --headless --remote-debugging-port=9222
 
 Please note that currently the *DevTools* methods are not properly supported in
-headless mode; use the [Target domain] instead. See [#84] for more information.
+headless mode; use the [Target domain] instead. See [#83] and [#84] for more
+information.
 
+[#83]: https://github.com/cyrus-and/chrome-remote-interface/issues/83
 [#84]: https://github.com/cyrus-and/chrome-remote-interface/issues/84
 [Target domain]: https://chromedevtools.github.io/debugger-protocol-viewer/tot/Target/
 
