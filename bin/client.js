@@ -249,7 +249,8 @@ let action;
 
 program
     .option('-t, --host <host>', 'HTTP frontend host')
-    .option('-p, --port <port>', 'HTTP frontend port');
+    .option('-p, --port <port>', 'HTTP frontend port')
+    .option('-s, --secure', 'HTTPS/WSS frontend');
 
 program
     .command('inspect [<target>]')
@@ -309,7 +310,8 @@ program.parse(process.argv);
 // common options
 const options = {
     'host': program.host,
-    'port': program.port
+    'port': program.port,
+    'secure': program.secure
 };
 
 if (action) {
