@@ -434,6 +434,7 @@ Connects to a remote instance using the [Chrome Debugging Protocol].
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
+- `secure`: HTTPS/WSS frontend. Defaults to `false`;
 - `tab`: determines which tab this client should attach to. The behavior changes
   according to the type:
 
@@ -501,6 +502,7 @@ Fetch the [Chrome Debugging Protocol] descriptor.
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
+- `secure`: HTTPS/WSS frontend. Defaults to `false`;
 - `remote`: a boolean indicating whether the protocol must be fetched *remotely*
   or if the local version must be returned. If it is not possible to fulfill the
   request then the local version is used. Defaults to `false`.
@@ -534,7 +536,8 @@ Request the list of the available open tabs of the remote instance.
 `options` is an object with the following optional properties:
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
-- `port`: HTTP frontend port. Defaults to `9222`.
+- `port`: HTTP frontend port. Defaults to `9222`;
+- `secure`: HTTPS/WSS frontend. Defaults to `false`.
 
 `callback` is executed when the list is correctly received, it gets the
 following arguments:
@@ -564,6 +567,7 @@ Create a new tab in the remote instance.
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
+- `secure`: HTTPS/WSS frontend. Defaults to `false`;
 - `url`: URL to load in the new tab. Defaults to `about:blank`.
 
 `callback` is executed when the tab is created, it gets the following arguments:
@@ -592,6 +596,7 @@ Activate an open tab of the remote instance.
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
+- `secure`: HTTPS/WSS frontend. Defaults to `false`;
 - `id`: Tab id. Required, no default.
 
 `callback` is executed when the response to the activation request is
@@ -620,6 +625,7 @@ Close an open tab of the remote instance.
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
+- `secure`: HTTPS/WSS frontend. Defaults to `false`;
 - `id`: Tab id. Required, no default.
 
 `callback` is executed when the response to the close request is received. It
@@ -650,7 +656,8 @@ Request version information from the remote instance.
 `options` is an object with the following optional properties:
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
-- `port`: HTTP frontend port. Defaults to `9222`.
+- `port`: HTTP frontend port. Defaults to `9222`;
+- `secure`: HTTPS/WSS frontend. Defaults to `false`.
 
 `callback` is executed when the version information is correctly received, it
 gets the following arguments:
