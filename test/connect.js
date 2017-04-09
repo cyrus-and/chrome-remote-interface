@@ -23,6 +23,20 @@ describe('connecting to Chrome', function () {
                     assert(false);
                 });
             });
+            it('should succeed with custom tab by index', function (done) {
+                Chrome({'tab': function () { return 0; }}, function (chrome) {
+                    chrome.close(done);
+                }).on('error', function () {
+                    assert(false);
+                });
+            });
+            it('should succeed with custom tab by object', function (done) {
+                Chrome({'tab': function (tabs) { return tabs[0]; }}, function (chrome) {
+                    chrome.close(done);
+                }).on('error', function () {
+                    assert(false);
+                });
+            });
         });
         describe('with custom (wrong) parameters', function () {
             it('should fail (wrong port)', function (done) {
@@ -81,6 +95,20 @@ describe('connecting to Chrome', function () {
         describe('with custom parameters', function () {
             it('should succeed', function (done) {
                 Chrome({'host': 'localhost', 'port': 9222}).then(function (chrome) {
+                    chrome.close(done);
+                }).catch(function () {
+                    assert(false);
+                });
+            });
+            it('should succeed with custom tab by index', function (done) {
+                Chrome({'tab': function () { return 0; }}).then(function (chrome) {
+                    chrome.close(done);
+                }).catch(function () {
+                    assert(false);
+                });
+            });
+            it('should succeed with custom tab by index', function (done) {
+                Chrome({'tab': function (tabs) { return tabs[0]; }}).then(function (chrome) {
                     chrome.close(done);
                 }).catch(function () {
                     assert(false);
