@@ -355,7 +355,7 @@ To override the above behavior there are basically three options:
   (`protocol` option);
 
 - use the *raw* version of the [commands](#clientsendmethod-params-callback)
-  and [events](#event-method) interface;
+  and [events](#event-domainmethod) interface;
 
 - update the local copy with `scripts/update-protocol.sh` (not present when
   fetched with `npm install`).
@@ -707,14 +707,14 @@ client.on('event', function (message) {
 });
 ```
 
-#### Event: '`<method>`'
+#### Event: '`<domain>`.`<method>`'
 
 ```javascript
 function (params) {}
 ```
 
-Emitted when the remote instance sends a notification for `<method>` through the
-WebSocket.
+Emitted when the remote instance sends a notification for `<domain>.<method>`
+through the WebSocket.
 
 `params` is an object containing the payload.
 
