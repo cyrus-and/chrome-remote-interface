@@ -522,6 +522,13 @@
                             "name": "url",
                             "type": "string",
                             "description": "URL to navigate the page to."
+                        },
+                        {
+                            "name": "referrer",
+                            "type": "string",
+                            "optional": true,
+                            "experimental": true,
+                            "description": "Referrer URL."
                         }
                     ],
                     "returns": [
@@ -879,11 +886,48 @@
                 {
                     "name": "captureScreenshot",
                     "description": "Capture page screenshot.",
+                    "parameters": [
+                        {
+                            "name": "format",
+                            "type": "string",
+                            "optional": true,
+                            "enum": [
+                                "jpeg",
+                                "png"
+                            ],
+                            "description": "Image compression format (defaults to png)."
+                        },
+                        {
+                            "name": "quality",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "Compression quality from range [0..100] (jpeg only)."
+                        },
+                        {
+                            "name": "fromSurface",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Capture the screenshot from the surface, rather than the view. Defaults to false.",
+                            "experimental": true
+                        }
+                    ],
                     "returns": [
                         {
                             "name": "data",
                             "type": "string",
-                            "description": "Base64-encoded image data (PNG)."
+                            "description": "Base64-encoded image data."
+                        }
+                    ],
+                    "experimental": true
+                },
+                {
+                    "name": "printToPDF",
+                    "description": "Print page as pdf.",
+                    "returns": [
+                        {
+                            "name": "data",
+                            "type": "string",
+                            "description": "Base64-encoded pdf data."
                         }
                     ],
                     "experimental": true
@@ -1062,6 +1106,11 @@
                             "name": "visualViewport",
                             "$ref": "VisualViewport",
                             "description": "Metrics relating to the visual viewport."
+                        },
+                        {
+                            "name": "contentSize",
+                            "$ref": "DOM.Rect",
+                            "description": "Size of scrollable area."
                         }
                     ]
                 }
@@ -1098,6 +1147,13 @@
                             "name": "parentFrameId",
                             "$ref": "FrameId",
                             "description": "Parent frame identifier."
+                        },
+                        {
+                            "name": "stack",
+                            "$ref": "Runtime.StackTrace",
+                            "optional": true,
+                            "description": "JavaScript stack trace of when frame was attached, only set if frame initiated from script.",
+                            "experimental": true
                         }
                     ]
                 },
@@ -1353,6 +1409,9 @@
         {
             "domain": "Emulation",
             "description": "This domain emulates different environments for the page.",
+            "dependencies": [
+                "DOM"
+            ],
             "types": [
                 {
                     "id": "ScreenOrientation",
@@ -1657,6 +1716,19 @@
                         }
                     ],
                     "experimental": true
+                },
+                {
+                    "name": "setDefaultBackgroundColorOverride",
+                    "description": "Sets or clears an override of the default background color of the frame. This override is used if the content does not specify one.",
+                    "parameters": [
+                        {
+                            "name": "color",
+                            "$ref": "DOM.RGBA",
+                            "optional": true,
+                            "description": "RGBA of the default background color. If not specified, any existing override will be cleared."
+                        }
+                    ],
+                    "experimental": true
                 }
             ],
             "events": [
@@ -1732,6 +1804,11 @@
                             "description": "True if the page was loaded over HTTPS and displayed mixed (HTTP) content such as images."
                         },
                         {
+                            "name": "containedMixedForm",
+                            "type": "boolean",
+                            "description": "True if the page was loaded over HTTPS and contained a form targeting an insecure url."
+                        },
+                        {
                             "name": "ranContentWithCertErrors",
                             "type": "boolean",
                             "description": "True if the page was loaded over HTTPS without certificate errors, and ran content such as scripts that were loaded with certificate errors."
@@ -1753,6 +1830,15 @@
                         }
                     ],
                     "description": "Information about insecure content on the page."
+                },
+                {
+                    "id": "CertificateErrorAction",
+                    "type": "string",
+                    "enum": [
+                        "continue",
+                        "cancel"
+                    ],
+                    "description": "The action to take when a certificate error occurs. continue will continue processing the request and cancel will cancel the request."
                 }
             ],
             "commands": [
@@ -1767,6 +1853,33 @@
                 {
                     "name": "showCertificateViewer",
                     "description": "Displays native dialog with the certificate details."
+                },
+                {
+                    "name": "handleCertificateError",
+                    "description": "Handles a certificate error that fired a certificateError event.",
+                    "parameters": [
+                        {
+                            "name": "eventId",
+                            "type": "integer",
+                            "description": "The ID of the event."
+                        },
+                        {
+                            "name": "action",
+                            "$ref": "CertificateErrorAction",
+                            "description": "The action to take on the certificate error."
+                        }
+                    ]
+                },
+                {
+                    "name": "setOverrideCertificateErrors",
+                    "description": "Enable/disable overriding certificate errors. If enabled, all certificate error events need to be handled by the DevTools client and should be answered with handleCertificateError commands.",
+                    "parameters": [
+                        {
+                            "name": "override",
+                            "type": "boolean",
+                            "description": "If true, certificate errors will be overridden."
+                        }
+                    ]
                 }
             ],
             "events": [
@@ -1802,6 +1915,27 @@
                             "type": "string",
                             "description": "Overrides user-visible description of the state.",
                             "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "certificateError",
+                    "description": "There is a certificate error. If overriding certificate errors is enabled, then it should be handled with the handleCertificateError command. Note: this event does not fire if the certificate error has been allowed internally.",
+                    "parameters": [
+                        {
+                            "name": "eventId",
+                            "type": "integer",
+                            "description": "The ID of the event."
+                        },
+                        {
+                            "name": "errorType",
+                            "type": "string",
+                            "description": "The type of the error."
+                        },
+                        {
+                            "name": "requestURL",
+                            "type": "string",
+                            "description": "The url that was requested."
                         }
                     ]
                 }
@@ -2017,6 +2151,12 @@
                                 "no-referrer-when-downgrade-origin-when-cross-origin"
                             ],
                             "description": "The referrer policy of the request, as defined in https://www.w3.org/TR/referrer-policy/"
+                        },
+                        {
+                            "name": "isLinkPreload",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Whether is loaded via link preload."
                         }
                     ]
                 },
@@ -2387,6 +2527,7 @@
                             "enum": [
                                 "parser",
                                 "script",
+                                "preload",
                                 "other"
                             ],
                             "description": "Type of this initiator."
@@ -2542,25 +2683,16 @@
                     ]
                 },
                 {
-                    "name": "addBlockedURL",
-                    "description": "Blocks specific URL from loading.",
+                    "name": "setBlockedURLs",
+                    "description": "Blocks URLs from loading.",
                     "parameters": [
                         {
-                            "name": "url",
-                            "type": "string",
-                            "description": "URL to block."
-                        }
-                    ],
-                    "experimental": true
-                },
-                {
-                    "name": "removeBlockedURL",
-                    "description": "Cancels blocking of a specific URL from loading.",
-                    "parameters": [
-                        {
-                            "name": "url",
-                            "type": "string",
-                            "description": "URL to stop blocking."
+                            "name": "urls",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "URL patterns to block. Wildcards ('*') are allowed."
                         }
                     ],
                     "experimental": true
@@ -2575,18 +2707,6 @@
                             "description": "Identifier of XHR to replay."
                         }
                     ],
-                    "experimental": true
-                },
-                {
-                    "name": "setMonitoringXHREnabled",
-                    "parameters": [
-                        {
-                            "name": "enabled",
-                            "type": "boolean",
-                            "description": "Monitoring enabled state."
-                        }
-                    ],
-                    "description": "Toggles monitoring of XMLHttpRequest. If <code>true</code>, console will receive messages upon each XHR issued.",
                     "experimental": true
                 },
                 {
@@ -2621,6 +2741,17 @@
                 },
                 {
                     "name": "getCookies",
+                    "parameters": [
+                        {
+                            "name": "urls",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "optional": true,
+                            "description": "The list of URLs for which applicable cookies will be fetched"
+                        }
+                    ],
                     "returns": [
                         {
                             "name": "cookies",
@@ -3726,6 +3857,23 @@
                     ],
                     "returns": [],
                     "description": "Clears all entries from an object store."
+                },
+                {
+                    "name": "deleteDatabase",
+                    "parameters": [
+                        {
+                            "name": "securityOrigin",
+                            "type": "string",
+                            "description": "Security origin."
+                        },
+                        {
+                            "name": "databaseName",
+                            "type": "string",
+                            "description": "Database name."
+                        }
+                    ],
+                    "returns": [],
+                    "description": "Deletes a database."
                 }
             ]
         },
@@ -3906,6 +4054,15 @@
                 {
                     "name": "disable",
                     "description": "Disables storage tracking, prevents storage events from being sent to the client."
+                },
+                {
+                    "name": "clear",
+                    "parameters": [
+                        {
+                            "name": "storageId",
+                            "$ref": "StorageId"
+                        }
+                    ]
                 },
                 {
                     "name": "getDOMStorageItems",
@@ -4271,6 +4428,13 @@
                             "name": "nodeId",
                             "$ref": "NodeId",
                             "description": "Node identifier that is passed into the rest of the DOM messages as the <code>nodeId</code>. Backend will only push node with given <code>id</code> once. It is aware of all requested nodes and will only fire DOM events for nodes known to the client."
+                        },
+                        {
+                            "name": "parentId",
+                            "$ref": "NodeId",
+                            "optional": true,
+                            "description": "The id of the parent node if any.",
+                            "experimental": true
                         },
                         {
                             "name": "backendNodeId",
@@ -4713,6 +4877,36 @@
                         {
                             "name": "root",
                             "$ref": "Node",
+                            "description": "Resulting node."
+                        }
+                    ],
+                    "description": "Returns the root DOM node (and optionally the subtree) to the caller."
+                },
+                {
+                    "name": "getFlattenedDocument",
+                    "parameters": [
+                        {
+                            "name": "depth",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "The maximum depth at which children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0.",
+                            "experimental": true
+                        },
+                        {
+                            "name": "pierce",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Whether or not iframes and shadow roots should be traversed when returning the subtree (default is false).",
+                            "experimental": true
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "nodes",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Node"
+                            },
                             "description": "Resulting node."
                         }
                     ],
@@ -5426,6 +5620,12 @@
                             "name": "y",
                             "type": "integer",
                             "description": "Y coordinate."
+                        },
+                        {
+                            "name": "includeUserAgentShadowDOM",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "False to skip to the nearest non-UA shadow root ancestor (default: false)."
                         }
                     ],
                     "returns": [
@@ -5922,6 +6122,12 @@
                             "name": "startColumn",
                             "type": "number",
                             "description": "Column offset of the stylesheet within the resource (zero based)."
+                        },
+                        {
+                            "name": "length",
+                            "type": "number",
+                            "description": "Size of the content (in characters).",
+                            "experimental": true
                         }
                     ],
                     "description": "CSS stylesheet metainformation."
@@ -5973,9 +6179,14 @@
                             "description": "The css style sheet identifier (absent for user agent stylesheet and user-specified stylesheet rules) this rule came from."
                         },
                         {
-                            "name": "range",
-                            "$ref": "SourceRange",
-                            "description": "Style declaration range in the enclosing stylesheet (if available)."
+                            "name": "startOffset",
+                            "type": "number",
+                            "description": "Offset of the start of the rule (including selector) from the beginning of the stylesheet."
+                        },
+                        {
+                            "name": "endOffset",
+                            "type": "number",
+                            "description": "Offset of the end of the rule body from the beginning of the stylesheet."
                         },
                         {
                             "name": "used",
@@ -5983,7 +6194,7 @@
                             "description": "Indicates whether the rule was actually used by some element in the page."
                         }
                     ],
-                    "description": "CSS rule usage information.",
+                    "description": "CSS coverage information.",
                     "experimental": true
                 },
                 {
@@ -6879,6 +7090,20 @@
                     "experimental": true
                 },
                 {
+                    "name": "takeCoverageDelta",
+                    "description": "Obtain list of rules that became used since last call to this method (or since start of coverage instrumentation)",
+                    "returns": [
+                        {
+                            "name": "coverage",
+                            "type": "array",
+                            "items": {
+                                "$ref": "RuleUsage"
+                            }
+                        }
+                    ],
+                    "experimental": true
+                },
+                {
                     "name": "stopRuleUsageTracking",
                     "returns": [
                         {
@@ -7066,10 +7291,10 @@
                             "description": "Event original handler function value."
                         },
                         {
-                            "name": "removeFunction",
-                            "$ref": "Runtime.RemoteObject",
+                            "name": "backendNodeId",
+                            "$ref": "DOM.BackendNodeId",
                             "optional": true,
-                            "description": "Event listener remove function."
+                            "description": "Node the listener is added to (if any)."
                         }
                     ],
                     "experimental": true
@@ -7198,6 +7423,20 @@
                             "name": "objectId",
                             "$ref": "Runtime.RemoteObjectId",
                             "description": "Identifier of the object to return listeners for."
+                        },
+                        {
+                            "name": "depth",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "The maximum depth at which Node children should be retrieved, defaults to 1. Use -1 for the entire subtree or provide an integer larger than 0.",
+                            "experimental": true
+                        },
+                        {
+                            "name": "pierce",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Whether or not iframes and shadow roots should be traversed when returning the subtree (default is false). Reports listeners for all contexts if pierce is enabled.",
+                            "experimental": true
                         }
                     ],
                     "returns": [
@@ -7322,7 +7561,7 @@
                     "parameters": [
                         {
                             "name": "targetId",
-                            "type": "string"
+                            "$ref": "TargetID"
                         },
                         {
                             "name": "message",
@@ -9470,7 +9709,9 @@
                         "disabled",
                         "hidden",
                         "hiddenRoot",
-                        "invalid"
+                        "invalid",
+                        "keyshortcuts",
+                        "roledescription"
                     ],
                     "description": "States which apply to every AX node."
                 },
@@ -9510,6 +9751,7 @@
                     "enum": [
                         "checked",
                         "expanded",
+                        "modal",
                         "pressed",
                         "selected"
                     ],
@@ -9520,9 +9762,11 @@
                     "type": "string",
                     "enum": [
                         "activedescendant",
-                        "flowto",
                         "controls",
                         "describedby",
+                        "details",
+                        "errormessage",
+                        "flowto",
                         "labelledby",
                         "owns"
                     ],
@@ -9712,11 +9956,10 @@
                             "name": "level",
                             "type": "string",
                             "enum": [
-                                "log",
+                                "verbose",
+                                "info",
                                 "warning",
-                                "error",
-                                "debug",
-                                "info"
+                                "error"
                             ],
                             "description": "Log entry severity."
                         },
@@ -9775,6 +10018,7 @@
                                 "longLayout",
                                 "blockedEvent",
                                 "blockedParser",
+                                "discouragedAPIUse",
                                 "handler",
                                 "recurringHandler"
                             ],
@@ -9974,6 +10218,124 @@
             ]
         },
         {
+            "domain": "Browser",
+            "description": "The Browser domain defines methods and events for browser managing.",
+            "experimental": true,
+            "types": [
+                {
+                    "id": "WindowID",
+                    "type": "integer"
+                },
+                {
+                    "id": "WindowState",
+                    "type": "string",
+                    "enum": [
+                        "normal",
+                        "minimized",
+                        "maximized",
+                        "fullscreen"
+                    ],
+                    "description": "The state of the browser window."
+                },
+                {
+                    "id": "Bounds",
+                    "type": "object",
+                    "description": "Browser window bounds information",
+                    "properties": [
+                        {
+                            "name": "left",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "The offset from the left edge of the screen to the window in pixels."
+                        },
+                        {
+                            "name": "top",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "The offset from the top edge of the screen to the window in pixels."
+                        },
+                        {
+                            "name": "width",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "The window width in pixels."
+                        },
+                        {
+                            "name": "height",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "The window height in pixels."
+                        },
+                        {
+                            "name": "windowState",
+                            "$ref": "WindowState",
+                            "optional": true,
+                            "description": "The window state. Default to normal."
+                        }
+                    ]
+                }
+            ],
+            "commands": [
+                {
+                    "name": "getWindowForTarget",
+                    "description": "Get the browser window that contains the devtools target.",
+                    "parameters": [
+                        {
+                            "name": "targetId",
+                            "$ref": "Target.TargetID",
+                            "description": "Devtools agent host id."
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "windowId",
+                            "$ref": "WindowID",
+                            "description": "Browser window id."
+                        },
+                        {
+                            "name": "bounds",
+                            "$ref": "Bounds",
+                            "description": "Bounds information of the window. When window state is 'minimized', the restored window position and size are returned."
+                        }
+                    ]
+                },
+                {
+                    "name": "setWindowBounds",
+                    "description": "Set position and/or size of the browser window.",
+                    "parameters": [
+                        {
+                            "name": "windowId",
+                            "$ref": "WindowID",
+                            "description": "Browser window id."
+                        },
+                        {
+                            "name": "bounds",
+                            "$ref": "Bounds",
+                            "description": "New window bounds. The 'minimized', 'maximized' and 'fullscreen' states cannot be combined with 'left', 'top', 'width' or 'height'. Leaves unspecified fields unchanged."
+                        }
+                    ]
+                },
+                {
+                    "name": "getWindowBounds",
+                    "description": "Get position and size of the browser window.",
+                    "parameters": [
+                        {
+                            "name": "windowId",
+                            "$ref": "WindowID",
+                            "description": "Browser window id."
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "bounds",
+                            "$ref": "Bounds",
+                            "description": "Bounds information of the window. When window state is 'minimized', the restored window position and size are returned."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "domain": "Schema",
             "description": "Provides information about the protocol schema.",
             "types": [
@@ -10072,6 +10434,8 @@
                                 "date",
                                 "map",
                                 "set",
+                                "weakmap",
+                                "weakset",
                                 "iterator",
                                 "generator",
                                 "error",
@@ -10186,6 +10550,8 @@
                                 "date",
                                 "map",
                                 "set",
+                                "weakmap",
+                                "weakset",
                                 "iterator",
                                 "generator",
                                 "error"
@@ -10271,6 +10637,8 @@
                                 "date",
                                 "map",
                                 "set",
+                                "weakmap",
+                                "weakset",
                                 "iterator",
                                 "generator",
                                 "error"
@@ -10555,6 +10923,13 @@
                             "$ref": "StackTrace",
                             "optional": true,
                             "description": "Asynchronous JavaScript stack trace that preceded this stack, if available."
+                        },
+                        {
+                            "name": "promiseCreationFrame",
+                            "$ref": "CallFrame",
+                            "optional": true,
+                            "experimental": true,
+                            "description": "Creation frame of the Promise which produced the next synchronous trace when resolved, if available."
                         }
                     ]
                 }
@@ -11034,7 +11409,9 @@
                                 "endGroup",
                                 "assert",
                                 "profile",
-                                "profileEnd"
+                                "profileEnd",
+                                "count",
+                                "timeEnd"
                             ],
                             "description": "Type of the call."
                         },
@@ -11246,6 +11623,39 @@
                         }
                     ],
                     "experimental": true
+                },
+                {
+                    "id": "BreakLocation",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "scriptId",
+                            "$ref": "Runtime.ScriptId",
+                            "description": "Script identifier as reported in the <code>Debugger.scriptParsed</code>."
+                        },
+                        {
+                            "name": "lineNumber",
+                            "type": "integer",
+                            "description": "Line number in the script (0-based)."
+                        },
+                        {
+                            "name": "columnNumber",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "Column number in the script (0-based)."
+                        },
+                        {
+                            "name": "type",
+                            "type": "string",
+                            "enum": [
+                                "debuggerStatement",
+                                "call",
+                                "return"
+                            ],
+                            "optional": true
+                        }
+                    ],
+                    "experimental": true
                 }
             ],
             "commands": [
@@ -11381,6 +11791,12 @@
                             "$ref": "Location",
                             "optional": true,
                             "description": "End of range to search possible breakpoint locations in (excluding). When not specifed, end of scripts is used as end of range."
+                        },
+                        {
+                            "name": "restrictToFunction",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Only consider locations which are in the same (non-nested) function as start."
                         }
                     ],
                     "returns": [
@@ -11388,7 +11804,7 @@
                             "name": "locations",
                             "type": "array",
                             "items": {
-                                "$ref": "Location"
+                                "$ref": "BreakLocation"
                             },
                             "description": "List of the possible breakpoint locations."
                         }
@@ -11422,6 +11838,11 @@
                 {
                     "name": "pause",
                     "description": "Stops on the next JavaScript statement."
+                },
+                {
+                    "name": "scheduleStepIntoAsync",
+                    "description": "Steps into next scheduled async task if any is scheduled before next pause. Returns success when async task is actually scheduled, returns error if no task were scheduled or another scheduleStepIntoAsync was called.",
+                    "experimental": true
                 },
                 {
                     "name": "resume",
@@ -11621,6 +12042,13 @@
                             "optional": true,
                             "experimental": true,
                             "description": "Whether preview should be generated for the result."
+                        },
+                        {
+                            "name": "throwOnSideEffect",
+                            "type": "boolean",
+                            "optional": true,
+                            "experimental": true,
+                            "description": "Whether to throw an exception if side effect cannot be ruled out during evaluation."
                         }
                     ],
                     "returns": [
@@ -11779,6 +12207,27 @@
                             "optional": true,
                             "description": "True, if this script has sourceURL.",
                             "experimental": true
+                        },
+                        {
+                            "name": "isModule",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "True, if this script is ES6 module.",
+                            "experimental": true
+                        },
+                        {
+                            "name": "length",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "This script length.",
+                            "experimental": true
+                        },
+                        {
+                            "name": "stackTrace",
+                            "$ref": "Runtime.StackTrace",
+                            "optional": true,
+                            "description": "JavaScript top stack frame of where the script parsed event was triggered if available.",
+                            "experimental": true
                         }
                     ],
                     "description": "Fired when virtual machine parses script. This event is also fired for all known and uncollected scripts upon enabling debugger."
@@ -11844,6 +12293,27 @@
                             "optional": true,
                             "description": "True, if this script has sourceURL.",
                             "experimental": true
+                        },
+                        {
+                            "name": "isModule",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "True, if this script is ES6 module.",
+                            "experimental": true
+                        },
+                        {
+                            "name": "length",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "This script length.",
+                            "experimental": true
+                        },
+                        {
+                            "name": "stackTrace",
+                            "$ref": "Runtime.StackTrace",
+                            "optional": true,
+                            "description": "JavaScript top stack frame of where the script parsed event was triggered if available.",
+                            "experimental": true
                         }
                     ],
                     "description": "Fired when virtual machine fails to parse the script."
@@ -11886,7 +12356,9 @@
                                 "assert",
                                 "debugCommand",
                                 "promiseRejection",
-                                "other"
+                                "OOM",
+                                "other",
+                                "ambiguous"
                             ],
                             "description": "Pause reason."
                         },
@@ -12133,6 +12605,76 @@
                             "description": "Number of samples attributed to the source line."
                         }
                     ]
+                },
+                {
+                    "id": "CoverageRange",
+                    "type": "object",
+                    "description": "Coverage data for a source range.",
+                    "properties": [
+                        {
+                            "name": "startOffset",
+                            "type": "integer",
+                            "description": "JavaScript script source offset for the range start."
+                        },
+                        {
+                            "name": "endOffset",
+                            "type": "integer",
+                            "description": "JavaScript script source offset for the range end."
+                        },
+                        {
+                            "name": "count",
+                            "type": "integer",
+                            "description": "Collected execution count of the source range."
+                        }
+                    ],
+                    "experimental": true
+                },
+                {
+                    "id": "FunctionCoverage",
+                    "type": "object",
+                    "description": "Coverage data for a JavaScript function.",
+                    "properties": [
+                        {
+                            "name": "functionName",
+                            "type": "string",
+                            "description": "JavaScript function name."
+                        },
+                        {
+                            "name": "ranges",
+                            "type": "array",
+                            "items": {
+                                "$ref": "CoverageRange"
+                            },
+                            "description": "Source ranges inside the function with coverage data."
+                        }
+                    ],
+                    "experimental": true
+                },
+                {
+                    "id": "ScriptCoverage",
+                    "type": "object",
+                    "description": "Coverage data for a JavaScript script.",
+                    "properties": [
+                        {
+                            "name": "scriptId",
+                            "$ref": "Runtime.ScriptId",
+                            "description": "JavaScript script id."
+                        },
+                        {
+                            "name": "url",
+                            "type": "string",
+                            "description": "JavaScript script name or url."
+                        },
+                        {
+                            "name": "functions",
+                            "type": "array",
+                            "items": {
+                                "$ref": "FunctionCoverage"
+                            },
+                            "description": "Functions contained in the script that has coverage data."
+                        }
+                    ],
+                    "experimental": true
                 }
             ],
             "commands": [
@@ -12165,6 +12707,54 @@
                             "description": "Recorded profile."
                         }
                     ]
+                },
+                {
+                    "name": "startPreciseCoverage",
+                    "parameters": [
+                        {
+                            "name": "callCount",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Collect accurate call counts beyond simple 'covered' or 'not covered'."
+                        }
+                    ],
+                    "description": "Enable precise code coverage. Coverage data for JavaScript executed before enabling precise code coverage may be incomplete. Enabling prevents running optimized code and resets execution counters.",
+                    "experimental": true
+                },
+                {
+                    "name": "stopPreciseCoverage",
+                    "description": "Disable precise code coverage. Disabling releases unnecessary execution count records and allows executing optimized code.",
+                    "experimental": true
+                },
+                {
+                    "name": "takePreciseCoverage",
+                    "returns": [
+                        {
+                            "name": "result",
+                            "type": "array",
+                            "items": {
+                                "$ref": "ScriptCoverage"
+                            },
+                            "description": "Coverage data for the current isolate."
+                        }
+                    ],
+                    "description": "Collect coverage data for the current isolate, and resets execution counters. Precise code coverage needs to have started.",
+                    "experimental": true
+                },
+                {
+                    "name": "getBestEffortCoverage",
+                    "returns": [
+                        {
+                            "name": "result",
+                            "type": "array",
+                            "items": {
+                                "$ref": "ScriptCoverage"
+                            },
+                            "description": "Coverage data for the current isolate."
+                        }
+                    ],
+                    "description": "Collect coverage data for the current isolate. The coverage data may be incomplete due to garbage collection.",
+                    "experimental": true
                 }
             ],
             "events": [
