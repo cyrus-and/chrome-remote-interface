@@ -18,6 +18,10 @@ function display(object) {
     });
 }
 
+function toJSON(object) {
+    return JSON.stringify(object, null, 4);
+}
+
 function inheritProperties(from, to) {
     Object.keys(from).forEach(function (property) {
         to[property] = from[property];
@@ -187,7 +191,7 @@ function list(options) {
             console.error(err.toString());
             process.exit(1);
         }
-        console.log(display(tabs));
+        console.log(toJSON(tabs));
     });
 }
 
@@ -198,7 +202,7 @@ function _new(url, options) {
             console.error(err.toString());
             process.exit(1);
         }
-        console.log(display(tab));
+        console.log(toJSON(tab));
     });
 }
 
@@ -228,7 +232,7 @@ function version(options) {
             console.error(err.toString());
             process.exit(1);
         }
-        console.log(display(info));
+        console.log(toJSON(info));
     });
 }
 
@@ -239,7 +243,7 @@ function protocol(args, options) {
             console.error(err.toString());
             process.exit(1);
         }
-        console.log(display(protocol));
+        console.log(toJSON(protocol));
     });
 }
 

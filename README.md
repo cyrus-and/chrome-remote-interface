@@ -177,14 +177,16 @@ Here are some examples:
 
 ```javascript
 $ chrome-remote-interface new 'http://example.com'
-{ description: '',
-  devtoolsFrontendUrl: '/devtools/inspector.html?ws=localhost:9222/devtools/page/b049bb56-de7d-424c-a331-6ae44cf7ae01',
-  id: 'b049bb56-de7d-424c-a331-6ae44cf7ae01',
-  thumbnailUrl: '/thumb/b049bb56-de7d-424c-a331-6ae44cf7ae01',
-  title: '',
-  type: 'page',
-  url: 'http://example.com/',
-  webSocketDebuggerUrl: 'ws://localhost:9222/devtools/page/b049bb56-de7d-424c-a331-6ae44cf7ae01' }
+{
+    "description": "",
+    "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:9222/devtools/page/b049bb56-de7d-424c-a331-6ae44cf7ae01",
+    "id": "b049bb56-de7d-424c-a331-6ae44cf7ae01",
+    "thumbnailUrl": "/thumb/b049bb56-de7d-424c-a331-6ae44cf7ae01",
+    "title": "",
+    "type": "page",
+    "url": "http://example.com/",
+    "webSocketDebuggerUrl": "ws://localhost:9222/devtools/page/b049bb56-de7d-424c-a331-6ae44cf7ae01"
+}
 $ chrome-remote-interface close 'b049bb56-de7d-424c-a331-6ae44cf7ae01'
 ```
 
