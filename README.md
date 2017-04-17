@@ -92,6 +92,10 @@ Implementation             | Protocol version   | [Protocol] | [List] | [New] | 
 [Close]: #cdpcloseoptions-callback
 [Version]: #cdpversionoptions-callback
 
+The meaning of *target* varies according to the implementation, for example,
+each Chrome tab represents a target whereas for Node.js a target is the
+currently inspected script.
+
 Setup
 -----
 
