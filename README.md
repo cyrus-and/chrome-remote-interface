@@ -167,7 +167,7 @@ Bundled client
 This module comes with a bundled client application that can be used to
 interactively control a remote instance.
 
-### Tab management
+### Target management
 
 The bundled client exposes subcommands to interact with the HTTP frontend
 (e.g., [List](#cdplistoptions-callback), [New](#cdpnewoptions-callback), etc.),
@@ -437,18 +437,18 @@ Connects to a remote instance using the [Chrome Debugging Protocol].
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
 - `secure`: HTTPS/WSS frontend. Defaults to `false`;
-- `tab`: determines which tab this client should attach to. The behavior changes
-  according to the type:
+- `target`: determines which target this client should attach to. The behavior
+  changes according to the type:
 
   - a `function` that takes the array returned by the `List` method and returns
-    a tab or its numeric index relative to the array;
-  - a tab `object` like those returned by the `New` and `List` methods;
+    a target or its numeric index relative to the array;
+  - a target `object` like those returned by the `New` and `List` methods;
   - a `string` representing the raw WebSocket URL, in this case `host` and
-    `port` are not used to fetch the tab list.
+    `port` are not used to fetch the target list.
 
   Defaults to a function which returns the first available target according to
   the implementation (note that at most one connection can be established to the
-  same tab);
+  same target);
 - `protocol`: [Chrome Debugging Protocol] descriptor object. Defaults to use the
   protocol chosen according to the `remote` option;
 - `remote`: a boolean indicating whether the protocol must be fetched *remotely*
@@ -483,7 +483,7 @@ function () {}
 Emitted when an instance closes the WebSocket connection.
 
 This may happen for example when the user opens DevTools for the currently
-inspected Chrome tab.
+inspected Chrome target.
 
 #### Event: 'error'
 
@@ -533,7 +533,7 @@ CDP.Protocol(function (err, protocol) {
 
 ### CDP.List([options], [callback])
 
-Request the list of the available open tabs of the remote instance.
+Request the list of the available open targets/tabs of the remote instance.
 
 `options` is an object with the following optional properties:
 
@@ -545,8 +545,8 @@ Request the list of the available open tabs of the remote instance.
 following arguments:
 
 - `err`: a `Error` object indicating the success status;
-- `tabs`: the array returned by `http://host:port/json/list` containing the tab
-  list.
+- `targets`: the array returned by `http://host:port/json/list` containing the
+  target list.
 
 When `callback` is omitted a `Promise` object is returned.
 
@@ -554,28 +554,30 @@ For example:
 
 ```javascript
 const CDP = require('chrome-remote-interface');
-CDP.List(function (err, tabs) {
+CDP.List(function (err, targets) {
     if (!err) {
-        console.log(tabs);
+        console.log(targets);
     }
 });
 ```
 
 ### CDP.New([options], [callback])
 
-Create a new tab in the remote instance.
+Create a new target/tab in the remote instance.
 
 `options` is an object with the following optional properties:
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
 - `secure`: HTTPS/WSS frontend. Defaults to `false`;
-- `url`: URL to load in the new tab. Defaults to `about:blank`.
+- `url`: URL to load in the new target/tab. Defaults to `about:blank`.
 
-`callback` is executed when the tab is created, it gets the following arguments:
+`callback` is executed when the target is created, it gets the following
+arguments:
 
 - `err`: a `Error` object indicating the success status;
-- `tab`: the object returned by `http://host:port/json/new` containing the tab.
+- `target`: the object returned by `http://host:port/json/new` containing the
+  target.
 
 When `callback` is omitted a `Promise` object is returned.
 
@@ -583,23 +585,23 @@ For example:
 
 ```javascript
 const CDP = require('chrome-remote-interface');
-CDP.New(function (err, tab) {
+CDP.New(function (err, target) {
     if (!err) {
-        console.log(tab);
+        console.log(target);
     }
 });
 ```
 
 ### CDP.Activate([options], [callback])
 
-Activate an open tab of the remote instance.
+Activate an open target/tab of the remote instance.
 
 `options` is an object with the following properties:
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
 - `secure`: HTTPS/WSS frontend. Defaults to `false`;
-- `id`: Tab id. Required, no default.
+- `id`: Target id. Required, no default.
 
 `callback` is executed when the response to the activation request is
 received. It gets the following arguments:
@@ -614,21 +616,21 @@ For example:
 const CDP = require('chrome-remote-interface');
 CDP.Activate({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
     if (!err) {
-        console.log('success! tab is activated');
+        console.log('success! target is activated');
     }
 });
 ```
 
 ### CDP.Close([options], [callback])
 
-Close an open tab of the remote instance.
+Close an open target/tab of the remote instance.
 
 `options` is an object with the following properties:
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
 - `secure`: HTTPS/WSS frontend. Defaults to `false`;
-- `id`: Tab id. Required, no default.
+- `id`: Target id. Required, no default.
 
 `callback` is executed when the response to the close request is received. It
 gets the following arguments:
@@ -643,12 +645,12 @@ For example:
 const CDP = require('chrome-remote-interface');
 CDP.Close({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
     if (!err) {
-        console.log('success! tab is closing');
+        console.log('success! target is closing');
     }
 });
 ```
 
-Note that the callback is fired when the tab is *queued* for removal, but the
+Note that the callback is fired when the target is *queued* for removal, but the
 actual removal will occur asynchronously.
 
 ### CDP.Version([options], [callback])

@@ -32,16 +32,16 @@ function inheritProperties(from, to) {
 
 function inspect(target, args, options) {
     options.remote = args.remote;
-    // otherwise the active tab
+    // otherwise the active target
     if (target) {
         if (args.webSocket) {
             // by WebSocket URL
-            options.tab = target;
+            options.target = target;
         } else {
-            // by tab id
-            options.tab = function (tabs) {
-                return tabs.findIndex(function (tab) {
-                    return tab.id === target;
+            // by target id
+            options.target = function (targets) {
+                return targets.findIndex(function (target) {
+                    return target.id === target;
                 });
             };
         }
@@ -186,23 +186,23 @@ function inspect(target, args, options) {
 }
 
 function list(options) {
-    CDP.List(options, function (err, tabs) {
+    CDP.List(options, function (err, targets) {
         if (err) {
             console.error(err.toString());
             process.exit(1);
         }
-        console.log(toJSON(tabs));
+        console.log(toJSON(targets));
     });
 }
 
 function _new(url, options) {
     options.url = url;
-    CDP.New(options, function (err, tab) {
+    CDP.New(options, function (err, target) {
         if (err) {
             console.error(err.toString());
             process.exit(1);
         }
-        console.log(toJSON(tab));
+        console.log(toJSON(target));
     });
 }
 
@@ -259,7 +259,7 @@ program
 program
     .command('inspect [<target>]')
     .description('inspect a target (defaults to the first available target)')
-    .option('-w, --web-socket', 'interpret <target> as a WebSocket URL instead of a tab id')
+    .option('-w, --web-socket', 'interpret <target> as a WebSocket URL instead of a target id')
     .option('-j, --protocol <file.json>', 'Chrome Debugging Protocol descriptor (overrides `--remote`)')
     .option('-r, --remote', 'Attempt to fetch the protocol descriptor remotely')
     .action(function (target, args) {
@@ -268,28 +268,28 @@ program
 
 program
     .command('list')
-    .description('list all the available tabs')
+    .description('list all the available targets/tabs')
     .action(function () {
         action = list;
     });
 
 program
     .command('new [<url>]')
-    .description('create a new tab')
+    .description('create a new target/tab')
     .action(function (url) {
         action = _new.bind(null, url);
     });
 
 program
     .command('activate <id>')
-    .description('activate a tab by id')
+    .description('activate a target/tab by id')
     .action(function (id) {
         action = activate.bind(null, id);
     });
 
 program
     .command('close <id>')
-    .description('close a tab by id')
+    .description('close a target/tab by id')
     .action(function (id) {
         action = close.bind(null, id);
     });

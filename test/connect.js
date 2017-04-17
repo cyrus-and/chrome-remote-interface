@@ -23,15 +23,15 @@ describe('connecting to Chrome', function () {
                     assert(false);
                 });
             });
-            it('should succeed with custom tab by index', function (done) {
-                Chrome({'tab': function () { return 0; }}, function (chrome) {
+            it('should succeed with custom target by index', function (done) {
+                Chrome({'target': function () { return 0; }}, function (chrome) {
                     chrome.close(done);
                 }).on('error', function () {
                     assert(false);
                 });
             });
-            it('should succeed with custom tab by object', function (done) {
-                Chrome({'tab': function (tabs) { return tabs[0]; }}, function (chrome) {
+            it('should succeed with custom target by object', function (done) {
+                Chrome({'target': function (targets) { return targets[0]; }}, function (chrome) {
                     chrome.close(done);
                 }).on('error', function () {
                     assert(false);
@@ -55,8 +55,8 @@ describe('connecting to Chrome', function () {
                     done();
                 });
             });
-            it('should fail (wrong tab)', function (done) {
-                Chrome({'tab': function () { return -1; }}, function () {
+            it('should fail (wrong target)', function (done) {
+                Chrome({'target': function () { return -1; }}, function () {
                     assert(false);
                 }).on('error', function (err) {
                     assert(err instanceof Error);
@@ -67,7 +67,7 @@ describe('connecting to Chrome', function () {
         describe('two times', function () {
             it('should fail', function (done) {
                 const options = {
-                    chooseTab: () => 0
+                    target: () => 0
                 };
                 Chrome(options, function (chrome) {
                     Chrome(options, function () {
@@ -100,15 +100,15 @@ describe('connecting to Chrome', function () {
                     assert(false);
                 });
             });
-            it('should succeed with custom tab by index', function (done) {
-                Chrome({'tab': function () { return 0; }}).then(function (chrome) {
+            it('should succeed with custom target by index', function (done) {
+                Chrome({'target': function () { return 0; }}).then(function (chrome) {
                     chrome.close(done);
                 }).catch(function () {
                     assert(false);
                 });
             });
-            it('should succeed with custom tab by index', function (done) {
-                Chrome({'tab': function (tabs) { return tabs[0]; }}).then(function (chrome) {
+            it('should succeed with custom target by index', function (done) {
+                Chrome({'target': function (targets) { return targets[0]; }}).then(function (chrome) {
                     chrome.close(done);
                 }).catch(function () {
                     assert(false);
@@ -132,8 +132,8 @@ describe('connecting to Chrome', function () {
                     done();
                 });
             });
-            it('should fail (wrong tab)', function (done) {
-                Chrome({'tab': function () { return -1; }}).then(function () {
+            it('should fail (wrong target)', function (done) {
+                Chrome({'target': function () { return -1; }}).then(function () {
                     done(new Error());
                 }).catch(function (err) {
                     assert(err instanceof Error);
@@ -144,7 +144,7 @@ describe('connecting to Chrome', function () {
         describe('two times', function () {
             it('should fail', function (done) {
                 const options = {
-                    chooseTab: () => 0
+                    target: () => 0
                 };
                 Chrome(options, function (chrome) {
                     Chrome(options).then(function () {
