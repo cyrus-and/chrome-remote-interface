@@ -807,13 +807,16 @@ For example:
 client.Page.navigate({'url': 'https://github.com'}, console.log);
 ```
 
-#### client.`<domain>`.`<event>`(callback)
+#### client.`<domain>`.`<event>`([callback])
 
 Just a shorthand for:
 
 ```javascript
 client.on('<domain>.<event>', callback);
 ```
+
+The only difference is that when `callback` is omitted the event is registered
+only once and a `Promise` object is returned.
 
 For example:
 
