@@ -103,7 +103,9 @@ describe('sending a command', function () {
             Chrome(function (chrome) {
                 chrome.Network.getResponseBody().then(function () {
                     done(new Error());
-                }).catch(function () {
+                }).catch(function (error) {
+                    assert(error instanceof Error);
+                    assert(!!error.code);
                     chrome.close(done);
                 });
             });
