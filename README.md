@@ -448,7 +448,8 @@ Connects to a remote instance using the [Chrome Debugging Protocol].
     a target or its numeric index relative to the array;
   - a target `object` like those returned by the `New` and `List` methods;
   - a `string` representing the raw WebSocket URL, in this case `host` and
-    `port` are not used to fetch the target list.
+    `port` are not used to fetch the target list, yet they are used to complete
+    the URL if relative.
 
   Defaults to a function which returns the first available target according to
   the implementation (note that at most one connection can be established to the

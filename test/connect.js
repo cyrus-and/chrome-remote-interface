@@ -37,6 +37,20 @@ describe('connecting to Chrome', function () {
                     assert(false);
                 });
             });
+            it('should succeed with custom target by full URL', function (done) {
+                Chrome({'target': 'ws://localhost:9222/devtools/browser'}, function (chrome) {
+                    chrome.close(done);
+                }).on('error', function () {
+                    assert(false);
+                });
+            });
+            it('should succeed with custom target by partial URL', function (done) {
+                Chrome({'target': '/devtools/browser'}, function (chrome) {
+                    chrome.close(done);
+                }).on('error', function () {
+                    assert(false);
+                });
+            });
         });
         describe('with custom (wrong) parameters', function () {
             it('should fail (wrong port)', function (done) {
@@ -109,6 +123,20 @@ describe('connecting to Chrome', function () {
             });
             it('should succeed with custom target by index', function (done) {
                 Chrome({'target': function (targets) { return targets[0]; }}).then(function (chrome) {
+                    chrome.close(done);
+                }).catch(function () {
+                    assert(false);
+                });
+            });
+            it('should succeed with custom target by full URL', function (done) {
+                Chrome({'target': 'ws://localhost:9222/devtools/browser'}).then(function (chrome) {
+                    chrome.close(done);
+                }).catch(function () {
+                    assert(false);
+                });
+            });
+            it('should succeed with custom target by partial URL', function (done) {
+                Chrome({'target': '/devtools/browser'}).then(function (chrome) {
                     chrome.close(done);
                 }).catch(function () {
                     assert(false);
