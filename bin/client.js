@@ -155,7 +155,7 @@ function inspect(target, args, options) {
         });
 
         // exit on disconnection
-        this.on('disconnect', function () {
+        client.on('disconnect', function () {
             console.error('Disconnected.');
             saveHistory();
             process.exit(1);

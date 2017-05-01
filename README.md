@@ -465,7 +465,7 @@ These options are also valid properties of all the instances of the `CDP` class.
 `callback` is a listener automatically added to the `connect` event of the
 returned `EventEmitter`. When `callback` is omitted a `Promise` object is
 returned which becomes fulfilled if the `connect` event is triggered and
-rejected if any of the `disconnect` or `error` events are triggered.
+rejected if the `error` event is triggered.
 
 The `EventEmitter` supports the following events:
 
@@ -478,17 +478,6 @@ function (client) {}
 Emitted when the connection to the WebSocket is established.
 
 `client` is an instance of the `CDP` class.
-
-#### Event: 'disconnect'
-
-```javascript
-function () {}
-```
-
-Emitted when an instance closes the WebSocket connection.
-
-This may happen for example when the user opens DevTools for the currently
-inspected Chrome target.
 
 #### Event: 'error'
 
@@ -764,6 +753,18 @@ client.once('ready', function () {
 In this particular case, not enforcing this kind of serialization may cause that
 the remote instance does not properly deliver the desired notifications the
 client.
+
+
+#### Event: 'disconnect'
+
+```javascript
+function () {}
+```
+
+Emitted when the instance closes the WebSocket connection.
+
+This may happen for example when the user opens DevTools or when the tab is
+closed.
 
 #### client.send(method, [params], [callback])
 
