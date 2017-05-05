@@ -16,11 +16,11 @@ module.exports = function (options, callback) {
         process.nextTick(function () {
             new Chrome(options, notifier);
         });
-        return notifier.on('connect', callback);
+        return notifier.once('connect', callback);
     } else {
         return new Promise(function (fulfill, reject) {
-            notifier.on('connect', fulfill);
-            notifier.on('error', reject);
+            notifier.once('connect', fulfill);
+            notifier.once('error', reject);
             new Chrome(options, notifier);
         });
     }
