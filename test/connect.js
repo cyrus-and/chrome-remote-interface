@@ -51,6 +51,16 @@ describe('connecting to Chrome', function () {
                     assert(false);
                 });
             });
+            it('should succeed with custom target by id', function (done) {
+                Chrome.List(function (err, targets) {
+                    assert.ifError(err);
+                    Chrome({'target': targets[0].id}, function (chrome) {
+                        chrome.close(done);
+                    }).on('error', function () {
+                        assert(false);
+                    });
+                });
+            });
         });
         describe('with custom (wrong) parameters', function () {
             it('should fail (wrong port)', function (done) {
@@ -140,6 +150,16 @@ describe('connecting to Chrome', function () {
                     chrome.close(done);
                 }).catch(function () {
                     assert(false);
+                });
+            });
+            it('should succeed with custom target by id', function (done) {
+                Chrome.List(function (err, targets) {
+                    assert.ifError(err);
+                    Chrome({'target': targets[0].id}).then(function (chrome) {
+                        chrome.close(done);
+                    }).catch(function () {
+                        assert(false);
+                    });
                 });
             });
         });
