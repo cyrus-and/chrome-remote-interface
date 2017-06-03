@@ -9,25 +9,29 @@ cache:
   directories:
     - node_modules
     - chrome
+addons: # needed to run Chrome beta
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - libstdc++-4.9-dev
 before_script:
   # fetch and extract Chrome if not cached
   - if [ ! -x chrome/opt/google/chrome/chrome ]; then
-        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb &&
-        dpkg -x google-chrome-stable_current_amd64.deb chrome &&
-        rm -f google-chrome-stable_current_amd64.deb
+        wget https://dl.google.com/linux/direct/google-chrome-beta_current_amd64.deb &&
+        dpkg -x google-chrome-beta_current_amd64.deb chrome &&
+        rm -f google-chrome-beta_current_amd64.deb
     else
         echo 'Using cached Google Chrome';
     fi
   # dump the current versions
-  - chrome/opt/google/chrome/chrome --version
+  - chrome/opt/google/chrome-beta/chrome --version
   - npm list
-  # prepare the headless environment
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start && sleep 5
   # start a fresh new Chrome instance
-  - chrome/opt/google/chrome/chrome
+  - chrome/opt/google/chrome-beta/chrome
         --user-data-dir=$(mktemp -d)
-        --no-sandbox --no-first-run --disable-extensions --remote-debugging-port=9222
-        about:blank &
+        --no-sandbox --no-first-run --disable-extensions
+        --remote-debugging-port=9222 --headless --disable-gpu
+        about:blank &>/dev/null &
   # wait for Chrome to start up
   - while ! curl http://localhost:9222 >/dev/null; do sleep 1; done
