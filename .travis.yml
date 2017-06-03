@@ -34,4 +34,4 @@ before_script:
         --remote-debugging-port=9222 --headless --disable-gpu
         about:blank &>/dev/null &
   # wait for Chrome to start up
-  - while ! curl http://localhost:9222 >/dev/null; do sleep 1; done
+  - while ! curl http://localhost:9222 &>/dev/null; do sleep 1; done
