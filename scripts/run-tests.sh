@@ -10,13 +10,13 @@ run-suite() {
 
 set -e
 
+header 'Linter'
+scripts/run-linter.sh
+
 if ! curl -s 'http://localhost:9222' >/dev/null; then
     echo 'Start Chrome with "--remote-debugging-port=9222"'
     false
 fi
-
-header 'Linter'
-scripts/run-linter.sh
 
 header 'Node.js: (default)'
 run-suite
