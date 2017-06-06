@@ -352,8 +352,8 @@ This behavior can be changed by setting the `remote` option to `true`
 upon [connection](#cdpoptions-callback), in which case the remote instance is
 *asked* to provide its own protocol descriptor.
 
-Currently Chrome is not able to do that (see [#10]), so the protocol descriptor
-is fetched from the proper [source repository].
+Chrome < 60.0.3097.0 is not able to do that, so in that case the protocol
+descriptor is fetched from the source repository.
 
 To override the above behavior there are basically three options:
 
@@ -367,8 +367,6 @@ To override the above behavior there are basically three options:
   fetched with `npm install`).
 
 [local version]: lib/protocol.json
-[#10]: https://github.com/cyrus-and/chrome-remote-interface/issues/10
-[source repository]: https://chromium.googlesource.com/chromium/src/+/master/third_party/WebKit/Source/
 
 Browser usage
 -------------
