@@ -72,13 +72,13 @@ Implementation             | Protocol version   | [Protocol] | [List] | [New] | 
 [Safari (iOS)][4.1]        | [*partial*][4.2]   | no         | yes    | no    | no         | no      | no
 
 [1.1]: #chromechromium
-[1.2]: https://chromedevtools.github.io/debugger-protocol-viewer/tot/
+[1.2]: https://chromedevtools.github.io/devtools-protocol/tot/
 
 [2.1]: #edge
 [2.2]: https://github.com/Microsoft/edge-diagnostics-adapter/wiki/Supported-features-and-API
 
 [3.1]: #nodejs
-[3.2]: https://chromedevtools.github.io/debugger-protocol-viewer/v8/
+[3.2]: https://chromedevtools.github.io/devtools-protocol/v8/
 
 [4.1]: #safari-ios
 [4.2]: http://trac.webkit.org/browser/trunk/Source/JavaScriptCore/inspector/protocol
