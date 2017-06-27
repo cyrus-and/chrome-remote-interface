@@ -10,6 +10,7 @@ const path = require('path');
 const program = require('commander');
 
 const CDP = require('../');
+const packageInfo = require('../package');
 
 function display(object) {
     return util.inspect(object, {
@@ -252,6 +253,7 @@ function protocol(args, options) {
 let action;
 
 program
+    .version(packageInfo.version)
     .option('-t, --host <host>', 'HTTP frontend host')
     .option('-p, --port <port>', 'HTTP frontend port')
     .option('-s, --secure', 'HTTPS/WSS frontend');
