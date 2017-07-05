@@ -451,7 +451,9 @@ Connects to a remote instance using the [Chrome Debugging Protocol].
   or if the local version must be used. It has no effect if the `protocol`
   option is set. Defaults to `false`.
 
-These options are also valid properties of all the instances of the `CDP` class.
+These options are also valid properties of all the instances of the `CDP`
+class. In addition to that, the `webSocketUrl` field contains the currently used
+WebSocket URL.
 
 `callback` is a listener automatically added to the `connect` event of the
 returned `EventEmitter`. When `callback` is omitted a `Promise` object is

@@ -145,6 +145,15 @@ function inspect(target, args, options) {
             return override;
         }
 
+        // utility custom command
+        cdpRepl.defineCommand('target', {
+            help: 'Display the current target',
+            action: function () {
+                console.log(client.webSocketUrl);
+                this.displayPrompt();
+            }
+        });
+
         // enable history
         loadHistory();
 
