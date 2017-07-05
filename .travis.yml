@@ -8,27 +8,15 @@ sudo: false
 cache:
   directories:
     - node_modules
-    - chrome
-addons: # needed to run Chrome beta
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - libstdc++-4.9-dev
+dist: trusty
+addons:
+  chrome: stable
 before_script:
-  # fetch and extract Chrome if not cached
-  - if [ ! -x chrome/opt/google/chrome/chrome ]; then
-        wget https://dl.google.com/linux/direct/google-chrome-beta_current_amd64.deb &&
-        dpkg -x google-chrome-beta_current_amd64.deb chrome &&
-        rm -f google-chrome-beta_current_amd64.deb
-    else
-        echo 'Using cached Google Chrome';
-    fi
   # dump the current versions
-  - chrome/opt/google/chrome-beta/chrome --version
+  - google-chrome-stable --version
   - npm list
   # start a fresh new Chrome instance
-  - chrome/opt/google/chrome-beta/chrome
+  - google-chrome-stable
         --user-data-dir=$(mktemp -d)
         --no-sandbox --no-first-run --disable-extensions
         --remote-debugging-port=9222 --headless --disable-gpu
