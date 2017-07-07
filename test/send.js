@@ -83,7 +83,7 @@ describe('sending a command', function () {
                     done(new Error());
                 }).catch(function (error) {
                     assert(error instanceof Error);
-                    assert(!!error.code);
+                    assert(!!error.response.code);
                     chrome.close(done);
                 });
             });
@@ -105,7 +105,7 @@ describe('sending a command', function () {
                     done(new Error());
                 }).catch(function (error) {
                     assert(error instanceof Error);
-                    assert(!!error.code);
+                    assert(!!error.response.code);
                     chrome.close(done);
                 });
             });
