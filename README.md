@@ -779,6 +779,9 @@ command, it gets the following arguments:
 When `callback` is omitted a `Promise` object is returned instead, with the
 fulfilled/rejected states implemented according to the `error` parameter.
 
+In case of low-level WebSocket errors, the `error` parameter contains the
+originating `Error` object and no `response` is returned.
+
 Note that the field `id` mentioned in the [Chrome Debugging Protocol]
 specification is managed internally and it is not exposed to the user.
 
