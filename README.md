@@ -353,7 +353,8 @@ To override the above behavior there are basically three options:
   (`protocol` option);
 
 - use the *raw* version of the [commands](#clientsendmethod-params-callback)
-  and [events](#event-domainmethod) interface;
+  and [events](#event-domainmethod) interface to use bleeding-edge features that
+  do not appear in the [local version] of the protocol descriptor;
 
 - update the local copy with `scripts/update-protocol.sh` (not present when
   fetched with `npm install`).
