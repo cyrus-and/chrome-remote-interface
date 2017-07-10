@@ -3376,7 +3376,7 @@
                     "experimental": true
                 },
                 {
-                    "name": "enableRequestInterception",
+                    "name": "setRequestInterceptionEnabled",
                     "parameters": [
                         {
                             "name": "enabled",
