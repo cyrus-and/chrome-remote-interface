@@ -97,7 +97,8 @@
             "description": "Actions and events related to the inspected page belong to the page domain.",
             "dependencies": [
                 "Debugger",
-                "DOM"
+                "DOM",
+                "Network"
             ],
             "types": [
                 {
@@ -191,7 +192,7 @@
                         },
                         {
                             "name": "lastModified",
-                            "$ref": "Network.Timestamp",
+                            "$ref": "Network.TimeSinceEpoch",
                             "description": "last-modified timestamp as reported by server.",
                             "optional": true
                         },
@@ -348,7 +349,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "type": "number",
+                            "$ref": "Network.TimeSinceEpoch",
                             "optional": true,
                             "experimental": true,
                             "description": "Frame swap timestamp."
@@ -477,6 +478,39 @@
                             "description": "Scale relative to the ideal viewport (size at width=device-width)."
                         }
                     ]
+                },
+                {
+                    "id": "Viewport",
+                    "type": "object",
+                    "description": "Viewport for capturing screenshot.",
+                    "experimental": true,
+                    "properties": [
+                        {
+                            "name": "x",
+                            "type": "number",
+                            "description": "X offset in CSS pixels."
+                        },
+                        {
+                            "name": "y",
+                            "type": "number",
+                            "description": "Y offset in CSS pixels"
+                        },
+                        {
+                            "name": "width",
+                            "type": "number",
+                            "description": "Rectangle width in CSS pixels"
+                        },
+                        {
+                            "name": "height",
+                            "type": "number",
+                            "description": "Rectangle height in CSS pixels"
+                        },
+                        {
+                            "name": "scale",
+                            "type": "number",
+                            "description": "Page scale factor."
+                        }
+                    ]
                 }
             ],
             "commands": [
@@ -503,6 +537,8 @@
                             "description": "Identifier of the added script."
                         }
                     ],
+                    "deprecated": true,
+                    "description": "Deprecated, please use addScriptToEvaluateOnNewDocument instead.",
                     "experimental": true
                 },
                 {
@@ -513,6 +549,37 @@
                             "$ref": "ScriptIdentifier"
                         }
                     ],
+                    "deprecated": true,
+                    "description": "Deprecated, please use removeScriptToEvaluateOnNewDocument instead.",
+                    "experimental": true
+                },
+                {
+                    "name": "addScriptToEvaluateOnNewDocument",
+                    "parameters": [
+                        {
+                            "name": "source",
+                            "type": "string"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "identifier",
+                            "$ref": "ScriptIdentifier",
+                            "description": "Identifier of the added script."
+                        }
+                    ],
+                    "description": "Evaluates given script in every frame upon creation (before loading frame's scripts).",
+                    "experimental": true
+                },
+                {
+                    "name": "removeScriptToEvaluateOnNewDocument",
+                    "parameters": [
+                        {
+                            "name": "identifier",
+                            "$ref": "ScriptIdentifier"
+                        }
+                    ],
+                    "description": "Removes given script from the list.",
                     "experimental": true
                 },
                 {
@@ -778,6 +845,7 @@
                         {
                             "name": "fitWindow",
                             "type": "boolean",
+                            "optional": true,
                             "description": "Whether a view that exceeds the available browser window area should be scaled down to fit."
                         },
                         {
@@ -939,6 +1007,13 @@
                             "type": "integer",
                             "optional": true,
                             "description": "Compression quality from range [0..100] (jpeg only)."
+                        },
+                        {
+                            "name": "clip",
+                            "$ref": "Viewport",
+                            "optional": true,
+                            "description": "Capture the screenshot of a given region only.",
+                            "experimental": true
                         },
                         {
                             "name": "fromSurface",
@@ -1210,6 +1285,13 @@
                             "optional": true,
                             "description": "Whether or not universal access should be granted to the isolated world. This is a powerful option, use with caution."
                         }
+                    ],
+                    "returns": [
+                        {
+                            "name": "executionContextId",
+                            "$ref": "Runtime.ExecutionContextId",
+                            "description": "Execution context of the isolated world."
+                        }
                     ]
                 }
             ],
@@ -1219,7 +1301,7 @@
                     "parameters": [
                         {
                             "name": "timestamp",
-                            "type": "number"
+                            "$ref": "Network.MonotonicTime"
                         }
                     ]
                 },
@@ -1228,7 +1310,7 @@
                     "parameters": [
                         {
                             "name": "timestamp",
-                            "type": "number"
+                            "$ref": "Network.MonotonicTime"
                         }
                     ]
                 },
@@ -1860,6 +1942,7 @@
                         {
                             "name": "fitWindow",
                             "type": "boolean",
+                            "optional": true,
                             "description": "Whether a view that exceeds the available browser window area should be scaled down to fit."
                         },
                         {
@@ -1926,33 +2009,6 @@
                     "description": "Clears the overriden device metrics."
                 },
                 {
-                    "name": "forceViewport",
-                    "description": "Overrides the visible area of the page. The change is hidden from the page, i.e. the observable scroll position and page scale does not change. In effect, the command moves the specified area of the page into the top-left corner of the frame.",
-                    "experimental": true,
-                    "parameters": [
-                        {
-                            "name": "x",
-                            "type": "number",
-                            "description": "X coordinate of top-left corner of the area (CSS pixels)."
-                        },
-                        {
-                            "name": "y",
-                            "type": "number",
-                            "description": "Y coordinate of top-left corner of the area (CSS pixels)."
-                        },
-                        {
-                            "name": "scale",
-                            "type": "number",
-                            "description": "Scale to apply to the area (relative to a page scale of 1.0)."
-                        }
-                    ]
-                },
-                {
-                    "name": "resetViewport",
-                    "description": "Resets the visible area of the page to the original viewport, undoing any effects of the <code>forceViewport</code> command.",
-                    "experimental": true
-                },
-                {
                     "name": "resetPageScaleFactor",
                     "experimental": true,
                     "description": "Requests that page scale factor is reset to initial values."
@@ -1971,8 +2027,9 @@
                 },
                 {
                     "name": "setVisibleSize",
-                    "description": "Resizes the frame/viewport of the page. Note that this does not affect the frame's container (e.g. browser window). Can be used to produce screenshots of the specified size. Not supported on Android.",
+                    "description": "Deprecated, does nothing. Please use setDeviceMetricsOverride instead.",
                     "experimental": true,
+                    "deprecated": true,
                     "parameters": [
                         {
                             "name": "width",
@@ -2134,6 +2191,16 @@
                     "description": "An internal certificate ID value."
                 },
                 {
+                    "id": "MixedContentType",
+                    "type": "string",
+                    "enum": [
+                        "blockable",
+                        "optionally-blockable",
+                        "none"
+                    ],
+                    "description": "A description of mixed content (HTTP resources on HTTPS pages), as defined by https://www.w3.org/TR/mixed-content/#categories"
+                },
+                {
                     "id": "SecurityState",
                     "type": "string",
                     "enum": [
@@ -2169,6 +2236,11 @@
                             "name": "hasCertificate",
                             "type": "boolean",
                             "description": "True if the page has a certificate."
+                        },
+                        {
+                            "name": "mixedContentType",
+                            "$ref": "MixedContentType",
+                            "description": "The type of mixed content described by the explanation."
                         }
                     ],
                     "description": "An explanation of an factor contributing to the security state."
@@ -2368,9 +2440,14 @@
                     "description": "Network level fetch failure reason."
                 },
                 {
-                    "id": "Timestamp",
+                    "id": "TimeSinceEpoch",
                     "type": "number",
-                    "description": "Number of seconds since epoch."
+                    "description": "UTC time in seconds, counted from January 1, 1970."
+                },
+                {
+                    "id": "MonotonicTime",
+                    "type": "number",
+                    "description": "Monotonically increasing time in seconds since an arbitrary point in the past."
                 },
                 {
                     "id": "Headers",
@@ -2533,14 +2610,9 @@
                         },
                         {
                             "name": "mixedContentType",
+                            "$ref": "Security.MixedContentType",
                             "optional": true,
-                            "type": "string",
-                            "enum": [
-                                "blockable",
-                                "optionally-blockable",
-                                "none"
-                            ],
-                            "description": "The mixed content status of the request, as defined in http://www.w3.org/TR/mixed-content/"
+                            "description": "The mixed content type of the request."
                         },
                         {
                             "name": "initialPriority",
@@ -2556,7 +2628,9 @@
                                 "no-referrer",
                                 "origin",
                                 "origin-when-cross-origin",
-                                "no-referrer-when-downgrade-origin-when-cross-origin"
+                                "same-origin",
+                                "strict-origin",
+                                "strict-origin-when-cross-origin"
                             ],
                             "description": "The referrer policy of the request, as defined in https://www.w3.org/TR/referrer-policy/"
                         },
@@ -2595,7 +2669,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "TimeSinceEpoch",
                             "description": "Issuance date."
                         },
                         {
@@ -2672,12 +2746,12 @@
                         },
                         {
                             "name": "validFrom",
-                            "$ref": "Timestamp",
+                            "$ref": "TimeSinceEpoch",
                             "description": "Certificate valid from date."
                         },
                         {
                             "name": "validTo",
-                            "$ref": "Timestamp",
+                            "$ref": "TimeSinceEpoch",
                             "description": "Certificate valid to (expiration) date"
                         },
                         {
@@ -2950,13 +3024,13 @@
                             "name": "url",
                             "type": "string",
                             "optional": true,
-                            "description": "Initiator URL, set for Parser type only."
+                            "description": "Initiator URL, set for Parser type or for Script type (when script is importing module)."
                         },
                         {
                             "name": "lineNumber",
                             "type": "number",
                             "optional": true,
-                            "description": "Initiator line number, set for Parser type only (0-based)."
+                            "description": "Initiator line number, set for Parser type or for Script type (when script is importing module) (0-based)."
                         }
                     ]
                 },
@@ -3015,6 +3089,69 @@
                             "$ref": "CookieSameSite",
                             "optional": true,
                             "description": "Cookie SameSite type."
+                        }
+                    ],
+                    "experimental": true
+                },
+                {
+                    "id": "AuthChallenge",
+                    "type": "object",
+                    "description": "Authorization challenge for HTTP status code 401 or 407.",
+                    "properties": [
+                        {
+                            "name": "source",
+                            "type": "string",
+                            "optional": true,
+                            "enum": [
+                                "Server",
+                                "Proxy"
+                            ],
+                            "description": "Source of the authentication challenge."
+                        },
+                        {
+                            "name": "origin",
+                            "type": "string",
+                            "description": "Origin of the challenger."
+                        },
+                        {
+                            "name": "scheme",
+                            "type": "string",
+                            "description": "The authentication scheme used, such as basic or digest"
+                        },
+                        {
+                            "name": "realm",
+                            "type": "string",
+                            "description": "The realm of the challenge. May be empty."
+                        }
+                    ],
+                    "experimental": true
+                },
+                {
+                    "id": "AuthChallengeResponse",
+                    "type": "object",
+                    "description": "Response to an AuthChallenge.",
+                    "properties": [
+                        {
+                            "name": "response",
+                            "type": "string",
+                            "enum": [
+                                "Default",
+                                "CancelAuth",
+                                "ProvideCredentials"
+                            ],
+                            "description": "The decision on what to do in response to the authorization challenge.  Default means deferring to the default behavior of the net stack, which will likely either the Cancel authentication or display a popup dialog box."
+                        },
+                        {
+                            "name": "username",
+                            "type": "string",
+                            "optional": true,
+                            "description": "The username to provide, possibly empty. Should only be set if response is ProvideCredentials."
+                        },
+                        {
+                            "name": "password",
+                            "type": "string",
+                            "optional": true,
+                            "description": "The password to provide, possibly empty. Should only be set if response is ProvideCredentials."
                         }
                     ],
                     "experimental": true
@@ -3255,7 +3392,7 @@
                         },
                         {
                             "name": "expirationDate",
-                            "$ref": "Timestamp",
+                            "$ref": "TimeSinceEpoch",
                             "optional": true,
                             "description": "If omitted, the cookie becomes a session cookie."
                         }
@@ -3376,7 +3513,7 @@
                     "experimental": true
                 },
                 {
-                    "name": "enableRequestInterception",
+                    "name": "setRequestInterceptionEnabled",
                     "parameters": [
                         {
                             "name": "enabled",
@@ -3398,37 +3535,43 @@
                             "name": "errorReason",
                             "$ref": "ErrorReason",
                             "optional": true,
-                            "description": "If set this causes the request to fail with the given reason."
+                            "description": "If set this causes the request to fail with the given reason. Must not be set in response to an authChallenge."
                         },
                         {
                             "name": "rawResponse",
                             "type": "string",
                             "optional": true,
-                            "description": "If set the requests completes using with the provided base64 encoded raw response, including HTTP status line and headers etc..."
+                            "description": "If set the requests completes using with the provided base64 encoded raw response, including HTTP status line and headers etc... Must not be set in response to an authChallenge."
                         },
                         {
                             "name": "url",
                             "type": "string",
                             "optional": true,
-                            "description": "If set the request url will be modified in a way that's not observable by page."
+                            "description": "If set the request url will be modified in a way that's not observable by page. Must not be set in response to an authChallenge."
                         },
                         {
                             "name": "method",
                             "type": "string",
                             "optional": true,
-                            "description": "If set this allows the request method to be overridden."
+                            "description": "If set this allows the request method to be overridden. Must not be set in response to an authChallenge."
                         },
                         {
                             "name": "postData",
                             "type": "string",
                             "optional": true,
-                            "description": "If set this allows postData to be set."
+                            "description": "If set this allows postData to be set. Must not be set in response to an authChallenge."
                         },
                         {
                             "name": "headers",
                             "$ref": "Headers",
                             "optional": true,
-                            "description": "If set this allows the request headers to be changed."
+                            "description": "If set this allows the request headers to be changed. Must not be set in response to an authChallenge."
+                        },
+                        {
+                            "name": "authChallengeResponse",
+                            "$ref": "AuthChallengeResponse",
+                            "optional": true,
+                            "description": "Response to a requestIntercepted with an authChallenge. Must not be set otherwise."
                         }
                     ],
                     "experimental": true
@@ -3451,7 +3594,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         }
                     ],
@@ -3467,15 +3610,9 @@
                             "description": "Request identifier."
                         },
                         {
-                            "name": "frameId",
-                            "$ref": "Page.FrameId",
-                            "description": "Frame identifier.",
-                            "experimental": true
-                        },
-                        {
                             "name": "loaderId",
                             "$ref": "LoaderId",
-                            "description": "Loader identifier."
+                            "description": "Loader identifier. Empty string if the request is fetched form worker."
                         },
                         {
                             "name": "documentURL",
@@ -3489,14 +3626,14 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
                             "name": "wallTime",
-                            "$ref": "Timestamp",
+                            "$ref": "TimeSinceEpoch",
                             "experimental": true,
-                            "description": "UTC Timestamp."
+                            "description": "Timestamp."
                         },
                         {
                             "name": "initiator",
@@ -3515,6 +3652,13 @@
                             "optional": true,
                             "experimental": true,
                             "description": "Type of this resource."
+                        },
+                        {
+                            "name": "frameId",
+                            "optional": true,
+                            "$ref": "Page.FrameId",
+                            "description": "Frame identifier.",
+                            "experimental": true
                         }
                     ]
                 },
@@ -3539,19 +3683,13 @@
                             "description": "Request identifier."
                         },
                         {
-                            "name": "frameId",
-                            "$ref": "Page.FrameId",
-                            "description": "Frame identifier.",
-                            "experimental": true
-                        },
-                        {
                             "name": "loaderId",
                             "$ref": "LoaderId",
-                            "description": "Loader identifier."
+                            "description": "Loader identifier. Empty string if the request is fetched form worker."
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3563,6 +3701,13 @@
                             "name": "response",
                             "$ref": "Response",
                             "description": "Response data."
+                        },
+                        {
+                            "name": "frameId",
+                            "optional": true,
+                            "$ref": "Page.FrameId",
+                            "description": "Frame identifier.",
+                            "experimental": true
                         }
                     ]
                 },
@@ -3577,7 +3722,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3603,7 +3748,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3624,7 +3769,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3663,12 +3808,12 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
                             "name": "wallTime",
-                            "$ref": "Timestamp",
+                            "$ref": "TimeSinceEpoch",
                             "experimental": true,
                             "description": "UTC Timestamp."
                         },
@@ -3691,7 +3836,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3736,7 +3881,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         }
                     ],
@@ -3753,7 +3898,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3775,7 +3920,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3797,7 +3942,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3819,7 +3964,7 @@
                         },
                         {
                             "name": "timestamp",
-                            "$ref": "Timestamp",
+                            "$ref": "MonotonicTime",
                             "description": "Timestamp."
                         },
                         {
@@ -3845,13 +3990,18 @@
                     "description": "Details of an intercepted HTTP request, which must be either allowed, blocked, modified or mocked.",
                     "parameters": [
                         {
-                            "name": "InterceptionId",
+                            "name": "interceptionId",
                             "$ref": "InterceptionId",
-                            "description": "Each request the page makes will have a unique id, however if any redirects are encountered while processing that fetch, they will be reported with the same id as the original fetch."
+                            "description": "Each request the page makes will have a unique id, however if any redirects are encountered while processing that fetch, they will be reported with the same id as the original fetch. Likewise if HTTP authentication is needed then the same fetch id will be used."
                         },
                         {
                             "name": "request",
                             "$ref": "Request"
+                        },
+                        {
+                            "name": "resourceType",
+                            "$ref": "Page.ResourceType",
+                            "description": "How the requested resource will be used."
                         },
                         {
                             "name": "redirectHeaders",
@@ -3870,6 +4020,12 @@
                             "optional": true,
                             "type": "string",
                             "description": "Redirect location, only sent if a redirect was intercepted."
+                        },
+                        {
+                            "name": "authChallenge",
+                            "$ref": "AuthChallenge",
+                            "optional": true,
+                            "description": "Details of the Authorization Challenge encountered. If this is set then continueInterceptedRequest must contain an authChallengeResponse."
                         }
                     ],
                     "experimental": true
@@ -4399,7 +4555,12 @@
                         {
                             "name": "response",
                             "type": "string",
-                            "description": "Response stataus text."
+                            "description": "Response status text."
+                        },
+                        {
+                            "name": "responseTime",
+                            "type": "number",
+                            "description": "Number of seconds since epoch."
                         }
                     ]
                 },
@@ -5729,7 +5890,14 @@
                         {
                             "name": "nodeId",
                             "$ref": "NodeId",
+                            "optional": true,
                             "description": "Id of the node to resolve."
+                        },
+                        {
+                            "name": "backendNodeId",
+                            "$ref": "DOM.BackendNodeId",
+                            "optional": true,
+                            "description": "Backend identifier of the node to resolve."
                         },
                         {
                             "name": "objectGroup",
@@ -5745,7 +5913,7 @@
                             "description": "JavaScript object wrapper for given node."
                         }
                     ],
-                    "description": "Resolves JavaScript node object for given node id."
+                    "description": "Resolves the JavaScript node object for a given NodeId or BackendNodeId."
                 },
                 {
                     "name": "getAttributes",
@@ -5848,7 +6016,20 @@
                         {
                             "name": "nodeId",
                             "$ref": "NodeId",
-                            "description": "Id of the node to focus."
+                            "optional": true,
+                            "description": "Identifier of the node."
+                        },
+                        {
+                            "name": "backendNodeId",
+                            "$ref": "BackendNodeId",
+                            "optional": true,
+                            "description": "Identifier of the backend node."
+                        },
+                        {
+                            "name": "objectId",
+                            "$ref": "Runtime.RemoteObjectId",
+                            "optional": true,
+                            "description": "JavaScript object id of the node wrapper."
                         }
                     ],
                     "description": "Focuses the given element.",
@@ -5858,17 +6039,30 @@
                     "name": "setFileInputFiles",
                     "parameters": [
                         {
-                            "name": "nodeId",
-                            "$ref": "NodeId",
-                            "description": "Id of the file input node to set files for."
-                        },
-                        {
                             "name": "files",
                             "type": "array",
                             "items": {
                                 "type": "string"
                             },
                             "description": "Array of file paths to set."
+                        },
+                        {
+                            "name": "nodeId",
+                            "$ref": "NodeId",
+                            "optional": true,
+                            "description": "Identifier of the node."
+                        },
+                        {
+                            "name": "backendNodeId",
+                            "$ref": "BackendNodeId",
+                            "optional": true,
+                            "description": "Identifier of the backend node."
+                        },
+                        {
+                            "name": "objectId",
+                            "$ref": "Runtime.RemoteObjectId",
+                            "optional": true,
+                            "description": "JavaScript object id of the node wrapper."
                         }
                     ],
                     "description": "Sets files for the given file input element.",
@@ -5880,7 +6074,20 @@
                         {
                             "name": "nodeId",
                             "$ref": "NodeId",
-                            "description": "Id of the node to get box model for."
+                            "optional": true,
+                            "description": "Identifier of the node."
+                        },
+                        {
+                            "name": "backendNodeId",
+                            "$ref": "BackendNodeId",
+                            "optional": true,
+                            "description": "Identifier of the backend node."
+                        },
+                        {
+                            "name": "objectId",
+                            "$ref": "Runtime.RemoteObjectId",
+                            "optional": true,
+                            "description": "JavaScript object id of the node wrapper."
                         }
                     ],
                     "returns": [
@@ -6181,7 +6388,7 @@
         {
             "domain": "CSS",
             "experimental": true,
-            "description": "This domain exposes CSS read/write operations. All CSS objects (stylesheets, rules, and styles) have an associated <code>id</code> used in subsequent operations on the related object. Each object type has a specific <code>id</code> structure, and those are not interchangeable between objects of different kinds. CSS objects can be loaded using the <code>get*ForNode()</code> calls (which accept a DOM node id). A client can also discover all the existing stylesheets with the <code>getAllStyleSheets()</code> method (or keeping track of the <code>styleSheetAdded</code>/<code>styleSheetRemoved</code> events) and subsequently load the required stylesheet contents using the <code>getStyleSheet[Text]()</code> methods.",
+            "description": "This domain exposes CSS read/write operations. All CSS objects (stylesheets, rules, and styles) have an associated <code>id</code> used in subsequent operations on the related object. Each object type has a specific <code>id</code> structure, and those are not interchangeable between objects of different kinds. CSS objects can be loaded using the <code>get*ForNode()</code> calls (which accept a DOM node id). A client can also keep track of stylesheets via the <code>styleSheetAdded</code>/<code>styleSheetRemoved</code> events and subsequently load the required stylesheet contents using the <code>getStyleSheet[Text]()</code> methods.",
             "dependencies": [
                 "DOM"
             ],
@@ -6822,60 +7029,6 @@
                     ],
                     "description": "Details of post layout rendered text positions. The exact layout should not be regarded as stable and may change between versions.",
                     "experimental": true
-                },
-                {
-                    "id": "LayoutTreeNode",
-                    "type": "object",
-                    "properties": [
-                        {
-                            "name": "nodeId",
-                            "$ref": "DOM.NodeId",
-                            "description": "The id of the related DOM node matching one from DOM.GetDocument."
-                        },
-                        {
-                            "name": "boundingBox",
-                            "$ref": "DOM.Rect",
-                            "description": "The absolute position bounding box."
-                        },
-                        {
-                            "name": "layoutText",
-                            "type": "string",
-                            "optional": true,
-                            "description": "Contents of the LayoutText if any"
-                        },
-                        {
-                            "name": "inlineTextNodes",
-                            "type": "array",
-                            "optional": true,
-                            "items": {
-                                "$ref": "InlineTextBox"
-                            },
-                            "description": "The post layout inline text nodes, if any."
-                        },
-                        {
-                            "name": "styleIndex",
-                            "type": "integer",
-                            "optional": true,
-                            "description": "Index into the computedStyles array returned by getLayoutTreeAndStyles."
-                        }
-                    ],
-                    "description": "Details of an element in the DOM tree with a LayoutObject.",
-                    "experimental": true
-                },
-                {
-                    "id": "ComputedStyle",
-                    "type": "object",
-                    "properties": [
-                        {
-                            "name": "properties",
-                            "type": "array",
-                            "items": {
-                                "$ref": "CSSComputedStyleProperty"
-                            }
-                        }
-                    ],
-                    "description": "A subset of the full ComputedStyle as defined by the request whitelist.",
-                    "experimental": true
                 }
             ],
             "commands": [
@@ -7298,37 +7451,6 @@
                     "experimental": true
                 },
                 {
-                    "name": "getLayoutTreeAndStyles",
-                    "parameters": [
-                        {
-                            "name": "computedStyleWhitelist",
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "description": "Whitelist of computed styles to return."
-                        }
-                    ],
-                    "returns": [
-                        {
-                            "name": "layoutTreeNodes",
-                            "type": "array",
-                            "items": {
-                                "$ref": "LayoutTreeNode"
-                            }
-                        },
-                        {
-                            "name": "computedStyles",
-                            "type": "array",
-                            "items": {
-                                "$ref": "ComputedStyle"
-                            }
-                        }
-                    ],
-                    "description": "For the main document and any content documents, return the LayoutTreeNodes and a whitelisted subset of the computed style. It only returns pushed nodes, on way to pull all nodes is to call DOM.getDocument with a depth of -1.",
-                    "experimental": true
-                },
-                {
                     "name": "startRuleUsageTracking",
                     "description": "Enables the selector recording.",
                     "experimental": true
@@ -7402,6 +7524,280 @@
                         }
                     ],
                     "description": "Fired whenever an active document stylesheet is removed."
+                }
+            ]
+        },
+        {
+            "domain": "DOMSnapshot",
+            "experimental": true,
+            "description": "This domain facilitates obtaining document snapshots with DOM, layout, and style information.",
+            "dependencies": [
+                "CSS",
+                "DOM",
+                "Page"
+            ],
+            "types": [
+                {
+                    "id": "DOMNode",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "nodeType",
+                            "type": "integer",
+                            "description": "<code>Node</code>'s nodeType."
+                        },
+                        {
+                            "name": "nodeName",
+                            "type": "string",
+                            "description": "<code>Node</code>'s nodeName."
+                        },
+                        {
+                            "name": "nodeValue",
+                            "type": "string",
+                            "description": "<code>Node</code>'s nodeValue."
+                        },
+                        {
+                            "name": "textValue",
+                            "type": "string",
+                            "optional": true,
+                            "description": "Only set for textarea elements, contains the text value."
+                        },
+                        {
+                            "name": "inputValue",
+                            "type": "string",
+                            "optional": true,
+                            "description": "Only set for input elements, contains the input's associated text value."
+                        },
+                        {
+                            "name": "inputChecked",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Only set for radio and checkbox input elements, indicates if the element has been checked"
+                        },
+                        {
+                            "name": "optionSelected",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Only set for option elements, indicates if the element has been selected"
+                        },
+                        {
+                            "name": "backendNodeId",
+                            "$ref": "DOM.BackendNodeId",
+                            "description": "<code>Node</code>'s id, corresponds to DOM.Node.backendNodeId."
+                        },
+                        {
+                            "name": "childNodeIndexes",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            },
+                            "optional": true,
+                            "description": "The indexes of the node's child nodes in the <code>domNodes</code> array returned by <code>getSnapshot</code>, if any."
+                        },
+                        {
+                            "name": "attributes",
+                            "type": "array",
+                            "items": {
+                                "$ref": "NameValue"
+                            },
+                            "optional": true,
+                            "description": "Attributes of an <code>Element</code> node."
+                        },
+                        {
+                            "name": "pseudoElementIndexes",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            },
+                            "optional": true,
+                            "description": "Indexes of pseudo elements associated with this node in the <code>domNodes</code> array returned by <code>getSnapshot</code>, if any."
+                        },
+                        {
+                            "name": "layoutNodeIndex",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "The index of the node's related layout tree node in the <code>layoutTreeNodes</code> array returned by <code>getSnapshot</code>, if any."
+                        },
+                        {
+                            "name": "documentURL",
+                            "type": "string",
+                            "optional": true,
+                            "description": "Document URL that <code>Document</code> or <code>FrameOwner</code> node points to."
+                        },
+                        {
+                            "name": "baseURL",
+                            "type": "string",
+                            "optional": true,
+                            "description": "Base URL that <code>Document</code> or <code>FrameOwner</code> node uses for URL completion."
+                        },
+                        {
+                            "name": "contentLanguage",
+                            "type": "string",
+                            "optional": true,
+                            "description": "Only set for documents, contains the document's content language."
+                        },
+                        {
+                            "name": "publicId",
+                            "type": "string",
+                            "optional": true,
+                            "description": "<code>DocumentType</code> node's publicId."
+                        },
+                        {
+                            "name": "systemId",
+                            "type": "string",
+                            "optional": true,
+                            "description": "<code>DocumentType</code> node's systemId."
+                        },
+                        {
+                            "name": "frameId",
+                            "$ref": "Page.FrameId",
+                            "optional": true,
+                            "description": "Frame ID for frame owner elements."
+                        },
+                        {
+                            "name": "contentDocumentIndex",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "The index of a frame owner element's content document in the <code>domNodes</code> array returned by <code>getSnapshot</code>, if any."
+                        },
+                        {
+                            "name": "importedDocumentIndex",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "Index of the imported document's node of a link element in the <code>domNodes</code> array returned by <code>getSnapshot</code>, if any."
+                        },
+                        {
+                            "name": "templateContentIndex",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "Index of the content node of a template element in the <code>domNodes</code> array returned by <code>getSnapshot</code>."
+                        },
+                        {
+                            "name": "pseudoType",
+                            "$ref": "DOM.PseudoType",
+                            "optional": true,
+                            "description": "Type of a pseudo element node."
+                        },
+                        {
+                            "name": "isClickable",
+                            "type": "boolean",
+                            "optional": true,
+                            "description": "Whether this DOM node responds to mouse clicks. This includes nodes that have had click event listeners attached via JavaScript as well as anchor tags that naturally navigate when clicked."
+                        }
+                    ],
+                    "description": "A Node in the DOM tree."
+                },
+                {
+                    "id": "LayoutTreeNode",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "domNodeIndex",
+                            "type": "integer",
+                            "description": "The index of the related DOM node in the <code>domNodes</code> array returned by <code>getSnapshot</code>."
+                        },
+                        {
+                            "name": "boundingBox",
+                            "$ref": "DOM.Rect",
+                            "description": "The absolute position bounding box."
+                        },
+                        {
+                            "name": "layoutText",
+                            "type": "string",
+                            "optional": true,
+                            "description": "Contents of the LayoutText, if any."
+                        },
+                        {
+                            "name": "inlineTextNodes",
+                            "type": "array",
+                            "optional": true,
+                            "items": {
+                                "$ref": "CSS.InlineTextBox"
+                            },
+                            "description": "The post-layout inline text nodes, if any."
+                        },
+                        {
+                            "name": "styleIndex",
+                            "type": "integer",
+                            "optional": true,
+                            "description": "Index into the <code>computedStyles</code> array returned by <code>getSnapshot</code>."
+                        }
+                    ],
+                    "description": "Details of an element in the DOM tree with a LayoutObject."
+                },
+                {
+                    "id": "ComputedStyle",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "properties",
+                            "type": "array",
+                            "items": {
+                                "$ref": "NameValue"
+                            },
+                            "description": "Name/value pairs of computed style properties."
+                        }
+                    ],
+                    "description": "A subset of the full ComputedStyle as defined by the request whitelist."
+                },
+                {
+                    "id": "NameValue",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "name",
+                            "type": "string",
+                            "description": "Attribute/property name."
+                        },
+                        {
+                            "name": "value",
+                            "type": "string",
+                            "description": "Attribute/property value."
+                        }
+                    ],
+                    "description": "A name/value pair."
+                }
+            ],
+            "commands": [
+                {
+                    "name": "getSnapshot",
+                    "parameters": [
+                        {
+                            "name": "computedStyleWhitelist",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Whitelist of computed styles to return."
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "domNodes",
+                            "type": "array",
+                            "items": {
+                                "$ref": "DOMNode"
+                            },
+                            "description": "The nodes in the DOM tree. The DOMNode at index 0 corresponds to the root document."
+                        },
+                        {
+                            "name": "layoutTreeNodes",
+                            "type": "array",
+                            "items": {
+                                "$ref": "LayoutTreeNode"
+                            },
+                            "description": "The nodes in the layout tree."
+                        },
+                        {
+                            "name": "computedStyles",
+                            "type": "array",
+                            "items": {
+                                "$ref": "ComputedStyle"
+                            },
+                            "description": "Whitelisted ComputedStyle properties for each node in the layout tree."
+                        }
+                    ],
+                    "description": "Returns a document snapshot, including the full DOM tree of the root node (including iframes, template contents, and imported documents) in a flattened array, as well as layout and white-listed computed style information for the nodes. Shadow DOM in the returned DOM tree is flattened. "
                 }
             ]
         },
@@ -7729,6 +8125,11 @@
                         {
                             "name": "url",
                             "type": "string"
+                        },
+                        {
+                            "name": "attached",
+                            "type": "boolean",
+                            "description": "Whether the target has an attached client."
                         }
                     ]
                 },
@@ -7750,7 +8151,7 @@
             "commands": [
                 {
                     "name": "setDiscoverTargets",
-                    "description": "Controls whether to discover available targets and notify via <code>targetCreated/targetDestroyed</code> events.",
+                    "description": "Controls whether to discover available targets and notify via <code>targetCreated/targetInfoChanged/targetDestroyed</code> events.",
                     "parameters": [
                         {
                             "name": "discover",
@@ -7964,6 +8365,16 @@
                 {
                     "name": "targetCreated",
                     "description": "Issued when a possible inspection target is created.",
+                    "parameters": [
+                        {
+                            "name": "targetInfo",
+                            "$ref": "TargetInfo"
+                        }
+                    ]
+                },
+                {
+                    "name": "targetInfoChanged",
+                    "description": "Issued when some information about a target has changed. This only happens between <code>targetCreated</code> and <code>targetDestroyed</code>.",
                     "parameters": [
                         {
                             "name": "targetInfo",
@@ -8366,6 +8777,11 @@
                         "touch",
                         "mouse"
                     ]
+                },
+                {
+                    "id": "TimeSinceEpoch",
+                    "type": "number",
+                    "description": "UTC time in seconds, counted from January 1, 1970."
                 }
             ],
             "commands": [
@@ -8402,9 +8818,9 @@
                         },
                         {
                             "name": "timestamp",
-                            "type": "number",
+                            "$ref": "TimeSinceEpoch",
                             "optional": true,
-                            "description": "Time at which the event occurred. Measured in UTC time in seconds since January 1, 1970 (default: current time)."
+                            "description": "Time at which the event occurred."
                         },
                         {
                             "name": "text",
@@ -8484,13 +8900,13 @@
                         },
                         {
                             "name": "x",
-                            "type": "integer",
-                            "description": "X coordinate of the event relative to the main frame's viewport."
+                            "type": "number",
+                            "description": "X coordinate of the event relative to the main frame's viewport in CSS pixels."
                         },
                         {
                             "name": "y",
-                            "type": "integer",
-                            "description": "Y coordinate of the event relative to the main frame's viewport. 0 refers to the top of the viewport and Y increases as it proceeds towards the bottom of the viewport."
+                            "type": "number",
+                            "description": "Y coordinate of the event relative to the main frame's viewport in CSS pixels. 0 refers to the top of the viewport and Y increases as it proceeds towards the bottom of the viewport."
                         },
                         {
                             "name": "modifiers",
@@ -8500,9 +8916,9 @@
                         },
                         {
                             "name": "timestamp",
-                            "type": "number",
+                            "$ref": "TimeSinceEpoch",
                             "optional": true,
-                            "description": "Time at which the event occurred. Measured in UTC time in seconds since January 1, 1970 (default: current time)."
+                            "description": "Time at which the event occurred."
                         },
                         {
                             "name": "button",
@@ -8555,9 +8971,9 @@
                         },
                         {
                             "name": "timestamp",
-                            "type": "number",
+                            "$ref": "TimeSinceEpoch",
                             "optional": true,
-                            "description": "Time at which the event occurred. Measured in UTC time in seconds since January 1, 1970 (default: current time)."
+                            "description": "Time at which the event occurred."
                         }
                     ],
                     "description": "Dispatches a touch event to the page."
@@ -8589,8 +9005,8 @@
                         },
                         {
                             "name": "timestamp",
-                            "type": "number",
-                            "description": "Time at which the event occurred. Measured in UTC time in seconds since January 1, 1970."
+                            "$ref": "TimeSinceEpoch",
+                            "description": "Time at which the event occurred."
                         },
                         {
                             "name": "button",
@@ -8635,12 +9051,12 @@
                     "parameters": [
                         {
                             "name": "x",
-                            "type": "integer",
+                            "type": "number",
                             "description": "X coordinate of the start of the gesture in CSS pixels."
                         },
                         {
                             "name": "y",
-                            "type": "integer",
+                            "type": "number",
                             "description": "Y coordinate of the start of the gesture in CSS pixels."
                         },
                         {
@@ -8669,35 +9085,35 @@
                     "parameters": [
                         {
                             "name": "x",
-                            "type": "integer",
+                            "type": "number",
                             "description": "X coordinate of the start of the gesture in CSS pixels."
                         },
                         {
                             "name": "y",
-                            "type": "integer",
+                            "type": "number",
                             "description": "Y coordinate of the start of the gesture in CSS pixels."
                         },
                         {
                             "name": "xDistance",
-                            "type": "integer",
+                            "type": "number",
                             "optional": true,
                             "description": "The distance to scroll along the X axis (positive to scroll left)."
                         },
                         {
                             "name": "yDistance",
-                            "type": "integer",
+                            "type": "number",
                             "optional": true,
                             "description": "The distance to scroll along the Y axis (positive to scroll up)."
                         },
                         {
                             "name": "xOverscroll",
-                            "type": "integer",
+                            "type": "number",
                             "optional": true,
                             "description": "The number of additional pixels to scroll back along the X axis, in addition to the given distance."
                         },
                         {
                             "name": "yOverscroll",
-                            "type": "integer",
+                            "type": "number",
                             "optional": true,
                             "description": "The number of additional pixels to scroll back along the Y axis, in addition to the given distance."
                         },
@@ -8746,12 +9162,12 @@
                     "parameters": [
                         {
                             "name": "x",
-                            "type": "integer",
+                            "type": "number",
                             "description": "X coordinate of the start of the gesture in CSS pixels."
                         },
                         {
                             "name": "y",
-                            "type": "integer",
+                            "type": "number",
                             "description": "Y coordinate of the start of the gesture in CSS pixels."
                         },
                         {
@@ -10150,9 +10566,27 @@
                         "websql",
                         "service_workers",
                         "cache_storage",
-                        "all"
+                        "all",
+                        "other"
                     ],
                     "description": "Enum of possible storage types."
+                },
+                {
+                    "id": "UsageForType",
+                    "type": "object",
+                    "description": "Usage for a storage type.",
+                    "properties": [
+                        {
+                            "name": "storageType",
+                            "$ref": "StorageType",
+                            "description": "Name of storage type."
+                        },
+                        {
+                            "name": "usage",
+                            "type": "number",
+                            "description": "Storage usage (bytes)."
+                        }
+                    ]
                 }
             ],
             "commands": [
@@ -10171,6 +10605,37 @@
                         }
                     ],
                     "description": "Clears storage for origin."
+                },
+                {
+                    "name": "getUsageAndQuota",
+                    "parameters": [
+                        {
+                            "name": "origin",
+                            "type": "string",
+                            "description": "Security origin."
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "usage",
+                            "type": "number",
+                            "description": "Storage usage (bytes)."
+                        },
+                        {
+                            "name": "quota",
+                            "type": "number",
+                            "description": "Storage quota (bytes)."
+                        },
+                        {
+                            "name": "usageBreakdown",
+                            "type": "array",
+                            "items": {
+                                "$ref": "UsageForType"
+                            },
+                            "description": "Storage usage per type (bytes)."
+                        }
+                    ],
+                    "description": "Returns usage and quota in bytes."
                 }
             ]
         },
@@ -11698,6 +12163,13 @@
                             "$ref": "StackTrace",
                             "optional": true,
                             "description": "Stack trace captured when the call was made."
+                        },
+                        {
+                            "name": "context",
+                            "type": "string",
+                            "optional": true,
+                            "experimental": true,
+                            "description": "Console context descriptor for calls on non-default console context (not console.*): 'anonymous#unique-logger-id' for call on unnamed context, 'name#unique-logger-id' for call on named context."
                         }
                     ]
                 },
@@ -12916,6 +13388,11 @@
                                 "$ref": "CoverageRange"
                             },
                             "description": "Source ranges inside the function with coverage data."
+                        },
+                        {
+                            "name": "isBlockCoverage",
+                            "type": "boolean",
+                            "description": "Whether coverage data for this function has block granularity."
                         }
                     ],
                     "experimental": true
