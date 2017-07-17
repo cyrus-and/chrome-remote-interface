@@ -227,13 +227,23 @@ function activate(args, options) {
 }
 
 function close(args, options) {
-    options.id = args;
-    CDP.Close(options, function (err) {
-        if (err) {
-            console.error(err.toString());
-            process.exit(1);
-        }
-    });
+  options.id = args;
+  CDP.Close(options, function (err) {
+      if (err) {
+          console.error(err.toString());
+          process.exit(1);
+      }
+  });
+}
+
+function autoClose(args, options) {
+  options.id = args;
+  CDP.AutoClose(options, function (err) {
+      if (err) {
+          console.error(err.toString());
+          process.exit(1);
+      }
+  });
 }
 
 function version(options) {
@@ -303,6 +313,13 @@ program
     .description('close a target/tab by id')
     .action(function (id) {
         action = close.bind(null, id);
+    });
+
+program
+    .command('auto-close <id>')
+    .description('mark a target/tab as auto-close by id')
+    .action(function (id) {
+        action = autoClose.bind(null, id);
     });
 
 program

@@ -36,4 +36,5 @@ module.exports.List = devtools.List;
 module.exports.New = devtools.New;
 module.exports.Activate = devtools.Activate;
 module.exports.Close = devtools.Close;
+module.exports.AutoClose = devtools.AutoClose;
 module.exports.Version = devtools.Version;
