@@ -227,23 +227,23 @@ function activate(args, options) {
 }
 
 function close(args, options) {
-  options.id = args;
-  CDP.Close(options, function (err) {
-      if (err) {
-          console.error(err.toString());
-          process.exit(1);
-      }
-  });
+    options.id = args;
+    CDP.Close(options, function (err) {
+        if (err) {
+            console.error(err.toString());
+            process.exit(1);
+        }
+    });
 }
 
 function autoClose(args, options) {
-  options.id = args;
-  CDP.AutoClose(options, function (err) {
-      if (err) {
-          console.error(err.toString());
-          process.exit(1);
-      }
-  });
+    options.id = args;
+    CDP.AutoClose(options, function (err) {
+        if (err) {
+            console.error(err.toString());
+            process.exit(1);
+        }
+    });
 }
 
 function version(options) {
