@@ -47,8 +47,11 @@ CDP((client) => {
 Find more examples in the [wiki], in particular notice how the above can be
 rewritten using the [`async`/`await`][async-await-example] primitives.
 
+You may also want to take a look at the [FAQ].
+
 [wiki]: https://github.com/cyrus-and/chrome-remote-interface/wiki
 [async-await-example]: https://github.com/cyrus-and/chrome-remote-interface/wiki/Async-await-example
+[FAQ]: https://github.com/cyrus-and/chrome-remote-interface#faq
 
 Installation
 ------------
@@ -830,6 +833,42 @@ Close the connection to the remote instance.
 `callback` is executed when the WebSocket is successfully closed.
 
 When `callback` is omitted a `Promise` object is returned.
+
+FAQ
+---
+
+### Invoking `Domain.method` I obtain `Domain.method is not a function`
+
+This means that the protocol descriptor that you are using does not contain
+`Domain.method`. If you are sure that your Chrome instance supports such method
+you can call it directly:
+
+```js
+client.send('Domain.method', ...);
+```
+
+or *ask* Chrome the correct protocol descriptor:
+
+```js
+CDP({remote: true});
+```
+
+See [here](https://github.com/cyrus-and/chrome-remote-interface#chrome-debugging-protocol-versions) for more information.
+
+### Invoking `Domain.method` I obtain `Domain.method wasn't found`
+
+This means that the protocol descriptor that you are using contains a method
+that is not supported by your Chrome instance. Most likely this is because you
+are trying to use a bleeding-edge feature, try to update to a newer Chrome
+version.
+
+See [here](https://github.com/cyrus-and/chrome-remote-interface#chrome-debugging-protocol-versions) for more information.
+
+To inspect the correct protocol descriptor use:
+
+```
+$ chrome-remote-interface inspect --remote
+```
 
 Contributors
 ------------
