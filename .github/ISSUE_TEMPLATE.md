@@ -1,20 +1,18 @@
 <!--
-Thank you for your interest in this project!
-
 Please make sure to have searched for existing issues before opening new ones:
-
-    https://github.com/cyrus-and/chrome-remote-interface/issues?utf8=%E2%9C%93&q=
+    https://github.com/cyrus-and/chrome-remote-interface/issues?q=
 
 You may also want to check the FAQ section of the README:
-
     https://github.com/cyrus-and/chrome-remote-interface#faq
 
-Alright then, please provide the following version information along with a
-minimal standalone script to reproduce your issue, if appropriate.
-
-(Feel free to delete this comment.)
+Alright then, please provide the following information along with a detailed
+description of what went wrong. If appropriate, attach a minimal standalone
+script to help to reproduce your issue.
 -->
 
-- **Node.js** ?
-- **Chrome** ?
-- **chrome-remote-interface** ?
+| Component | Version
+|-|-
+| **Operating system**	   	| WRITE HERE
+| **Node.js**				| WRITE HERE
+| **Chrome/Chromium/...**	| WRITE HERE
+| **chrome-remote-interface**	| WRITE HERE
