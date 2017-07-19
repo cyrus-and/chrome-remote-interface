@@ -262,7 +262,7 @@ function protocol(args, options) {
 let action;
 
 program
-    .version(packageInfo.version)
+    .option('-v, --v', 'Show this module version')
     .option('-t, --host <host>', 'HTTP frontend host')
     .option('-p, --port <port>', 'HTTP frontend port')
     .option('-s, --secure', 'HTTPS/WSS frontend');
@@ -332,6 +332,10 @@ const options = {
 if (action) {
     action(options);
 } else {
-    program.outputHelp();
-    process.exit(1);
+    if (program.v) {
+        console.log(packageInfo.version);
+    } else {
+        program.outputHelp();
+        process.exit(1);
+    }
 }
