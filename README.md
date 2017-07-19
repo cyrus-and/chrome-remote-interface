@@ -870,6 +870,10 @@ To inspect the correct protocol descriptor use:
 $ chrome-remote-interface inspect --remote
 ```
 
+### Headless chrome problems?
+
+Bear in mind that `--headless` chrome is relatively new and there are kinks (in chrome) that are being worked out. If you believe you've encountered a bug, take a look at the open issues, especially [external issues](https://github.com/cyrus-and/chrome-remote-interface/issues?q=label%3A%22external+issue%22+is%3Aclosed).
+
 Contributors
 ------------
 
