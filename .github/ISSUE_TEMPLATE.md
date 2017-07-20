@@ -12,7 +12,7 @@ script to help to reproduce your issue.
 
 | Component | Version
 |-|-
-| **Operating system**	   	| WRITE HERE
-| **Node.js**				| WRITE HERE
-| **Chrome/Chromium/...**	| WRITE HERE
-| **chrome-remote-interface**	| WRITE HERE
+| Operating system	  	 	| WRITE HERE
+| Node.js					| WRITE HERE
+| Chrome/Chromium/...		| WRITE HERE
+| chrome-remote-interface	| WRITE HERE
