@@ -878,6 +878,14 @@ take a look at the open issues, especially [external issues].
 
 [external issues]: https://github.com/cyrus-and/chrome-remote-interface/issues?q=label%3A%22external+issue%22
 
+### Why my program stalls or behave unexpectedly if I run Chrome in a Docker container?
+
+This happens because the size of `/dev/shm` is set to 64MB by default in Docker
+and may not be enough for Chrome to navigate certain web pages.
+
+You can change this value by running your container with, say,
+`--shm-size=256m`.
+
 Contributors
 ------------
 
