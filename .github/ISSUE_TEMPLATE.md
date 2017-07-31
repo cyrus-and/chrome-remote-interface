@@ -16,3 +16,5 @@ script to help to reproduce your issue.
 | Node.js					| WRITE HERE
 | Chrome/Chromium/...		| WRITE HERE
 | chrome-remote-interface	| WRITE HERE
+
+Is Chrome running in a container? YES / NO
