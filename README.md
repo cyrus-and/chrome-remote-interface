@@ -886,6 +886,26 @@ and may not be enough for Chrome to navigate certain web pages.
 You can change this value by running your container with, say,
 `--shm-size=256m`.
 
+### Using `Runtime.evaluate` with `awaitPromise: true` I sometimes obtain `Error: Promise was collected`
+
+This is thrown by `Runtime.evaluate` when the browser-side promise gets
+*collected* by the Chrome's garbage collector, this happens when the whole
+JavaScript execution environment is invalidated, e.g., a when page is navigated
+or reloaded while a promise is still waiting to be resolved.
+
+Here is an example:
+
+```
+$ chrome-remote-interface inspect
+>>> Runtime.evaluate({expression: `new Promise(() => {})`, awaitPromise: true})
+>>> Page.reload() // then wait several seconds
+{ result: {} }
+{ error: { code: -32000, message: 'Promise was collected' } }
+```
+
+To fix this, just make sure there are no pending promises before closing,
+reloading, etc. a page.
+
 Contributors
 ------------
 
