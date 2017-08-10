@@ -6,8 +6,10 @@ You may also want to check the FAQ section of the README:
     https://github.com/cyrus-and/chrome-remote-interface#faq
 
 Alright then, please provide the following information along with a detailed
-description of what went wrong. If appropriate, attach a minimal standalone
-script to help to reproduce your issue.
+description of what went wrong.
+
+If appropriate, attach a MINIMAL STANDALONE SCRIPT to help to reproduce your
+issue. (Use fenced blocks to display JavaScript code like this: ```js)
 -->
 
 | Component | Version
