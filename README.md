@@ -126,7 +126,7 @@ Plug the device and enable the [port forwarding][adb], for example:
 
     adb forward tcp:9222 localabstract:chrome_devtools_remote
 
-[adb]: https://developer.chrome.com/devtools/docs/remote-debugging-legacy
+[adb]: https://developers.google.com/web/tools/chrome-devtools/remote-debugging/local-server#port-forwarding
 
 ##### WebView
 
