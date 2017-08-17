@@ -1,6 +1,7 @@
 'use strict';
 
 const assert = require('assert');
+const url = require('url');
 
 const Chrome = require('../');
 
@@ -38,17 +39,28 @@ describe('connecting to Chrome', function () {
                 });
             });
             it('should succeed with custom target by full URL', function (done) {
-                Chrome({'target': 'ws://localhost:9222/devtools/browser'}, function (chrome) {
-                    chrome.close(done);
-                }).on('error', function () {
-                    assert(false);
+                Chrome.Version(function (err, info) {
+                    assert.ifError(err);
+                    const browserUrl = info.webSocketDebuggerUrl || 'ws://localhost:9222/devtools/browser';
+                    Chrome({'target': browserUrl}, function (chrome) {
+                        chrome.close(done);
+                    }).on('error', function () {
+                        assert(false);
+                    });
                 });
             });
             it('should succeed with custom target by partial URL', function (done) {
-                Chrome({'target': '/devtools/browser'}, function (chrome) {
-                    chrome.close(done);
-                }).on('error', function () {
-                    assert(false);
+                Chrome.Version(function (err, info) {
+                    assert.ifError(err);
+                    if (info.webSocketDebuggerUrl) {
+                        info.webSocketDebuggerUrl = url.parse(info.webSocketDebuggerUrl).pathname;
+                    }
+                    const browserUrl = info.webSocketDebuggerUrl || '/devtools/browser';
+                    Chrome({'target': browserUrl}, function (chrome) {
+                        chrome.close(done);
+                    }).on('error', function () {
+                        assert(false);
+                    });
                 });
             });
             it('should succeed with custom target by id', function (done) {
@@ -139,17 +151,28 @@ describe('connecting to Chrome', function () {
                 });
             });
             it('should succeed with custom target by full URL', function (done) {
-                Chrome({'target': 'ws://localhost:9222/devtools/browser'}).then(function (chrome) {
-                    chrome.close(done);
-                }).catch(function () {
-                    assert(false);
+                Chrome.Version(function (err, info) {
+                    assert.ifError(err);
+                    const browserUrl = info.webSocketDebuggerUrl || 'ws://localhost:9222/devtools/browser';
+                    Chrome({'target': browserUrl}).then(function (chrome) {
+                        chrome.close(done);
+                    }).catch(function () {
+                        assert(false);
+                    });
                 });
             });
             it('should succeed with custom target by partial URL', function (done) {
-                Chrome({'target': '/devtools/browser'}).then(function (chrome) {
-                    chrome.close(done);
-                }).catch(function () {
-                    assert(false);
+                Chrome.Version(function (err, info) {
+                    assert.ifError(err);
+                    if (info.webSocketDebuggerUrl) {
+                        info.webSocketDebuggerUrl = url.parse(info.webSocketDebuggerUrl).pathname;
+                    }
+                    const browserUrl = info.webSocketDebuggerUrl || '/devtools/browser';
+                    Chrome({'target': browserUrl}).then(function (chrome) {
+                        chrome.close(done);
+                    }).catch(function () {
+                        assert(false);
+                    });
                 });
             });
             it('should succeed with custom target by id', function (done) {
