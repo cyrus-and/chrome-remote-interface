@@ -906,6 +906,22 @@ $ chrome-remote-interface inspect
 To fix this, just make sure there are no pending promises before closing,
 reloading, etc. a page.
 
+### How does this compare to Puppeteer?
+
+[Puppeteer] is an additional high-level API built upon the [Chrome Debugging
+Protocol] which, among the other things, may start and use a bundled version of
+Chromium instead of the one installed on your system. Use it if its API meets
+your needs as it would probably be easier to work with.
+
+chrome-remote-interface instead is just a general purpose 1:1 Node.js binding
+for the [Chrome Debugging Protocol]. Use it if you need all the power of the raw
+protocol, e.g., to implement your own high-level API.
+
+See [#240] for a more thorough discussion.
+
+[Puppeteer]: https://github.com/GoogleChrome/puppeteer
+[#240]: https://github.com/cyrus-and/chrome-remote-interface/issues/240
+
 Contributors
 ------------
 
