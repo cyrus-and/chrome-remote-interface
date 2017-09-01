@@ -41,8 +41,8 @@ function inspect(target, args, options) {
         } else {
             // by target id
             options.target = function (targets) {
-                return targets.findIndex(function (target) {
-                    return target.id === target;
+                return targets.findIndex(function (_target) {
+                    return _target.id === target;
                 });
             };
         }
