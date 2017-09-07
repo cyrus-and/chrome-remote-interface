@@ -99,13 +99,25 @@ function inspect(target, args, options) {
         }
 
         function overrideCommand(command) {
-            // hard code a callback to display the result
-            const override = function (params) {
-                command(params, function (error, response) {
-                    const repr = {};
-                    repr[error ? 'error' : 'result'] = response;
-                    overridePrompt(display(repr));
-                });
+            const override = function (params, callback) {
+                if (typeof callback === 'function') {
+                    // if a callback is provided the use it as is
+                    command(params, callback);
+                    return undefined;
+                } else {
+                    const promise = command(params);
+                    // use a custom inspect to display the outcome
+                    promise.inspect = function () {
+                        this.then((result) => {
+                            overridePrompt(display(result));
+                        }).catch((err) => {
+                            overridePrompt(display(err));
+                        });
+                        // temporary placeholder
+                        return '...';
+                    };
+                    return promise;
+                }
             };
             // inherit the doc decorations
             inheritProperties(command, override);

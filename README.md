@@ -194,10 +194,8 @@ $ chrome-remote-interface close 'b049bb56-de7d-424c-a331-6ae44cf7ae01'
 Using the `inspect` subcommand it is possible to
 perform [command execution](#clientdomainmethodparams-callback)
 and [event binding](#clientdomaineventcallback) in a REPL fashion. But unlike
-the regular API the callbacks are overridden to conveniently display the result
-of the commands and the message of the events. Also, the event binding is
-simplified here, executing a shorthand method (e.g., `Page.loadEventFired()`)
-toggles the event registration.
+the regular API, the event binding overridden to allow easier event
+registration.
 
 Remember that the REPL interface provides completion.
 
@@ -206,13 +204,11 @@ Here is a sample session:
 ```javascript
 $ chrome-remote-interface inspect
 >>> Runtime.evaluate({expression: 'window.location.toString()'})
-{ result:
-   { result:
-      { type: 'string',
-        value: 'https://www.google.it/_/chrome/newtab?espv=2&ie=UTF-8' },
-     wasThrown: false } }
+...
+{ result: { type: 'string', value: 'about:blank' } }
 >>> Page.enable()
-{ result: {} }
+...
+{}
 >>> Page.loadEventFired() // registered
 { 'Page.loadEventFired': true }
 >>> Page.loadEventFired() // unregistered
@@ -220,12 +216,12 @@ $ chrome-remote-interface inspect
 >>> Page.loadEventFired() // registered
 { 'Page.loadEventFired': true }
 >>> Page.navigate({url: 'https://github.com'})
-{ result: { frameId: '28677.1' } }
-{ 'Page.loadEventFired': { timestamp: 21385.383076 } }
+...
+{ frameId: '15174.1' }
+{ 'Page.loadEventFired': { timestamp: 46427.780513 } }
 >>> Runtime.evaluate({expression: 'window.location.toString()'})
-{ result:
-   { result: { type: 'string', value: 'https://github.com/' },
-     wasThrown: false } }
+...
+{ result: { type: 'string', value: 'https://github.com/' } }
 ```
 
 #### Event filtering
@@ -236,12 +232,14 @@ provide a filter function. In this example only the resource URL is shown:
 ```javascript
 $ chrome-remote-interface inspect
 >>> Network.enable()
-{ result: {} }
+...
+{}
 >>> Network.requestWillBeSent(params => params.request.url)
 { 'Network.requestWillBeSent': 'params => params.request.url' }
 >>> Page.navigate({url: 'https://www.wikipedia.org'})
+...
+{ frameId: '5530.1' }
 { 'Network.requestWillBeSent': 'https://www.wikipedia.org/' }
-{ result: { frameId: '5530.1' } }
 { 'Network.requestWillBeSent': 'https://www.wikipedia.org/portal/wikipedia.org/assets/img/Wikipedia_wordmark.png' }
 { 'Network.requestWillBeSent': 'https://www.wikipedia.org/portal/wikipedia.org/assets/img/Wikipedia-logo-v2.png' }
 { 'Network.requestWillBeSent': 'https://www.wikipedia.org/portal/wikipedia.org/assets/js/index-3b68787aa6.js' }
