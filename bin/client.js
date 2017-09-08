@@ -128,29 +128,33 @@ function inspect(target, args, options) {
             const event = client[domainName][itemName];
             const eventName = domainName + '.' + itemName;
             // hard code a callback to display the event data
-            const override = function (filter) {
+            const override = function (callback) {
                 // remove all the listeners (just one actually) anyway
                 client.removeAllListeners(eventName);
                 const status = {};
-                // a filter will always enable/update the listener
-                if (!filter && registeredEvents[eventName]) {
+                // a callback will always enable/update the listener
+                if (!callback && registeredEvents[eventName]) {
                     delete registeredEvents[eventName];
                     status[eventName] = false;
+                    return status;
                 } else {
-                    // use the filter (or true) as a status token
-                    const statusToken = (filter ? filter.toString() : true);
+                    // use the callback (or true) as a status token
+                    const statusToken = (callback ? '<custom>' : true);
                     status[eventName] = registeredEvents[eventName] = statusToken;
-                    event(function (params) {
-                        const repr = {};
-                        if (filter) {
-                            params = filter(params);
-                        }
-                        repr[eventName] = params;
-                        overridePrompt(display(repr));
-                    });
+                    if (typeof callback === 'function') {
+                        // if a callback is provided the use it as is
+                        event(callback);
+                        return undefined;
+                    } else {
+                        // the default implementation just shows the params
+                        event(function (params) {
+                            const repr = {};
+                            repr[eventName] = params;
+                            overridePrompt(display(repr));
+                        });
+                        return status;
+                    }
                 }
-                // show the registration status to the user
-                return status;
             };
             // inherit the doc decorations
             inheritProperties(event, override);

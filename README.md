@@ -194,8 +194,8 @@ $ chrome-remote-interface close 'b049bb56-de7d-424c-a331-6ae44cf7ae01'
 Using the `inspect` subcommand it is possible to
 perform [command execution](#clientdomainmethodparams-callback)
 and [event binding](#clientdomaineventcallback) in a REPL fashion. But unlike
-the regular API, the event binding overridden to allow easier event
-registration.
+the regular API, events never return a promise, if the callback is omitted a
+default implementation is provided which allows to toggle the handler.
 
 Remember that the REPL interface provides completion.
 
@@ -222,30 +222,6 @@ $ chrome-remote-interface inspect
 >>> Runtime.evaluate({expression: 'window.location.toString()'})
 ...
 { result: { type: 'string', value: 'https://github.com/' } }
-```
-
-#### Event filtering
-
-To reduce the amount of data displayed by the event listeners it is possible to
-provide a filter function. In this example only the resource URL is shown:
-
-```javascript
-$ chrome-remote-interface inspect
->>> Network.enable()
-...
-{}
->>> Network.requestWillBeSent(params => params.request.url)
-{ 'Network.requestWillBeSent': 'params => params.request.url' }
->>> Page.navigate({url: 'https://www.wikipedia.org'})
-...
-{ frameId: '5530.1' }
-{ 'Network.requestWillBeSent': 'https://www.wikipedia.org/' }
-{ 'Network.requestWillBeSent': 'https://www.wikipedia.org/portal/wikipedia.org/assets/img/Wikipedia_wordmark.png' }
-{ 'Network.requestWillBeSent': 'https://www.wikipedia.org/portal/wikipedia.org/assets/img/Wikipedia-logo-v2.png' }
-{ 'Network.requestWillBeSent': 'https://www.wikipedia.org/portal/wikipedia.org/assets/js/index-3b68787aa6.js' }
-{ 'Network.requestWillBeSent': 'https://www.wikipedia.org/portal/wikipedia.org/assets/js/gt-ie9-c84bf66d33.js' }
-{ 'Network.requestWillBeSent': 'https://www.wikipedia.org/portal/wikipedia.org/assets/img/sprite-bookshelf_icons.png?16ed124e8ca7c5ce9d463e8f99b2064427366360' }
-{ 'Network.requestWillBeSent': 'https://www.wikipedia.org/portal/wikipedia.org/assets/img/sprite-project-logos.png?9afc01c5efe0a8fb6512c776955e2ad3eb48fbca' }
 ```
 
 Embedded documentation
