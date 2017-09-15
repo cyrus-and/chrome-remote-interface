@@ -32,7 +32,7 @@ function inheritProperties(from, to) {
 ///
 
 function inspect(target, args, options) {
-    options.remote = args.remote;
+    options.local = args.local;
     // otherwise the active target
     if (target) {
         if (args.webSocket) {
@@ -263,7 +263,7 @@ function version(options) {
 }
 
 function protocol(args, options) {
-    options.remote = args.remote;
+    options.local = args.local;
     CDP.Protocol(options, function (err, protocol) {
         if (err) {
             console.error(err.toString());
@@ -287,8 +287,8 @@ program
     .command('inspect [<target>]')
     .description('inspect a target (defaults to the first available target)')
     .option('-w, --web-socket', 'interpret <target> as a WebSocket URL instead of a target id')
-    .option('-j, --protocol <file.json>', 'Chrome Debugging Protocol descriptor (overrides `--remote`)')
-    .option('-r, --remote', 'Attempt to fetch the protocol descriptor remotely')
+    .option('-j, --protocol <file.json>', 'Chrome Debugging Protocol descriptor (overrides `--local`)')
+    .option('-l, --local', 'Use the local protocol descriptor')
     .action(function (target, args) {
         action = inspect.bind(null, target, args);
     });
@@ -331,7 +331,7 @@ program
 program
     .command('protocol')
     .description('show the currently available protocol descriptor')
-    .option('-r, --remote', 'Attempt to fetch the protocol descriptor remotely')
+    .option('-l, --local', 'Return the local protocol descriptor')
     .action(function (args) {
         action = protocol.bind(null, args);
     });

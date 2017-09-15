@@ -156,7 +156,9 @@ Start Node.js with the `--inspect` option, for example:
 
 ### Safari (iOS)
 
-Install and run the [iOS WebKit Debug Proxy][iwdp].
+Install and run the [iOS WebKit Debug Proxy][iwdp]. Then use it with the `local`
+option set to `true` to use the local version of the protocol or pass a custom
+descriptor upon connection (`protocol` option).
 
 [iwdp]: https://github.com/google/ios-webkit-debug-proxy
 
@@ -313,18 +315,15 @@ are named in upper camel case) type:
 Chrome Debugging Protocol versions
 ----------------------------------
 
-`chrome-remote-interface` uses the [local version] of the protocol descriptor by
-default. This file is manually updated from time to time using
-`scripts/update-protocol.sh` and pushed to this repository.
+By default `chrome-remote-interface` *asks* the remote instance to provide its
+own protocol.
 
-This behavior can be changed by setting the `remote` option to `true`
-upon [connection](#cdpoptions-callback), in which case the remote instance is
-*asked* to provide its own protocol descriptor.
+This behavior can be changed by setting the `local` option to `true`
+upon [connection](#cdpoptions-callback), in which case the [local version] of
+the protocol descriptor is used. This file is manually updated from time to time
+using `scripts/update-protocol.sh` and pushed to this repository.
 
-Chrome < 60.0.3097.0 is not able to do that, so in that case the protocol
-descriptor is fetched from the source repository.
-
-To override the above behavior there are basically three options:
+To further override the above behavior there are basically two options:
 
 - pass a custom protocol descriptor upon [connection](#cdpoptions-callback)
   (`protocol` option);
@@ -332,9 +331,6 @@ To override the above behavior there are basically three options:
 - use the *raw* version of the [commands](#clientsendmethod-params-callback)
   and [events](#event-domainmethod) interface to use bleeding-edge features that
   do not appear in the [local version] of the protocol descriptor;
-
-- update the local copy with `scripts/update-protocol.sh` (not present when
-  fetched with `npm install`).
 
 [local version]: lib/protocol.json
 
@@ -424,8 +420,8 @@ Connects to a remote instance using the [Chrome Debugging Protocol].
   the implementation (note that at most one connection can be established to the
   same target);
 - `protocol`: [Chrome Debugging Protocol] descriptor object. Defaults to use the
-  protocol chosen according to the `remote` option;
-- `remote`: a boolean indicating whether the protocol must be fetched *remotely*
+  protocol chosen according to the `local` option;
+- `local`: a boolean indicating whether the protocol must be fetched *remotely*
   or if the local version must be used. It has no effect if the `protocol`
   option is set. Defaults to `false`.
 
@@ -470,18 +466,14 @@ Fetch the [Chrome Debugging Protocol] descriptor.
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
 - `secure`: HTTPS/WSS frontend. Defaults to `false`;
-- `remote`: a boolean indicating whether the protocol must be fetched *remotely*
-  or if the local version must be returned. If it is not possible to fulfill the
-  request then the local version is used. Defaults to `false`.
+- `local`: a boolean indicating whether the protocol must be fetched *remotely*
+  or if the local version must be returned. Defaults to `true`.
 
 `callback` is executed when the protocol is fetched, it gets the following
 arguments:
 
 - `err`: a `Error` object indicating the success status;
-- `protocol`: an object with the following properties:
-   - `remote`: a boolean indicating whether the returned descriptor is the
-     remote version or not (due to user choice or error);
-   - `descriptor`: the [Chrome Debugging Protocol] descriptor.
+- `protocol`: the [Chrome Debugging Protocol] descriptor.
 
 When `callback` is omitted a `Promise` object is returned.
 
@@ -491,7 +483,7 @@ For example:
 const CDP = require('chrome-remote-interface');
 CDP.Protocol(function (err, protocol) {
     if (!err) {
-        console.log(JSON.stringify(protocol.descriptor, null, 4));
+        console.log(JSON.stringify(protocol, null, 4));
     }
 });
 ```
@@ -821,12 +813,6 @@ you can call it directly:
 client.send('Domain.method', ...);
 ```
 
-or *ask* Chrome the correct protocol descriptor:
-
-```js
-CDP({remote: true});
-```
-
 See [here](#chrome-debugging-protocol-versions) for more information.
 
 ### Invoking `Domain.method` I obtain `Domain.method wasn't found`
@@ -841,7 +827,7 @@ See [here](#chrome-debugging-protocol-versions) for more information.
 To inspect the correct protocol descriptor use:
 
 ```
-$ chrome-remote-interface inspect --remote
+$ chrome-remote-interface inspect
 ```
 
 ### Headless Chrome problems?

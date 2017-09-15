@@ -12,7 +12,7 @@ describe('closing a connection', function () {
                     Chrome(function (chrome) {
                         chrome.close(done);
                     }).on('error', function () {
-                        assert(false);
+                        assert(false, 1);
                     });
                 });
             }).on('error', function () {

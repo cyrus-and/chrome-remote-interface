@@ -9,38 +9,48 @@ describe('devtool interaction', function () {
     describe('Protocol', function () {
         describe('with callback', function () {
             it('should return the local protocol descriptor', function (done) {
-                Chrome.Protocol(function (err, protocol) {
+                Chrome.Protocol({'local': true, 'port': 1}, function (err, protocol) {
                     assert.ifError(err);
-                    assert(!protocol.remote);
-                    assert.equal(typeof protocol.descriptor, 'object');
-                    assert.equal(typeof protocol.descriptor.version, 'object');
-                    done();
-                });
-            });
-            it('should fail if remote is not available', function (done) {
-                Chrome.Protocol({'remote': true, 'port': 1}, function (err, protocol) {
-                    assert(err !== null);
-                    assert(!protocol);
+                    assert.equal(typeof protocol, 'object');
+                    assert.equal(typeof protocol.version, 'object');
                     done();
                 });
             });
             it('should return the remote protocol descriptor', function (done) {
-                Chrome.Protocol({'remote': true}, function (err, protocol) {
+                Chrome.Protocol(function (err, protocol) {
                     assert.ifError(err);
-                    assert(protocol.remote);
-                    assert.equal(typeof protocol.descriptor, 'object');
-                    assert.equal(typeof protocol.descriptor.version, 'object');
+                    assert.equal(typeof protocol, 'object');
+                    assert.equal(typeof protocol.version, 'object');
+                    done();
+                });
+            });
+            it('should fail if remote is not available', function (done) {
+                Chrome.Protocol({'port': 1}, function (err, protocol) {
+                    assert(err !== null);
+                    assert(!protocol);
                     done();
                 });
             });
         });
         describe('without callback', function () {
             it('should return the local protocol descriptor', function (done) {
+                Chrome.Protocol({'local': true, 'port': 1}).then(function (protocol) {
+                    try {
+                        assert.equal(typeof protocol, 'object');
+                        assert.equal(typeof protocol.version, 'object');
+                        done();
+                    } catch (err) {
+                        done(err);
+                    }
+                }).catch(function () {
+                    assert(false);
+                });
+            });
+            it('should return the remote protocol descriptor', function (done) {
                 Chrome.Protocol().then(function (protocol) {
                     try {
-                        assert(!protocol.remote);
-                        assert.equal(typeof protocol.descriptor, 'object');
-                        assert.equal(typeof protocol.descriptor.version, 'object');
+                        assert.equal(typeof protocol, 'object');
+                        assert.equal(typeof protocol.version, 'object');
                         done();
                     } catch (err) {
                         done(err);
@@ -50,24 +60,10 @@ describe('devtool interaction', function () {
                 });
             });
             it('should fail if remote is not available', function (done) {
-                Chrome.Protocol({'remote': true, 'port': 1}).then(function (protocol) {
+                Chrome.Protocol({'port': 1}).then(function (protocol) {
                     done(new Error());
                 }).catch(function () {
                     done();
-                });
-            });
-            it('should return the remote protocol descriptor', function (done) {
-                Chrome.Protocol({'remote': true}).then(function (protocol) {
-                    try {
-                        assert(protocol.remote);
-                        assert.equal(typeof protocol.descriptor, 'object');
-                        assert.equal(typeof protocol.descriptor.version, 'object');
-                        done();
-                    } catch (err) {
-                        done(err);
-                    }
-                }).catch(function () {
-                    assert(false);
                 });
             });
         });
