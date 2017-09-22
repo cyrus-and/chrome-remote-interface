@@ -805,30 +805,24 @@ FAQ
 
 ### Invoking `Domain.method` I obtain `Domain.method is not a function`
 
-This means that the protocol descriptor that you are using does not contain
-`Domain.method`. If you are sure that your Chrome instance supports such method
-you can call it directly:
-
-```js
-client.send('Domain.method', ...);
-```
+This means that the Chrome version that you are using does not support
+`Domain.method`. The solution is to update to a newer version.
 
 See [here](#chrome-debugging-protocol-versions) for more information.
 
 ### Invoking `Domain.method` I obtain `Domain.method wasn't found`
 
-This means that the protocol descriptor that you are using contains a method
-that is not supported by your Chrome instance. Most likely this is because you
-are trying to use a bleeding-edge feature, try to update to a newer Chrome
-version.
+This means that you are providing a custom protocol descriptor
+(`CDP({protocol: customProtocol})`) which declares `Domain.method` while the
+Chrome version that you are using does not support it.
 
-See [here](#chrome-debugging-protocol-versions) for more information.
-
-To inspect the correct protocol descriptor use:
+To inspect the currently available protocol descriptor use:
 
 ```
 $ chrome-remote-interface inspect
 ```
+
+See [here](#chrome-debugging-protocol-versions) for more information.
 
 ### Headless Chrome problems?
 
