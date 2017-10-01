@@ -21,7 +21,7 @@
         "node": ">=4"
     },
     "dependencies": {
-        "ws": "2.0.x",
+        "ws": "3.2.x",
         "commander": "2.1.x"
     },
     "files": [
