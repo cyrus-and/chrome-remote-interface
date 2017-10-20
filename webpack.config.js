@@ -26,7 +26,7 @@ const webpackConfig = {
             },
             {
                 test: /\.json$/,
-                loader: 'json'
+                loader: 'json-loader'
             }
         ]
     },
