@@ -100,23 +100,6 @@ describe('connecting to Chrome', function () {
                 });
             });
         });
-        describe('two times', function () {
-            it('should fail', function (done) {
-                const options = {
-                    target: () => 0
-                };
-                Chrome(options, function (chrome) {
-                    Chrome(options, function () {
-                        assert(false);
-                    }).on('error', function (err) {
-                        assert(err instanceof Error);
-                        chrome.close(done);
-                    });
-                }).on('error', function () {
-                    assert(false);
-                });
-            });
-        });
     });
     describe('without callback', function () {
         describe('with default parameters', function () {
@@ -209,23 +192,6 @@ describe('connecting to Chrome', function () {
                 }).catch(function (err) {
                     assert(err instanceof Error);
                     done();
-                });
-            });
-        });
-        describe('two times', function () {
-            it('should fail', function (done) {
-                const options = {
-                    target: () => 0
-                };
-                Chrome(options, function (chrome) {
-                    Chrome(options).then(function () {
-                        done(new Error());
-                    }).catch(function (err) {
-                        assert(err instanceof Error);
-                        chrome.close(done);
-                    });
-                }).on('error', function () {
-                    assert(false);
                 });
             });
         });
