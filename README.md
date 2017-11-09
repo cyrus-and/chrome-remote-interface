@@ -70,7 +70,6 @@ following implementations:
 Implementation             | Protocol version   | [Protocol] | [List] | [New] | [Activate] | [Close] | [Version]
 ---------------------------|--------------------|------------|--------|-------|------------|---------|-----------
 [Google Chrome][1.1]       | [tip-of-tree][1.2] | yes        | yes    | yes   | yes        | yes     | yes
-[Microsoft Edge][2.1]      | [*partial*][2.2]   | yes        | yes    | no    | no         | no      | yes
 [Node.js][3.1] ([v6.3.0]+) | [node][3.2]        | yes        | no     | no    | no         | no      | yes
 [Safari (iOS)][4.1]        | [*partial*][4.2]   | no         | yes    | no    | no         | no      | no
 
@@ -141,12 +140,6 @@ Finally, port forwarding can be enabled as follows:
     adb forward tcp:9222 localabstract:webview_devtools_remote_<pid>
 
 [webview]: https://developers.google.com/web/tools/chrome-devtools/remote-debugging/webviews#configure_webviews_for_debugging
-
-### Edge
-
-Install and run the [Edge Diagnostics Adapter][edge-adapter].
-
-[edge-adapter]: https://github.com/Microsoft/edge-diagnostics-adapter
 
 ### Node.js
 
