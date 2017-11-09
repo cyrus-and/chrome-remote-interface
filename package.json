@@ -21,8 +21,8 @@
         "node": ">=4"
     },
     "dependencies": {
-        "ws": "3.2.x",
-        "commander": "2.1.x"
+        "ws": "3.3.x",
+        "commander": "2.11.x"
     },
     "files": [
         "lib",
