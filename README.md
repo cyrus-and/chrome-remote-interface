@@ -70,14 +70,15 @@ following implementations:
 Implementation             | Protocol version   | [Protocol] | [List] | [New] | [Activate] | [Close] | [Version]
 ---------------------------|--------------------|------------|--------|-------|------------|---------|-----------
 [Google Chrome][1.1]       | [tip-of-tree][1.2] | yes        | yes    | yes   | yes        | yes     | yes
+[Opera][2.1]               | [tip-of-tree][2.2] | yes        | yes    | yes   | yes        | yes     | yes
 [Node.js][3.1] ([v6.3.0]+) | [node][3.2]        | yes        | no     | no    | no         | no      | yes
 [Safari (iOS)][4.1]        | [*partial*][4.2]   | no         | yes    | no    | no         | no      | no
 
 [1.1]: #chromechromium
 [1.2]: https://chromedevtools.github.io/devtools-protocol/tot/
 
-[2.1]: #edge
-[2.2]: https://github.com/Microsoft/edge-diagnostics-adapter/wiki/Supported-features-and-API
+[2.1]: #opera
+[2.2]: https://chromedevtools.github.io/devtools-protocol/tot/
 
 [3.1]: #nodejs
 [3.2]: https://chromedevtools.github.io/devtools-protocol/v8/
@@ -140,6 +141,12 @@ Finally, port forwarding can be enabled as follows:
     adb forward tcp:9222 localabstract:webview_devtools_remote_<pid>
 
 [webview]: https://developers.google.com/web/tools/chrome-devtools/remote-debugging/webviews#configure_webviews_for_debugging
+
+### Opera
+
+Start Opera with the `--remote-debugging-port` option, for example:
+
+    opera --remote-debugging-port=9222
 
 ### Node.js
 
