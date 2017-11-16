@@ -107,7 +107,6 @@ describe('sending a command', function () {
                     chrome.Page.enable().then(function (response) {
                         assert(!false);
                     }).catch(function (err) {
-                        console.log(err.response);
                         assert(err instanceof Error);
                         assert(!err.response); // not protocol error
                         done();
