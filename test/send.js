@@ -95,6 +95,7 @@ describe('sending a command', function () {
                     done(new Error());
                 }).catch(function (error) {
                     assert(error instanceof Error);
+                    assert(!!error.request);
                     assert(!!error.response.code);
                     chrome.close(done);
                 });
@@ -108,6 +109,7 @@ describe('sending a command', function () {
                         assert(!false);
                     }).catch(function (err) {
                         assert(err instanceof Error);
+                        assert(!err.request); // not protocol error
                         assert(!err.response); // not protocol error
                         done();
                     });
@@ -131,6 +133,7 @@ describe('sending a command', function () {
                     done(new Error());
                 }).catch(function (error) {
                     assert(error instanceof Error);
+                    assert(!!error.request);
                     assert(!!error.response.code);
                     chrome.close(done);
                 });

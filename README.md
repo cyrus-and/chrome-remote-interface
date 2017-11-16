@@ -747,9 +747,10 @@ command, it gets the following arguments:
   === true`).
 
 When `callback` is omitted a `Promise` object is returned instead, with the
-fulfilled/rejected states implemented according to the `error` parameter.
-
-In case of low-level WebSocket errors, the `error` parameter contains the
+fulfilled/rejected states implemented according to the `error` parameter. The
+`Error` object returned contains two additional parameters: `request` and
+`response` which contain the raw massages, useful for debugging purposes. In
+case of low-level WebSocket errors, the `error` parameter contains the
 originating `Error` object and no `response` is returned.
 
 Note that the field `id` mentioned in the [Chrome Debugging Protocol]
