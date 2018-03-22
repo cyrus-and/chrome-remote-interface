@@ -467,7 +467,7 @@ Fetch the [Chrome Debugging Protocol] descriptor.
 - `port`: HTTP frontend port. Defaults to `9222`;
 - `secure`: HTTPS/WSS frontend. Defaults to `false`;
 - `local`: a boolean indicating whether the protocol must be fetched *remotely*
-  or if the local version must be returned. Defaults to `true`.
+  or if the local version must be returned. Defaults to `false`.
 
 `callback` is executed when the protocol is fetched, it gets the following
 arguments:
