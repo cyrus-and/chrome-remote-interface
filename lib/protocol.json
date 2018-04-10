@@ -328,8 +328,21 @@
                     "parameters": [
                         {
                             "name": "nodeId",
-                            "description": "ID of node to get the partial accessibility tree for.",
+                            "description": "Identifier of the node to get the partial accessibility tree for.",
+                            "optional": true,
                             "$ref": "DOM.NodeId"
+                        },
+                        {
+                            "name": "backendNodeId",
+                            "description": "Identifier of the backend node to get the partial accessibility tree for.",
+                            "optional": true,
+                            "$ref": "DOM.BackendNodeId"
+                        },
+                        {
+                            "name": "objectId",
+                            "description": "JavaScript object id of the node wrapper to get the partial accessibility tree for.",
+                            "optional": true,
+                            "$ref": "Runtime.RemoteObjectId"
                         },
                         {
                             "name": "fetchRelatives",
@@ -5218,6 +5231,11 @@
                             "name": "virtualTimeBase",
                             "description": "Absolute timestamp at which virtual time was first enabled (milliseconds since epoch).",
                             "$ref": "Runtime.Timestamp"
+                        },
+                        {
+                            "name": "virtualTimeTicksBase",
+                            "description": "Absolute timestamp at which virtual time was first enabled (up time in milliseconds).",
+                            "type": "number"
                         }
                     ]
                 },
@@ -5312,15 +5330,27 @@
                     "parameters": [
                         {
                             "name": "frameTime",
-                            "description": "Timestamp of this BeginFrame (milliseconds since epoch). If not set, the current time will\nbe used.",
+                            "description": "Timestamp of this BeginFrame (milliseconds since epoch). If not set, the current time will\nbe used unless frameTicks is specified.",
                             "optional": true,
                             "$ref": "Runtime.Timestamp"
                         },
                         {
+                            "name": "frameTimeTicks",
+                            "description": "Timestamp of this BeginFrame in Renderer TimeTicks (milliseconds of uptime). If not set,\nthe current time will be used unless frameTime is specified.",
+                            "optional": true,
+                            "type": "number"
+                        },
+                        {
                             "name": "deadline",
-                            "description": "Deadline of this BeginFrame (milliseconds since epoch). If not set, the deadline will be\ncalculated from the frameTime and interval.",
+                            "description": "Deadline of this BeginFrame (milliseconds since epoch). If not set, the deadline will be\ncalculated from the frameTime and interval unless deadlineTicks is specified.",
                             "optional": true,
                             "$ref": "Runtime.Timestamp"
+                        },
+                        {
+                            "name": "deadlineTicks",
+                            "description": "Deadline of this BeginFrame in Renderer TimeTicks  (milliseconds of uptime). If not set,\nthe deadline will be calculated from the frameTime and interval unless deadline is specified.",
+                            "optional": true,
+                            "type": "number"
                         },
                         {
                             "name": "interval",
@@ -7491,7 +7521,22 @@
                             "items": {
                                 "$ref": "SignedCertificateTimestamp"
                             }
+                        },
+                        {
+                            "name": "certificateTransparencyCompliance",
+                            "description": "Whether the request complied with Certificate Transparency policy",
+                            "$ref": "CertificateTransparencyCompliance"
                         }
+                    ]
+                },
+                {
+                    "id": "CertificateTransparencyCompliance",
+                    "description": "Whether the request complied with Certificate Transparency policy.",
+                    "type": "string",
+                    "enum": [
+                        "unknown",
+                        "not-compliant",
+                        "compliant"
                     ]
                 },
                 {
@@ -10226,7 +10271,7 @@
                         },
                         {
                             "name": "headerTemplate",
-                            "description": "HTML template for the print header. Should be valid HTML markup with following\nclasses used to inject printing values into them:\n- date - formatted print date\n- title - document title\n- url - document location\n- pageNumber - current page number\n- totalPages - total pages in the document\n\nFor example, <span class=title></span> would generate span containing the title.",
+                            "description": "HTML template for the print header. Should be valid HTML markup with following\nclasses used to inject printing values into them:\n- `date`: formatted print date\n- `title`: document title\n- `url`: document location\n- `pageNumber`: current page number\n- `totalPages`: total pages in the document\n\nFor example, `<span class=title></span>` would generate span containing the title.",
                             "optional": true,
                             "type": "string"
                         },
@@ -10359,6 +10404,18 @@
                         {
                             "name": "enabled",
                             "description": "Whether to block ads.",
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
+                    "name": "setBypassCSP",
+                    "description": "Enable page Content Security Policy by-passing.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "enabled",
+                            "description": "Whether to bypass page CSP.",
                             "type": "boolean"
                         }
                     ]
@@ -10795,6 +10852,11 @@
                             "$ref": "DialogType"
                         },
                         {
+                            "name": "hasBrowserHandler",
+                            "description": "True iff browser is capable showing or acting on the given dialog. When browser has no\ndialog handler for given target, calling alert while Page domain is engaged will stall\nthe page execution. Execution can be resumed via calling Page.handleJavaScriptDialog.",
+                            "type": "boolean"
+                        },
+                        {
                             "name": "defaultPrompt",
                             "description": "Default dialog prompt.",
                             "optional": true,
@@ -10832,6 +10894,23 @@
                         {
                             "name": "timestamp",
                             "$ref": "Network.MonotonicTime"
+                        }
+                    ]
+                },
+                {
+                    "name": "navigatedWithinDocument",
+                    "description": "Fired when same-document navigation happens, e.g. due to history API usage or anchor navigation.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "frameId",
+                            "description": "Id of the frame.",
+                            "$ref": "FrameId"
+                        },
+                        {
+                            "name": "url",
+                            "description": "Frame's new url.",
+                            "type": "string"
                         }
                     ]
                 },
@@ -11130,7 +11209,7 @@
                 },
                 {
                     "name": "setOverrideCertificateErrors",
-                    "description": "Enable/disable overriding certificate errors. If enabled, all certificate error events need to\nbe handled by the DevTools client and should be answered with handleCertificateError commands.",
+                    "description": "Enable/disable overriding certificate errors. If enabled, all certificate error events need to\nbe handled by the DevTools client and should be answered with `handleCertificateError` commands.",
                     "deprecated": true,
                     "parameters": [
                         {
@@ -11144,7 +11223,7 @@
             "events": [
                 {
                     "name": "certificateError",
-                    "description": "There is a certificate error. If overriding certificate errors is enabled, then it should be\nhandled with the handleCertificateError command. Note: this event does not fire if the\ncertificate error has been allowed internally. Only one client per target should override\ncertificate errors at the same time.",
+                    "description": "There is a certificate error. If overriding certificate errors is enabled, then it should be\nhandled with the `handleCertificateError` command. Note: this event does not fire if the\ncertificate error has been allowed internally. Only one client per target should override\ncertificate errors at the same time.",
                     "deprecated": true,
                     "parameters": [
                         {
@@ -15043,6 +15122,35 @@
                     ]
                 },
                 {
+                    "name": "getIsolateId",
+                    "description": "Returns the isolate id.",
+                    "experimental": true,
+                    "returns": [
+                        {
+                            "name": "id",
+                            "description": "The isolate id.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "getHeapUsage",
+                    "description": "Returns the JavaScript heap usage.\nIt is the total usage of the corresponding isolate not scoped to a particular Runtime.",
+                    "experimental": true,
+                    "returns": [
+                        {
+                            "name": "usedSize",
+                            "description": "Used heap size in bytes.",
+                            "type": "number"
+                        },
+                        {
+                            "name": "totalSize",
+                            "description": "Allocated heap size in bytes.",
+                            "type": "number"
+                        }
+                    ]
+                },
+                {
                     "name": "getProperties",
                     "description": "Returns properties of a given object. Object group of the result is inherited from the target\nobject.",
                     "parameters": [
@@ -15126,6 +15234,12 @@
                             "name": "prototypeObjectId",
                             "description": "Identifier of the prototype to return objects for.",
                             "$ref": "RemoteObjectId"
+                        },
+                        {
+                            "name": "objectGroup",
+                            "description": "Symbolic group name that can be used to release the results.",
+                            "optional": true,
+                            "type": "string"
                         }
                     ],
                     "returns": [
@@ -15237,6 +15351,11 @@
                             "type": "boolean"
                         }
                     ]
+                },
+                {
+                    "name": "terminateExecution",
+                    "description": "Terminate current or next JavaScript execution.\nWill cancel the termination when the outer-most script execution ends.",
+                    "experimental": true
                 }
             ],
             "events": [
