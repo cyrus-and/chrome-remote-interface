@@ -69,11 +69,15 @@ following implementations:
 
 Implementation             | Protocol version   | [Protocol] | [List] | [New] | [Activate] | [Close] | [Version]
 ---------------------------|--------------------|------------|--------|-------|------------|---------|-----------
-[Google Chrome][1.1]       | [tip-of-tree][1.2] | yes        | yes    | yes   | yes        | yes     | yes
+[Google Chrome][1.1]       | [tip-of-tree][1.2] | yes¹       | yes    | yes   | yes        | yes     | yes
 [Opera][2.1]               | [tip-of-tree][2.2] | yes        | yes    | yes   | yes        | yes     | yes
 [Node.js][3.1] ([v6.3.0]+) | [node][3.2]        | yes        | no     | no    | no         | no      | yes
 [Safari (iOS)][4.1]        | [*partial*][4.2]   | no         | yes    | no    | no         | no      | no
 [Microsoft Edge][5.1]      | [*partial*][5.2]   | yes        | yes    | no    | no         | no      | yes
+
+¹ Not available on [Chrome for Android][chrome-mobile-protocol].
+
+[chrome-mobile-protocol]: https://bugs.chromium.org/p/chromium/issues/detail?id=824626#c4
 
 [1.1]: #chromechromium
 [1.2]: https://chromedevtools.github.io/devtools-protocol/tot/
