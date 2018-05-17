@@ -73,6 +73,7 @@ Implementation             | Protocol version   | [Protocol] | [List] | [New] | 
 [Opera][2.1]               | [tip-of-tree][2.2] | yes        | yes    | yes   | yes        | yes     | yes
 [Node.js][3.1] ([v6.3.0]+) | [node][3.2]        | yes        | no     | no    | no         | no      | yes
 [Safari (iOS)][4.1]        | [*partial*][4.2]   | no         | yes    | no    | no         | no      | no
+[Microsoft Edge][5.1]      | [*partial*][5.2]   | yes        | yes    | no    | no         | no      | yes
 
 [1.1]: #chromechromium
 [1.2]: https://chromedevtools.github.io/devtools-protocol/tot/
@@ -85,6 +86,9 @@ Implementation             | Protocol version   | [Protocol] | [List] | [New] | 
 
 [4.1]: #safari-ios
 [4.2]: http://trac.webkit.org/browser/trunk/Source/JavaScriptCore/inspector/protocol
+
+[5.1]: #edge
+[5.2]: https://docs.microsoft.com/en-us/microsoft-edge/devtools-protocol/0.1/domains/
 
 [v6.3.0]: https://nodejs.org/en/blog/release/v6.3.0/
 
@@ -161,6 +165,16 @@ option set to `true` to use the local version of the protocol or pass a custom
 descriptor upon connection (`protocol` option).
 
 [iwdp]: https://github.com/google/ios-webkit-debug-proxy
+
+### Edge
+
+Start Edge with the `--devtools-server-port` option, for example:
+
+    MicrosoftEdge.exe --devtools-server-port 9222 about:blank
+
+Please find more information [here][edge-devtools].
+
+[edge-devtools]: https://docs.microsoft.com/en-us/microsoft-edge/devtools-protocol/
 
 Bundled client
 --------------
