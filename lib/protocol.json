@@ -220,7 +220,7 @@
                         "relevant",
                         "root",
                         "autocomplete",
-                        "haspopup",
+                        "hasPopup",
                         "level",
                         "multiselectable",
                         "orientation",
@@ -2149,7 +2149,7 @@
                 },
                 {
                     "name": "getStyleSheetText",
-                    "description": "Returns the current textual content and the URL for a stylesheet.",
+                    "description": "Returns the current textual content for a stylesheet.",
                     "parameters": [
                         {
                             "name": "styleSheetId",
@@ -4563,6 +4563,12 @@
                             "description": "Whether to determine and include the paint order index of LayoutTreeNodes (default false).",
                             "optional": true,
                             "type": "boolean"
+                        },
+                        {
+                            "name": "includeUserAgentShadowTree",
+                            "description": "Whether to include UA shadow tree in the snapshot (default false).",
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ],
                     "returns": [
@@ -5224,6 +5230,12 @@
                             "description": "If set the virtual time policy change should be deferred until any frame starts navigating.\nNote any previous deferred policy change is superseded.",
                             "optional": true,
                             "type": "boolean"
+                        },
+                        {
+                            "name": "initialVirtualTime",
+                            "description": "If set, base::Time::Now will be overriden to initially return this value.",
+                            "optional": true,
+                            "$ref": "Network.TimeSinceEpoch"
                         }
                     ],
                     "returns": [
@@ -5386,18 +5398,6 @@
                     ]
                 },
                 {
-                    "name": "enterDeterministicMode",
-                    "description": "Puts the browser into deterministic mode.  Only effective for subsequently created web contents.\nOnly supported in headless mode.  Once set there's no way of leaving deterministic mode.",
-                    "parameters": [
-                        {
-                            "name": "initialDate",
-                            "description": "Number of seconds since the Epoch",
-                            "optional": true,
-                            "type": "number"
-                        }
-                    ]
-                },
-                {
                     "name": "disable",
                     "description": "Disables headless events for the target."
                 },
@@ -5453,7 +5453,7 @@
                         },
                         {
                             "name": "offset",
-                            "description": "Seek to the specified offset before reading (if not specificed, proceed with offset\nfollowing the last read).",
+                            "description": "Seek to the specified offset before reading (if not specificed, proceed with offset\nfollowing the last read). Some types of streams may only support sequential reads.",
                             "optional": true,
                             "type": "integer"
                         },
@@ -7190,7 +7190,9 @@
                         "ConnectionFailed",
                         "NameNotResolved",
                         "InternetDisconnected",
-                        "AddressUnreachable"
+                        "AddressUnreachable",
+                        "BlockedByClient",
+                        "BlockedByResponse"
                     ]
                 },
                 {
@@ -7544,12 +7546,13 @@
                     "description": "The reason why request was blocked.",
                     "type": "string",
                     "enum": [
+                        "other",
                         "csp",
                         "mixed-content",
                         "origin",
                         "inspector",
                         "subresource-filter",
-                        "other"
+                        "content-type"
                     ]
                 },
                 {
@@ -8017,6 +8020,114 @@
                             "$ref": "InterceptionStage"
                         }
                     ]
+                },
+                {
+                    "id": "SignedExchangeSignature",
+                    "description": "Information about a signed exchange signature.\nhttps://wicg.github.io/webpackage/draft-yasskin-httpbis-origin-signed-exchanges-impl.html#rfc.section.3.1",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "label",
+                            "description": "Signed exchange signature label.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "integrity",
+                            "description": "Signed exchange signature integrity.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "certUrl",
+                            "description": "Signed exchange signature cert Url.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "validityUrl",
+                            "description": "Signed exchange signature validity Url.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "date",
+                            "description": "Signed exchange signature date.",
+                            "type": "integer"
+                        },
+                        {
+                            "name": "expires",
+                            "description": "Signed exchange signature expires.",
+                            "type": "integer"
+                        }
+                    ]
+                },
+                {
+                    "id": "SignedExchangeHeader",
+                    "description": "Information about a signed exchange header.\nhttps://wicg.github.io/webpackage/draft-yasskin-httpbis-origin-signed-exchanges-impl.html#cbor-representation",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "requestUrl",
+                            "description": "Signed exchange request URL.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "requestMethod",
+                            "description": "Signed exchange request method.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "responseCode",
+                            "description": "Signed exchange response code.",
+                            "type": "integer"
+                        },
+                        {
+                            "name": "responseHeaders",
+                            "description": "Signed exchange response headers.",
+                            "$ref": "Headers"
+                        },
+                        {
+                            "name": "signatures",
+                            "description": "Signed exchange response signature.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "SignedExchangeSignature"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "SignedExchangeInfo",
+                    "description": "Information about a signed exchange response.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "outerResponse",
+                            "description": "The outer response of signed HTTP exchange which was received from network.",
+                            "$ref": "Response"
+                        },
+                        {
+                            "name": "header",
+                            "description": "Information about the signed exchange header.",
+                            "optional": true,
+                            "$ref": "SignedExchangeHeader"
+                        },
+                        {
+                            "name": "securityDetails",
+                            "description": "Security details for the signed exchange header.",
+                            "optional": true,
+                            "$ref": "SecurityDetails"
+                        },
+                        {
+                            "name": "errors",
+                            "description": "Errors occurred while handling the signed exchagne.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    ]
                 }
             ],
             "commands": [
@@ -8330,6 +8441,23 @@
                             "name": "base64Encoded",
                             "description": "True, if content was sent as base64.",
                             "type": "boolean"
+                        }
+                    ]
+                },
+                {
+                    "name": "takeResponseBodyForInterceptionAsStream",
+                    "description": "Returns a handle to the stream representing the response body. Note that after this command,\nthe intercepted request can't be continued as is -- you either need to cancel it or to provide\nthe response body. The stream only supports sequential read, IO.read will fail if the position\nis specified.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "interceptionId",
+                            "$ref": "InterceptionId"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "stream",
+                            "$ref": "IO.StreamHandle"
                         }
                     ]
                 },
@@ -8709,6 +8837,12 @@
                             "type": "boolean"
                         },
                         {
+                            "name": "isDownload",
+                            "description": "Set if the request is a navigation that will result in a download.\nOnly present after response is received from the server (i.e. HeadersReceived stage).",
+                            "optional": true,
+                            "type": "boolean"
+                        },
+                        {
                             "name": "redirectUrl",
                             "description": "Redirect location, only sent if a redirect was intercepted.",
                             "optional": true,
@@ -8835,6 +8969,23 @@
                             "name": "timestamp",
                             "description": "Timestamp.",
                             "$ref": "MonotonicTime"
+                        }
+                    ]
+                },
+                {
+                    "name": "signedExchangeReceived",
+                    "description": "Fired when a signed exchange was received over the network",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "requestId",
+                            "description": "Request identifier.",
+                            "$ref": "RequestId"
+                        },
+                        {
+                            "name": "info",
+                            "description": "Information about the signed exchange response.",
+                            "$ref": "SignedExchangeInfo"
                         }
                     ]
                 },
@@ -9428,6 +9579,7 @@
                         "EventSource",
                         "WebSocket",
                         "Manifest",
+                        "SignedExchange",
                         "Other"
                     ]
                 },
@@ -10673,6 +10825,27 @@
                     "experimental": true
                 },
                 {
+                    "name": "close",
+                    "description": "Tries to close page, running its beforeunload hooks, if any.",
+                    "experimental": true
+                },
+                {
+                    "name": "setWebLifecycleState",
+                    "description": "Tries to update the web lifecycle state of the page.\nIt will transition the page to the given state according to:\nhttps://github.com/WICG/web-lifecycle/",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "state",
+                            "description": "Target lifecycle state",
+                            "type": "string",
+                            "enum": [
+                                "frozen",
+                                "active"
+                            ]
+                        }
+                    ]
+                },
+                {
                     "name": "stopScreencast",
                     "description": "Stops sending each frame in the `screencastFrame`.",
                     "experimental": true
@@ -11897,6 +12070,12 @@
                             "description": "Opener target Id",
                             "optional": true,
                             "$ref": "TargetID"
+                        },
+                        {
+                            "name": "browserContextId",
+                            "experimental": true,
+                            "optional": true,
+                            "$ref": "BrowserContextID"
                         }
                     ]
                 },
@@ -11973,6 +12152,21 @@
                     ]
                 },
                 {
+                    "name": "getBrowserContexts",
+                    "description": "Returns all browser contexts created with `Target.createBrowserContext` method.",
+                    "experimental": true,
+                    "returns": [
+                        {
+                            "name": "browserContextIds",
+                            "description": "An array of browser context ids.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "BrowserContextID"
+                            }
+                        }
+                    ]
+                },
+                {
                     "name": "createTarget",
                     "description": "Creates a new page.",
                     "parameters": [
@@ -11995,7 +12189,7 @@
                         },
                         {
                             "name": "browserContextId",
-                            "description": "The browser context to create the page in (headless chrome only).",
+                            "description": "The browser context to create the page in.",
                             "optional": true,
                             "$ref": "BrowserContextID"
                         },
@@ -12036,18 +12230,12 @@
                 },
                 {
                     "name": "disposeBrowserContext",
-                    "description": "Deletes a BrowserContext, will fail of any open page uses it.",
+                    "description": "Deletes a BrowserContext. All the belonging pages will be closed without calling their\nbeforeunload hooks.",
                     "experimental": true,
                     "parameters": [
                         {
                             "name": "browserContextId",
                             "$ref": "BrowserContextID"
-                        }
-                    ],
-                    "returns": [
-                        {
-                            "name": "success",
-                            "type": "boolean"
                         }
                     ]
                 },
@@ -12919,6 +13107,13 @@
                             "description": "Whether to throw an exception if side effect cannot be ruled out during evaluation.",
                             "optional": true,
                             "type": "boolean"
+                        },
+                        {
+                            "name": "timeout",
+                            "description": "Terminate execution after timing out (number of milliseconds).",
+                            "experimental": true,
+                            "optional": true,
+                            "$ref": "Runtime.TimeDelta"
                         }
                     ],
                     "returns": [
@@ -13236,6 +13431,31 @@
                             "items": {
                                 "$ref": "Location"
                             }
+                        }
+                    ]
+                },
+                {
+                    "name": "setBreakpointOnFunctionCall",
+                    "description": "Sets JavaScript breakpoint before each call to the given function.\nIf another function was created from the same source as a given one,\ncalling it will also trigger the breakpoint.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "objectId",
+                            "description": "Function object id.",
+                            "$ref": "Runtime.RemoteObjectId"
+                        },
+                        {
+                            "name": "condition",
+                            "description": "Expression to use as a breakpoint condition. When specified, debugger will\nstop on the breakpoint if this expression evaluates to true.",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "breakpointId",
+                            "description": "Id of the created breakpoint for further reference.",
+                            "$ref": "BreakpointId"
                         }
                     ]
                 },
@@ -14780,6 +15000,11 @@
                     "type": "number"
                 },
                 {
+                    "id": "TimeDelta",
+                    "description": "Number of milliseconds.",
+                    "type": "number"
+                },
+                {
                     "id": "CallFrame",
                     "description": "Stack entry for runtime errors and assertions.",
                     "type": "object",
@@ -15105,6 +15330,13 @@
                             "experimental": true,
                             "optional": true,
                             "type": "boolean"
+                        },
+                        {
+                            "name": "timeout",
+                            "description": "Terminate execution after timing out (number of milliseconds).",
+                            "experimental": true,
+                            "optional": true,
+                            "$ref": "TimeDelta"
                         }
                     ],
                     "returns": [
