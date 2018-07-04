@@ -10,7 +10,7 @@ const path = require('path');
 const program = require('commander');
 
 const CDP = require('../');
-const packageInfo = require('../package');
+const packageInfo = require('../package.json');
 
 function display(object) {
     return util.inspect(object, {
