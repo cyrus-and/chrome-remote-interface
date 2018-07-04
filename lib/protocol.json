@@ -1119,6 +1119,12 @@
                             "description": "Requested substring in name. Only histograms which have query as a\nsubstring in their name are extracted. An empty or absent query returns\nall histograms.",
                             "optional": true,
                             "type": "string"
+                        },
+                        {
+                            "name": "delta",
+                            "description": "If true, retrieve delta since last call.",
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ],
                     "returns": [
@@ -1141,6 +1147,12 @@
                             "name": "name",
                             "description": "Requested histogram name.",
                             "type": "string"
+                        },
+                        {
+                            "name": "delta",
+                            "description": "If true, retrieve delta since last call.",
+                            "optional": true,
+                            "type": "boolean"
                         }
                     ],
                     "returns": [
@@ -3183,6 +3195,41 @@
                     ]
                 },
                 {
+                    "name": "getContentQuads",
+                    "description": "Returns quads that describe node position on the page. This method\nmight return multiple quads for inline nodes.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "nodeId",
+                            "description": "Identifier of the node.",
+                            "optional": true,
+                            "$ref": "NodeId"
+                        },
+                        {
+                            "name": "backendNodeId",
+                            "description": "Identifier of the backend node.",
+                            "optional": true,
+                            "$ref": "BackendNodeId"
+                        },
+                        {
+                            "name": "objectId",
+                            "description": "JavaScript object id of the node wrapper.",
+                            "optional": true,
+                            "$ref": "Runtime.RemoteObjectId"
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "quads",
+                            "description": "Quads that describe node layout relative to viewport.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Quad"
+                            }
+                        }
+                    ]
+                },
+                {
                     "name": "getDocument",
                     "description": "Returns the root DOM node (and optionally the subtree) to the caller.",
                     "parameters": [
@@ -4437,6 +4484,12 @@
                             "description": "The selected url for nodes with a srcset attribute.",
                             "optional": true,
                             "type": "string"
+                        },
+                        {
+                            "name": "originURL",
+                            "description": "The url of the script (if any) that generates this node.",
+                            "optional": true,
+                            "type": "string"
                         }
                     ]
                 },
@@ -4537,12 +4590,371 @@
                             "type": "string"
                         }
                     ]
+                },
+                {
+                    "id": "StringIndex",
+                    "description": "Index of the string in the strings table.",
+                    "type": "integer"
+                },
+                {
+                    "id": "ArrayOfStrings",
+                    "description": "Index of the string in the strings table.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "StringIndex"
+                    }
+                },
+                {
+                    "id": "RareStringData",
+                    "description": "Data that is only present on rare nodes.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "index",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        {
+                            "name": "value",
+                            "type": "array",
+                            "items": {
+                                "$ref": "StringIndex"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "RareBooleanData",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "index",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "RareIntegerData",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "index",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        {
+                            "name": "value",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "Rectangle",
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "id": "DOMTreeSnapshot",
+                    "description": "DOM tree snapshot.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "parentIndex",
+                            "description": "Parent node index.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        {
+                            "name": "nodeType",
+                            "description": "`Node`'s nodeType.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        {
+                            "name": "nodeName",
+                            "description": "`Node`'s nodeName.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "$ref": "StringIndex"
+                            }
+                        },
+                        {
+                            "name": "nodeValue",
+                            "description": "`Node`'s nodeValue.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "$ref": "StringIndex"
+                            }
+                        },
+                        {
+                            "name": "backendNodeId",
+                            "description": "`Node`'s id, corresponds to DOM.Node.backendNodeId.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "$ref": "DOM.BackendNodeId"
+                            }
+                        },
+                        {
+                            "name": "attributes",
+                            "description": "Attributes of an `Element` node. Flatten name, value pairs.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "$ref": "ArrayOfStrings"
+                            }
+                        },
+                        {
+                            "name": "layoutNodeIndex",
+                            "description": "The index of the node's related layout tree node in the `layoutTreeNodes` array returned by\n`captureSnapshot`, if any.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        {
+                            "name": "textValue",
+                            "description": "Only set for textarea elements, contains the text value.",
+                            "optional": true,
+                            "$ref": "RareStringData"
+                        },
+                        {
+                            "name": "inputValue",
+                            "description": "Only set for input elements, contains the input's associated text value.",
+                            "optional": true,
+                            "$ref": "RareStringData"
+                        },
+                        {
+                            "name": "inputChecked",
+                            "description": "Only set for radio and checkbox input elements, indicates if the element has been checked",
+                            "optional": true,
+                            "$ref": "RareBooleanData"
+                        },
+                        {
+                            "name": "optionSelected",
+                            "description": "Only set for option elements, indicates if the element has been selected",
+                            "optional": true,
+                            "$ref": "RareBooleanData"
+                        },
+                        {
+                            "name": "documentURL",
+                            "description": "Document URL that `Document` or `FrameOwner` node points to.",
+                            "optional": true,
+                            "$ref": "RareStringData"
+                        },
+                        {
+                            "name": "baseURL",
+                            "description": "Base URL that `Document` or `FrameOwner` node uses for URL completion.",
+                            "optional": true,
+                            "$ref": "RareStringData"
+                        },
+                        {
+                            "name": "contentLanguage",
+                            "description": "Only set for documents, contains the document's content language.",
+                            "optional": true,
+                            "$ref": "RareStringData"
+                        },
+                        {
+                            "name": "documentEncoding",
+                            "description": "Only set for documents, contains the document's character set encoding.",
+                            "optional": true,
+                            "$ref": "RareStringData"
+                        },
+                        {
+                            "name": "publicId",
+                            "description": "`DocumentType` node's publicId.",
+                            "optional": true,
+                            "$ref": "RareStringData"
+                        },
+                        {
+                            "name": "systemId",
+                            "description": "`DocumentType` node's systemId.",
+                            "optional": true,
+                            "$ref": "RareStringData"
+                        },
+                        {
+                            "name": "frameId",
+                            "description": "Frame ID for frame owner elements and also for the document node.",
+                            "optional": true,
+                            "$ref": "RareStringData"
+                        },
+                        {
+                            "name": "contentDocumentIndex",
+                            "description": "The index of a frame owner element's content document in the `domNodes` array returned by\n`captureSnapshot`, if any.",
+                            "optional": true,
+                            "$ref": "RareIntegerData"
+                        },
+                        {
+                            "name": "importedDocumentIndex",
+                            "description": "Index of the imported document's node of a link element in the `domNodes` array returned by\n`captureSnapshot`, if any.",
+                            "optional": true,
+                            "$ref": "RareIntegerData"
+                        },
+                        {
+                            "name": "templateContentIndex",
+                            "description": "Index of the content node of a template element in the `domNodes` array returned by\n`captureSnapshot`.",
+                            "optional": true,
+                            "$ref": "RareIntegerData"
+                        },
+                        {
+                            "name": "pseudoType",
+                            "description": "Type of a pseudo element node.",
+                            "optional": true,
+                            "$ref": "RareStringData"
+                        },
+                        {
+                            "name": "isClickable",
+                            "description": "Whether this DOM node responds to mouse clicks. This includes nodes that have had click\nevent listeners attached via JavaScript as well as anchor tags that naturally navigate when\nclicked.",
+                            "optional": true,
+                            "$ref": "RareBooleanData"
+                        },
+                        {
+                            "name": "currentSourceURL",
+                            "description": "The selected url for nodes with a srcset attribute.",
+                            "optional": true,
+                            "$ref": "RareStringData"
+                        },
+                        {
+                            "name": "originURL",
+                            "description": "The url of the script (if any) that generates this node.",
+                            "optional": true,
+                            "$ref": "RareStringData"
+                        }
+                    ]
+                },
+                {
+                    "id": "TextBoxSnapshot",
+                    "description": "Details of post layout rendered text positions. The exact layout should not be regarded as\nstable and may change between versions.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "layoutIndex",
+                            "description": "Intex of th elayout tree node that owns this box collection.",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        {
+                            "name": "bounds",
+                            "description": "The absolute position bounding box.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Rectangle"
+                            }
+                        },
+                        {
+                            "name": "start",
+                            "description": "The starting index in characters, for this post layout textbox substring. Characters that\nwould be represented as a surrogate pair in UTF-16 have length 2.",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        {
+                            "name": "length",
+                            "description": "The number of characters in this post layout textbox substring. Characters that would be\nrepresented as a surrogate pair in UTF-16 have length 2.",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "LayoutTreeSnapshot",
+                    "description": "Details of an element in the DOM tree with a LayoutObject.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "nodeIndex",
+                            "description": "The index of the related DOM node in the `domNodes` array returned by `getSnapshot`.",
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        {
+                            "name": "styles",
+                            "description": "Index into the `computedStyles` array returned by `captureSnapshot`.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "ArrayOfStrings"
+                            }
+                        },
+                        {
+                            "name": "bounds",
+                            "description": "The absolute position bounding box.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "Rectangle"
+                            }
+                        },
+                        {
+                            "name": "text",
+                            "description": "Contents of the LayoutText, if any.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "StringIndex"
+                            }
+                        },
+                        {
+                            "name": "textBoxes",
+                            "description": "The post-layout inline text nodes",
+                            "$ref": "TextBoxSnapshot"
+                        }
+                    ]
+                },
+                {
+                    "id": "StylesSnapshot",
+                    "description": "Computed style snapshot.",
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "values",
+                            "description": "Whitelisted ComputedStyle property values referenced by styleIndex.",
+                            "type": "array",
+                            "items": {
+                                "$ref": "ArrayOfStrings"
+                            }
+                        }
+                    ]
                 }
             ],
             "commands": [
                 {
+                    "name": "disable",
+                    "description": "Disables DOM snapshot agent for the given page."
+                },
+                {
+                    "name": "enable",
+                    "description": "Enables DOM snapshot agent for the given page."
+                },
+                {
                     "name": "getSnapshot",
                     "description": "Returns a document snapshot, including the full DOM tree of the root node (including iframes,\ntemplate contents, and imported documents) in a flattened array, as well as layout and\nwhite-listed computed style information for the nodes. Shadow DOM in the returned DOM tree is\nflattened.",
+                    "deprecated": true,
                     "parameters": [
                         {
                             "name": "computedStyleWhitelist",
@@ -4594,6 +5006,40 @@
                             "type": "array",
                             "items": {
                                 "$ref": "ComputedStyle"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "captureSnapshot",
+                    "description": "Returns a document snapshot, including the full DOM tree of the root node (including iframes,\ntemplate contents, and imported documents) in a flattened array, as well as layout and\nwhite-listed computed style information for the nodes. Shadow DOM in the returned DOM tree is\nflattened.",
+                    "parameters": [
+                        {
+                            "name": "computedStyles",
+                            "description": "Whitelist of computed styles to return.",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    ],
+                    "returns": [
+                        {
+                            "name": "nodes",
+                            "description": "The nodes in the DOM tree. The DOMNode at index 0 corresponds to the root document.",
+                            "$ref": "DOMTreeSnapshot"
+                        },
+                        {
+                            "name": "layout",
+                            "description": "The nodes in the layout tree.",
+                            "$ref": "LayoutTreeSnapshot"
+                        },
+                        {
+                            "name": "strings",
+                            "description": "Shared string table that all string properties refer to with indexes.",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
                             }
                         }
                     ]
@@ -5097,6 +5543,28 @@
                     ]
                 },
                 {
+                    "name": "setScrollbarsHidden",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "hidden",
+                            "description": "Whether scrollbars should be always hidden.",
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
+                    "name": "setDocumentCookieDisabled",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "disabled",
+                            "description": "Whether document.coookie API should be disabled.",
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                {
                     "name": "setEmitTouchEventsForMouse",
                     "experimental": true,
                     "parameters": [
@@ -5156,6 +5624,7 @@
                     "name": "setNavigatorOverrides",
                     "description": "Overrides value returned by the javascript navigator object.",
                     "experimental": true,
+                    "deprecated": true,
                     "parameters": [
                         {
                             "name": "platform",
@@ -5240,11 +5709,6 @@
                     ],
                     "returns": [
                         {
-                            "name": "virtualTimeBase",
-                            "description": "Absolute timestamp at which virtual time was first enabled (milliseconds since epoch).",
-                            "$ref": "Runtime.Timestamp"
-                        },
-                        {
                             "name": "virtualTimeTicksBase",
                             "description": "Absolute timestamp at which virtual time was first enabled (up time in milliseconds).",
                             "type": "number"
@@ -5266,6 +5730,29 @@
                             "name": "height",
                             "description": "Frame height (DIP).",
                             "type": "integer"
+                        }
+                    ]
+                },
+                {
+                    "name": "setUserAgentOverride",
+                    "description": "Allows overriding user agent with the given string.",
+                    "parameters": [
+                        {
+                            "name": "userAgent",
+                            "description": "User agent to use.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "acceptLanguage",
+                            "description": "Browser langugage to emulate.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "platform",
+                            "description": "The platform navigator.platform should return.",
+                            "optional": true,
+                            "type": "string"
                         }
                     ]
                 }
@@ -5341,26 +5828,8 @@
                     "description": "Sends a BeginFrame to the target and returns when the frame was completed. Optionally captures a\nscreenshot from the resulting frame. Requires that the target was created with enabled\nBeginFrameControl. Designed for use with --run-all-compositor-stages-before-draw, see also\nhttps://goo.gl/3zHXhB for more background.",
                     "parameters": [
                         {
-                            "name": "frameTime",
-                            "description": "Timestamp of this BeginFrame (milliseconds since epoch). If not set, the current time will\nbe used unless frameTicks is specified.",
-                            "optional": true,
-                            "$ref": "Runtime.Timestamp"
-                        },
-                        {
                             "name": "frameTimeTicks",
-                            "description": "Timestamp of this BeginFrame in Renderer TimeTicks (milliseconds of uptime). If not set,\nthe current time will be used unless frameTime is specified.",
-                            "optional": true,
-                            "type": "number"
-                        },
-                        {
-                            "name": "deadline",
-                            "description": "Deadline of this BeginFrame (milliseconds since epoch). If not set, the deadline will be\ncalculated from the frameTime and interval unless deadlineTicks is specified.",
-                            "optional": true,
-                            "$ref": "Runtime.Timestamp"
-                        },
-                        {
-                            "name": "deadlineTicks",
-                            "description": "Deadline of this BeginFrame in Renderer TimeTicks  (milliseconds of uptime). If not set,\nthe deadline will be calculated from the frameTime and interval unless deadline is specified.",
+                            "description": "Timestamp of this BeginFrame in Renderer TimeTicks (milliseconds of uptime). If not set,\nthe current time will be used.",
                             "optional": true,
                             "type": "number"
                         },
@@ -7345,7 +7814,13 @@
                     "properties": [
                         {
                             "name": "url",
-                            "description": "Request URL.",
+                            "description": "Request URL (without fragment).",
+                            "type": "string"
+                        },
+                        {
+                            "name": "urlFragment",
+                            "description": "Fragment of the requested URL starting with hash, if present.",
+                            "optional": true,
                             "type": "string"
                         },
                         {
@@ -7552,7 +8027,8 @@
                         "origin",
                         "inspector",
                         "subresource-filter",
-                        "content-type"
+                        "content-type",
+                        "collapsed-by-client"
                     ]
                 },
                 {
@@ -7782,6 +8258,7 @@
                                 "parser",
                                 "script",
                                 "preload",
+                                "SignedExchange",
                                 "other"
                             ]
                         },
@@ -7793,7 +8270,7 @@
                         },
                         {
                             "name": "url",
-                            "description": "Initiator URL, set for Parser type or for Script type (when script is importing module).",
+                            "description": "Initiator URL, set for Parser type or for Script type (when script is importing module) or for SignedExchange type.",
                             "optional": true,
                             "type": "string"
                         },
@@ -8033,6 +8510,11 @@
                             "type": "string"
                         },
                         {
+                            "name": "signature",
+                            "description": "The hex string of signed exchange signature.",
+                            "type": "string"
+                        },
+                        {
                             "name": "integrity",
                             "description": "Signed exchange signature integrity.",
                             "type": "string"
@@ -8040,6 +8522,13 @@
                         {
                             "name": "certUrl",
                             "description": "Signed exchange signature cert Url.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "certSha256",
+                            "description": "The hex string of signed exchange signature cert sha256.",
+                            "optional": true,
                             "type": "string"
                         },
                         {
@@ -8056,6 +8545,15 @@
                             "name": "expires",
                             "description": "Signed exchange signature expires.",
                             "type": "integer"
+                        },
+                        {
+                            "name": "certificates",
+                            "description": "The encoded certificates.",
+                            "optional": true,
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     ]
                 },
@@ -8096,6 +8594,45 @@
                     ]
                 },
                 {
+                    "id": "SignedExchangeErrorField",
+                    "description": "Field type for a signed exchange related error.",
+                    "experimental": true,
+                    "type": "string",
+                    "enum": [
+                        "signatureSig",
+                        "signatureIntegrity",
+                        "signatureCertUrl",
+                        "signatureCertSha256",
+                        "signatureValidityUrl",
+                        "signatureTimestamps"
+                    ]
+                },
+                {
+                    "id": "SignedExchangeError",
+                    "description": "Information about a signed exchange response.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "message",
+                            "description": "Error message.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "signatureIndex",
+                            "description": "The index of the signature which caused the error.",
+                            "optional": true,
+                            "type": "integer"
+                        },
+                        {
+                            "name": "errorField",
+                            "description": "The field which caused the error.",
+                            "optional": true,
+                            "$ref": "SignedExchangeErrorField"
+                        }
+                    ]
+                },
+                {
                     "id": "SignedExchangeInfo",
                     "description": "Information about a signed exchange response.",
                     "experimental": true,
@@ -8124,7 +8661,7 @@
                             "optional": true,
                             "type": "array",
                             "items": {
-                                "type": "string"
+                                "$ref": "SignedExchangeError"
                             }
                         }
                     ]
@@ -8675,10 +9212,23 @@
                 {
                     "name": "setUserAgentOverride",
                     "description": "Allows overriding user agent with the given string.",
+                    "redirect": "Emulation",
                     "parameters": [
                         {
                             "name": "userAgent",
                             "description": "User agent to use.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "acceptLanguage",
+                            "description": "Browser langugage to emulate.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "platform",
+                            "description": "The platform navigator.platform should return.",
+                            "optional": true,
                             "type": "string"
                         }
                     ]
@@ -8800,8 +9350,8 @@
                             "type": "number"
                         },
                         {
-                            "name": "blockedCrossSiteDocument",
-                            "description": "Set when response was blocked due to being cross-site document response.",
+                            "name": "shouldReportCorbBlocking",
+                            "description": "Set when 1) response was blocked by Cross-Origin Read Blocking and also\n2) this needs to be reported to the DevTools console.",
                             "optional": true,
                             "type": "boolean"
                         }
@@ -9580,6 +10130,8 @@
                         "WebSocket",
                         "Manifest",
                         "SignedExchange",
+                        "Ping",
+                        "CSPViolationReport",
                         "Other"
                     ]
                 },
@@ -9973,6 +10525,76 @@
                             "name": "scale",
                             "description": "Page scale factor.",
                             "type": "number"
+                        }
+                    ]
+                },
+                {
+                    "id": "FontFamilies",
+                    "description": "Generic font families collection.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "standard",
+                            "description": "The standard font-family.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "fixed",
+                            "description": "The fixed font-family.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "serif",
+                            "description": "The serif font-family.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "sansSerif",
+                            "description": "The sansSerif font-family.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "cursive",
+                            "description": "The cursive font-family.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "fantasy",
+                            "description": "The fantasy font-family.",
+                            "optional": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "pictograph",
+                            "description": "The pictograph font-family.",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "id": "FontSizes",
+                    "description": "Default font sizes.",
+                    "experimental": true,
+                    "type": "object",
+                    "properties": [
+                        {
+                            "name": "standard",
+                            "description": "Default standard font size.",
+                            "optional": true,
+                            "type": "integer"
+                        },
+                        {
+                            "name": "fixed",
+                            "description": "Default fixed font size.",
+                            "optional": true,
+                            "type": "integer"
                         }
                     ]
                 }
@@ -10670,6 +11292,30 @@
                             "name": "gamma",
                             "description": "Mock gamma",
                             "type": "number"
+                        }
+                    ]
+                },
+                {
+                    "name": "setFontFamilies",
+                    "description": "Set generic font families.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "fontFamilies",
+                            "description": "Specifies font families to set. If a font family is not specified, it won't be changed.",
+                            "$ref": "FontFamilies"
+                        }
+                    ]
+                },
+                {
+                    "name": "setFontSizes",
+                    "description": "Set default font sizes.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "fontSizes",
+                            "description": "Specifies font sizes to set. If a font size is not specified, it won't be changed.",
+                            "$ref": "FontSizes"
                         }
                     ]
                 },
@@ -12140,6 +12786,23 @@
                     ]
                 },
                 {
+                    "name": "exposeDevToolsProtocol",
+                    "description": "Inject object to the target's main frame that provides a communication\nchannel with browser target.\n\nInjected object will be available as `window[bindingName]`.\n\nThe object has the follwing API:\n- `binding.send(json)` - a method to send messages over the remote debugging protocol\n- `binding.onmessage = json => handleMessage(json)` - a callback that will be called for the protocol notifications and command responses.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "targetId",
+                            "$ref": "TargetID"
+                        },
+                        {
+                            "name": "bindingName",
+                            "description": "Binding name, 'cdp' if not specified.",
+                            "optional": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
                     "name": "createBrowserContext",
                     "description": "Creates a new empty BrowserContext. Similar to an incognito profile but you can have more than\none.",
                     "experimental": true,
@@ -12246,6 +12909,7 @@
                     "parameters": [
                         {
                             "name": "targetId",
+                            "optional": true,
                             "$ref": "TargetID"
                         }
                     ],
@@ -12416,6 +13080,26 @@
                         {
                             "name": "targetId",
                             "$ref": "TargetID"
+                        }
+                    ]
+                },
+                {
+                    "name": "targetCrashed",
+                    "description": "Issued when a target has crashed.",
+                    "parameters": [
+                        {
+                            "name": "targetId",
+                            "$ref": "TargetID"
+                        },
+                        {
+                            "name": "status",
+                            "description": "Termination status type.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "errorCode",
+                            "description": "Termination error code.",
+                            "type": "integer"
                         }
                     ]
                 },
@@ -15575,6 +16259,18 @@
                     ]
                 },
                 {
+                    "name": "setAsyncCallStackDepth",
+                    "description": "Enables or disables async call stacks tracking.",
+                    "redirect": "Debugger",
+                    "parameters": [
+                        {
+                            "name": "maxDepth",
+                            "description": "Maximum depth of async call stacks. Setting to `0` will effectively disable collecting async\ncall stacks (default).",
+                            "type": "integer"
+                        }
+                    ]
+                },
+                {
                     "name": "setCustomObjectFormatterEnabled",
                     "experimental": true,
                     "parameters": [
@@ -15585,12 +16281,69 @@
                     ]
                 },
                 {
+                    "name": "setMaxCallStackSizeToCapture",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "size",
+                            "type": "integer"
+                        }
+                    ]
+                },
+                {
                     "name": "terminateExecution",
                     "description": "Terminate current or next JavaScript execution.\nWill cancel the termination when the outer-most script execution ends.",
                     "experimental": true
+                },
+                {
+                    "name": "addBinding",
+                    "description": "If executionContextId is empty, adds binding with the given name on the\nglobal objects of all inspected contexts, including those created later,\nbindings survive reloads.\nIf executionContextId is specified, adds binding only on global object of\ngiven execution context.\nBinding function takes exactly one argument, this argument should be string,\nin case of any other input, function throws an exception.\nEach binding function call produces Runtime.bindingCalled notification.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "name": "executionContextId",
+                            "optional": true,
+                            "$ref": "ExecutionContextId"
+                        }
+                    ]
+                },
+                {
+                    "name": "removeBinding",
+                    "description": "This method does not remove binding function from global object but\nunsubscribes current runtime agent from Runtime.bindingCalled notifications.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "name",
+                            "type": "string"
+                        }
+                    ]
                 }
             ],
             "events": [
+                {
+                    "name": "bindingCalled",
+                    "description": "Notification is issued every time when binding is called.",
+                    "experimental": true,
+                    "parameters": [
+                        {
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "name": "payload",
+                            "type": "string"
+                        },
+                        {
+                            "name": "executionContextId",
+                            "description": "Identifier of the context where the call was made.",
+                            "$ref": "ExecutionContextId"
+                        }
+                    ]
+                },
                 {
                     "name": "consoleAPICalled",
                     "description": "Issued when console API was called.",
