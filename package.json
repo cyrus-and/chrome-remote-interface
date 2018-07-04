@@ -27,8 +27,8 @@
         "node": ">=4"
     },
     "dependencies": {
-        "ws": "3.3.x",
-        "commander": "2.11.x"
+        "commander": "2.11.x",
+        "ws": "^3.3.3"
     },
     "files": [
         "lib",
@@ -42,12 +42,12 @@
     },
     "browser": "chrome-remote-interface.js",
     "devDependencies": {
-        "eslint": "3.x.x",
-        "mocha": "5.x.x",
-        "babel-core": "^6.18.2",
+        "babel-core": "^6.26.3",
         "babel-loader": "^6.2.8",
         "babel-preset-es2015": "^6.18.0",
+        "eslint": "^3.19.0",
         "json-loader": "^0.5.4",
+        "mocha": "5.x.x",
         "webpack": "^1.13.3"
     },
     "scripts": {
