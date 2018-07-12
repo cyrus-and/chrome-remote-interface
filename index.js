@@ -27,12 +27,6 @@ function CDP(options, callback) {
 }
 
 module.exports = CDP;
-
-// for backward compatibility
-module.exports.listTabs = devtools.List;
-module.exports.spawnTab = devtools.New;
-module.exports.closeTab = devtools.Close;
-
 module.exports.Protocol = devtools.Protocol;
 module.exports.List = devtools.List;
 module.exports.New = devtools.New;
