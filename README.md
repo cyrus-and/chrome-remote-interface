@@ -18,36 +18,34 @@ The following snippet loads `https://github.com` and dumps every request made:
 ```js
 const CDP = require('chrome-remote-interface');
 
-CDP((client) => {
-    // extract domains
-    const {Network, Page} = client;
-    // setup handlers
-    Network.requestWillBeSent((params) => {
-        console.log(params.request.url);
-    });
-    Page.loadEventFired(() => {
-        client.close();
-    });
-    // enable events then start!
-    Promise.all([
-        Network.enable(),
-        Page.enable()
-    ]).then(() => {
-        return Page.navigate({url: 'https://github.com'});
-    }).catch((err) => {
+async function example() {
+    try {
+        // connect to endpoint
+        let client = await CDP();
+        // extract domains
+        const {Network, Page} = client;
+        // setup handlers
+        Network.requestWillBeSent((params) => {
+            console.log(params.request.url);
+        });
+        // enable events then start!
+        await Network.enable();
+        await Page.enable();
+        await Page.navigate({url: 'https://github.com'});
+        await Page.loadEventFired();
+    } catch (err) {
         console.error(err);
-        client.close();
-    });
-}).on('error', (err) => {
-    // cannot connect to the remote endpoint
-    console.error(err);
-});
+    } finally {
+        if (client) {
+            await client.close();
+        }
+    }
+}
+
+example();
 ```
 
-Find more examples in the [wiki], in particular notice how the above can be
-rewritten using the [`async`/`await`][async-await-example] primitives.
-
-You may also want to take a look at the [FAQ].
+Find more examples in the [wiki]. You may also want to take a look at the [FAQ].
 
 [wiki]: https://github.com/cyrus-and/chrome-remote-interface/wiki
 [async-await-example]: https://github.com/cyrus-and/chrome-remote-interface/wiki/Async-await-example
@@ -499,7 +497,7 @@ For example:
 
 ```javascript
 const CDP = require('chrome-remote-interface');
-CDP.Protocol(function (err, protocol) {
+CDP.Protocol((err, protocol) => {
     if (!err) {
         console.log(JSON.stringify(protocol, null, 4));
     }
@@ -529,7 +527,7 @@ For example:
 
 ```javascript
 const CDP = require('chrome-remote-interface');
-CDP.List(function (err, targets) {
+CDP.List((err, targets) => {
     if (!err) {
         console.log(targets);
     }
@@ -560,7 +558,7 @@ For example:
 
 ```javascript
 const CDP = require('chrome-remote-interface');
-CDP.New(function (err, target) {
+CDP.New((err, target) => {
     if (!err) {
         console.log(target);
     }
@@ -589,7 +587,7 @@ For example:
 
 ```javascript
 const CDP = require('chrome-remote-interface');
-CDP.Activate({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
+CDP.Activate({id: 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, (err) => {
     if (!err) {
         console.log('target is activated');
     }
@@ -618,7 +616,7 @@ For example:
 
 ```javascript
 const CDP = require('chrome-remote-interface');
-CDP.Close({'id': 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, function (err) {
+CDP.Close({id: 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, (err) => {
     if (!err) {
         console.log('target is closing');
     }
@@ -651,7 +649,7 @@ For example:
 
 ```javascript
 const CDP = require('chrome-remote-interface');
-CDP.Version(function (err, info) {
+CDP.Version((err, info) => {
     if (!err) {
         console.log(info);
     }
@@ -679,7 +677,7 @@ Refer to the [Chrome Debugging Protocol] specification for more information.
 For example:
 
 ```javascript
-client.on('event', function (message) {
+client.on('event', (message) => {
     if (message.method === 'Network.requestWillBeSent') {
         console.log(message.params);
     }
@@ -726,8 +724,8 @@ For example to load a URL only after having enabled the notifications of both
 ```javascript
 client.Network.enable();
 client.Page.enable();
-client.once('ready', function () {
-    client.Page.navigate({'url': 'https://github.com'});
+client.once('ready', () => {
+    client.Page.navigate({url: 'https://github.com'});
 });
 ```
 
@@ -777,7 +775,7 @@ specification is managed internally and it is not exposed to the user.
 For example:
 
 ```javascript
-client.send('Page.navigate', {'url': 'https://github.com'}, console.log);
+client.send('Page.navigate', {url: 'https://github.com'}, console.log);
 ```
 
 #### client.`<domain>`.`<method>`([params], [callback])
@@ -791,7 +789,7 @@ client.send('<domain>.<method>', params, callback);
 For example:
 
 ```javascript
-client.Page.navigate({'url': 'https://github.com'}, console.log);
+client.Page.navigate({url: 'https://github.com'}, console.log);
 ```
 
 #### client.`<domain>`.`<event>`([callback])
