@@ -13,7 +13,6 @@ addons:
 before_script:
   # dump the current versions
   - google-chrome-stable --version
-  - npm list
   # start a fresh new Chrome instance
   - google-chrome-stable
         --user-data-dir=$(mktemp -d)
