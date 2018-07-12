@@ -31,11 +31,21 @@ describe('connecting to Chrome', () => {
                     assert(false);
                 });
             });
-            it('should succeed with custom target by object', (done) => {
+            it('should succeed with custom target by function', (done) => {
                 Chrome({'target': function (targets) { return targets[0]; }}, (chrome) => {
                     chrome.close(done);
                 }).on('error', () => {
                     assert(false);
+                });
+            });
+            it('should succeed with custom target by object', (done) => {
+                Chrome.Version((err, info) => {
+                    assert.ifError(err);
+                    Chrome({'target': info}, (chrome) => {
+                        chrome.close(done);
+                    }).on('error', () => {
+                        assert(false);
+                    });
                 });
             });
             it('should succeed with custom target by full URL', (done) => {
