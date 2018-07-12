@@ -14,8 +14,8 @@ const packageInfo = require('../package.json');
 
 function display(object) {
     return util.inspect(object, {
-        'colors': process.stdout.isTTY,
-        'depth': null
+        colors: process.stdout.isTTY,
+        depth: null
     });
 }
 
@@ -57,9 +57,9 @@ function inspect(target, args, options) {
         const registeredEvents = {};
 
         const cdpRepl = repl.start({
-            'prompt': '\x1b[32m>>>\x1b[0m ',
-            'ignoreUndefined': true,
-            'writer': display
+            prompt: '\x1b[32m>>>\x1b[0m ',
+            ignoreUndefined: true,
+            writer: display
         });
 
         const homePath = process.env.HOME || process.env.USERPROFILE;
@@ -107,12 +107,13 @@ function inspect(target, args, options) {
                 } else {
                     const promise = command(params);
                     // use a custom inspect to display the outcome
-                    promise.inspect = function () {
-                        this.then((result) => {
+                    promise.inspect = async () => {
+                        try {
+                            const result = await this;
                             overridePrompt(display(result));
-                        }).catch((err) => {
+                        } catch (err) {
                             overridePrompt(display(err));
-                        });
+                        }
                         // temporary placeholder
                         return '...';
                     };
@@ -340,9 +341,9 @@ program.parse(process.argv);
 
 // common options
 const options = {
-    'host': program.host,
-    'port': program.port,
-    'secure': program.secure
+    host: program.host,
+    port: program.port,
+    secure: program.secure
 };
 
 if (action) {
