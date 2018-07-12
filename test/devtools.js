@@ -5,36 +5,36 @@ const util = require('util');
 
 const Chrome = require('../');
 
-describe('devtool interaction', function () {
-    describe('Protocol', function () {
-        describe('with callback', function () {
-            it('should return the local protocol descriptor', function (done) {
-                Chrome.Protocol({'local': true, 'port': 1}, function (err, protocol) {
+describe('devtool interaction', () => {
+    describe('Protocol', () => {
+        describe('with callback', () => {
+            it('should return the local protocol descriptor', (done) => {
+                Chrome.Protocol({'local': true, 'port': 1}, (err, protocol) => {
                     assert.ifError(err);
                     assert.equal(typeof protocol, 'object');
                     assert.equal(typeof protocol.version, 'object');
                     done();
                 });
             });
-            it('should return the remote protocol descriptor', function (done) {
-                Chrome.Protocol(function (err, protocol) {
+            it('should return the remote protocol descriptor', (done) => {
+                Chrome.Protocol((err, protocol) => {
                     assert.ifError(err);
                     assert.equal(typeof protocol, 'object');
                     assert.equal(typeof protocol.version, 'object');
                     done();
                 });
             });
-            it('should fail if remote is not available', function (done) {
-                Chrome.Protocol({'port': 1}, function (err, protocol) {
+            it('should fail if remote is not available', (done) => {
+                Chrome.Protocol({'port': 1}, (err, protocol) => {
                     assert(err !== null);
                     assert(!protocol);
                     done();
                 });
             });
         });
-        describe('without callback', function () {
-            it('should return the local protocol descriptor', function (done) {
-                Chrome.Protocol({'local': true, 'port': 1}).then(function (protocol) {
+        describe('without callback', () => {
+            it('should return the local protocol descriptor', (done) => {
+                Chrome.Protocol({'local': true, 'port': 1}).then((protocol) => {
                     try {
                         assert.equal(typeof protocol, 'object');
                         assert.equal(typeof protocol.version, 'object');
@@ -42,12 +42,12 @@ describe('devtool interaction', function () {
                     } catch (err) {
                         done(err);
                     }
-                }).catch(function () {
+                }).catch(() => {
                     assert(false);
                 });
             });
-            it('should return the remote protocol descriptor', function (done) {
-                Chrome.Protocol().then(function (protocol) {
+            it('should return the remote protocol descriptor', (done) => {
+                Chrome.Protocol().then((protocol) => {
                     try {
                         assert.equal(typeof protocol, 'object');
                         assert.equal(typeof protocol.version, 'object');
@@ -55,52 +55,52 @@ describe('devtool interaction', function () {
                     } catch (err) {
                         done(err);
                     }
-                }).catch(function () {
+                }).catch(() => {
                     assert(false);
                 });
             });
-            it('should fail if remote is not available', function (done) {
-                Chrome.Protocol({'port': 1}).then(function (protocol) {
+            it('should fail if remote is not available', (done) => {
+                Chrome.Protocol({'port': 1}).then((protocol) => {
                     done(new Error());
-                }).catch(function () {
+                }).catch(() => {
                     done();
                 });
             });
         });
     });
-    describe('List', function () {
-        describe('with callback', function () {
-            it('should return the target list', function (done) {
-                Chrome.List(function (err, targets) {
+    describe('List', () => {
+        describe('with callback', () => {
+            it('should return the target list', (done) => {
+                Chrome.List((err, targets) => {
                     assert.ifError(err);
                     assert(util.isArray(targets));
                     done();
                 });
             });
         });
-        describe('without callback', function () {
-            it('should return the target list', function (done) {
-                Chrome.List().then(function (targets) {
+        describe('without callback', () => {
+            it('should return the target list', (done) => {
+                Chrome.List().then((targets) => {
                     try {
                         assert(util.isArray(targets));
                         done();
                     } catch (err) {
                         done(err);
                     }
-                }).catch(function () {
+                }).catch(() => {
                     assert(false);
                 });
             });
         });
     });
-    describe('New', function () {
-        describe('with callback', function () {
-            it('should spawn a target to a specific URL', function (done) {
-                Chrome.New({url: 'chrome://newtab/'}, function (err, target) {
+    describe('New', () => {
+        describe('with callback', () => {
+            it('should spawn a target to a specific URL', (done) => {
+                Chrome.New({url: 'chrome://newtab/'}, (err, target) => {
                     assert.ifError(err);
                     assert(target.id);
-                    Chrome.List(function (err, targets) {
-                        assert(targets.some(function (t) {
+                    Chrome.List((err, targets) => {
+                        assert(targets.some((t) => {
                             return t.id === target.id;
                         }));
                         assert(util.isArray(targets));
@@ -109,12 +109,12 @@ describe('devtool interaction', function () {
                     });
                 });
             });
-            it('should spawn a new target', function (done) {
-                Chrome.New(function (err, target) {
+            it('should spawn a new target', (done) => {
+                Chrome.New((err, target) => {
                     assert.ifError(err);
                     assert(target.id);
-                    Chrome.List(function (err, targets) {
-                        assert(targets.some(function (t) {
+                    Chrome.List((err, targets) => {
+                        assert(targets.some((t) => {
                             return t.id === target.id;
                         }));
                         assert(util.isArray(targets));
@@ -123,13 +123,13 @@ describe('devtool interaction', function () {
                 });
             });
         });
-        describe('without callback', function () {
-            it('should spawn a target to a specific URL', function (done) {
-                Chrome.New({url: 'chrome://newtab/'}).then(function (target) {
+        describe('without callback', () => {
+            it('should spawn a target to a specific URL', (done) => {
+                Chrome.New({url: 'chrome://newtab/'}).then((target) => {
                     try {
                         assert(target.id);
-                        Chrome.List(function (err, targets) {
-                            assert(targets.some(function (t) {
+                        Chrome.List((err, targets) => {
+                            assert(targets.some((t) => {
                                 return t.id === target.id;
                             }));
                             assert(util.isArray(targets));
@@ -139,16 +139,16 @@ describe('devtool interaction', function () {
                     } catch (err) {
                         done(err);
                     }
-                }).catch(function () {
+                }).catch(() => {
                     assert(false);
                 });
             });
-            it('should spawn a new target', function (done) {
-                Chrome.New().then(function (target) {
+            it('should spawn a new target', (done) => {
+                Chrome.New().then((target) => {
                     try {
                         assert(target.id);
-                        Chrome.List(function (err, targets) {
-                            assert(targets.some(function (t) {
+                        Chrome.List((err, targets) => {
+                            assert(targets.some((t) => {
                                 return t.id === target.id;
                             }));
                             assert(util.isArray(targets));
@@ -157,46 +157,46 @@ describe('devtool interaction', function () {
                     } catch (err) {
                         done(err);
                     }
-                }).catch(function (err) {
+                }).catch((err) => {
                     assert(false);
                 });
             });
         });
     });
-    describe('Activate', function () {
-        describe('with callback', function () {
-            it('should activate an existing target', function (done) {
-                Chrome.List(function (err, targets) {
+    describe('Activate', () => {
+        describe('with callback', () => {
+            it('should activate an existing target', (done) => {
+                Chrome.List((err, targets) => {
                     // targets[0] is the latest target to be spawned
                     const target = targets[0];
-                    Chrome.Activate({id: target.id}, function (err) {
+                    Chrome.Activate({id: target.id}, (err) => {
                         assert.ifError(err);
                         done();
                     });
                 });
             });
         });
-        describe('without callback', function () {
-            it('should activate an existing target', function (done) {
-                Chrome.List(function (err, targets) {
+        describe('without callback', () => {
+            it('should activate an existing target', (done) => {
+                Chrome.List((err, targets) => {
                     // targets[0] is the latest target to be spawned
                     const target = targets[0];
-                    Chrome.Activate({id: target.id}).then(function () {
+                    Chrome.Activate({id: target.id}).then(() => {
                         done();
-                    }).catch(function () {
+                    }).catch(() => {
                         assert(false);
                     });
                 });
             });
         });
     });
-    describe('Close', function () {
-        describe('with callback', function () {
-            it('should close an existing target', function (done) {
-                Chrome.List(function (err, targets) {
+    describe('Close', () => {
+        describe('with callback', () => {
+            it('should close an existing target', (done) => {
+                Chrome.List((err, targets) => {
                     // targets[0] is the latest target to be spawned
                     const target = targets[0];
-                    Chrome.Close({id: target.id}, function (err) {
+                    Chrome.Close({id: target.id}, (err) => {
                         assert.ifError(err);
                         // avoid that further test cases attach to this target as the
                         // actual close is a bit delayed
@@ -205,42 +205,42 @@ describe('devtool interaction', function () {
                 });
             });
         });
-        describe('without callback', function () {
-            it('should close an existing target', function (done) {
-                Chrome.List(function (err, targets) {
+        describe('without callback', () => {
+            it('should close an existing target', (done) => {
+                Chrome.List((err, targets) => {
                     // targets[0] is the latest target to be spawned
                     const target = targets[0];
-                    Chrome.Close({id: target.id}).then(function () {
+                    Chrome.Close({id: target.id}).then(() => {
                         // avoid that further test cases attach to this target as the
                         // actual close is a bit delayed
                         setTimeout(done, 1000);
-                    }).catch(function () {
+                    }).catch(() => {
                         assert(false);
                     });
                 });
             });
         });
     });
-    describe('Version', function () {
-        describe('with callback', function () {
-            it('should return the version information', function (done) {
-                Chrome.Version(function (err, info) {
+    describe('Version', () => {
+        describe('with callback', () => {
+            it('should return the version information', (done) => {
+                Chrome.Version((err, info) => {
                     assert.ifError(err);
                     assert(util.isObject(info));
                     done();
                 });
             });
         });
-        describe('without callback', function () {
-            it('should return the version information', function (done) {
-                Chrome.Version().then(function (info) {
+        describe('without callback', () => {
+            it('should return the version information', (done) => {
+                Chrome.Version().then((info) => {
                     try {
                         assert(util.isObject(info));
                         done();
                     } catch (err) {
                         done(err);
                     }
-                }).catch(function () {
+                }).catch(() => {
                     assert(false);
                 });
             });

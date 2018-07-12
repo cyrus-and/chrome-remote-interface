@@ -5,191 +5,201 @@ const url = require('url');
 
 const Chrome = require('../');
 
-describe('connecting to Chrome', function () {
-    describe('with callback', function () {
-        describe('with default parameters', function () {
-            it('should succeed with "connect" callback passed as an argument', function (done) {
-                Chrome(function (chrome) {
+describe('connecting to Chrome', () => {
+    describe('with callback', () => {
+        describe('with default parameters', () => {
+            it('should succeed with "connect" callback passed as an argument', (done) => {
+                Chrome((chrome) => {
                     chrome.close(done);
-                }).on('error', function () {
+                }).on('error', () => {
                     assert(false);
                 });
             });
         });
-        describe('with custom parameters', function () {
-            it('should succeed with "connect" callback passed as an argument', function (done) {
-                Chrome({'host': 'localhost', 'port': 9222}, function (chrome) {
+        describe('with custom parameters', () => {
+            it('should succeed with "connect" callback passed as an argument', (done) => {
+                Chrome({'host': 'localhost', 'port': 9222}, (chrome) => {
                     chrome.close(done);
-                }).on('error', function () {
+                }).on('error', () => {
                     assert(false);
                 });
             });
-            it('should succeed with custom target by index', function (done) {
-                Chrome({'target': function () { return 0; }}, function (chrome) {
+            it('should succeed with custom target by index', (done) => {
+                Chrome({'target': function () { return 0; }}, (chrome) => {
                     chrome.close(done);
-                }).on('error', function () {
+                }).on('error', () => {
                     assert(false);
                 });
             });
-            it('should succeed with custom target by object', function (done) {
-                Chrome({'target': function (targets) { return targets[0]; }}, function (chrome) {
+            it('should succeed with custom target by function', (done) => {
+                Chrome({'target': function (targets) { return targets[0]; }}, (chrome) => {
                     chrome.close(done);
-                }).on('error', function () {
+                }).on('error', () => {
                     assert(false);
                 });
             });
-            it('should succeed with custom target by full URL', function (done) {
-                Chrome.Version(function (err, info) {
+            it('should succeed with custom target by object', (done) => {
+                Chrome.Version((err, info) => {
                     assert.ifError(err);
-                    const browserUrl = info.webSocketDebuggerUrl || 'ws://localhost:9222/devtools/browser';
-                    Chrome({'target': browserUrl}, function (chrome) {
+                    Chrome({'target': info}, (chrome) => {
                         chrome.close(done);
-                    }).on('error', function () {
+                    }).on('error', () => {
                         assert(false);
                     });
                 });
             });
-            it('should succeed with custom target by partial URL', function (done) {
-                Chrome.Version(function (err, info) {
+            it('should succeed with custom target by full URL', (done) => {
+                Chrome.Version((err, info) => {
+                    assert.ifError(err);
+                    const browserUrl = info.webSocketDebuggerUrl || 'ws://localhost:9222/devtools/browser';
+                    Chrome({'target': browserUrl}, (chrome) => {
+                        chrome.close(done);
+                    }).on('error', () => {
+                        assert(false);
+                    });
+                });
+            });
+            it('should succeed with custom target by partial URL', (done) => {
+                Chrome.Version((err, info) => {
                     assert.ifError(err);
                     if (info.webSocketDebuggerUrl) {
                         info.webSocketDebuggerUrl = url.parse(info.webSocketDebuggerUrl).pathname;
                     }
                     const browserUrl = info.webSocketDebuggerUrl || '/devtools/browser';
-                    Chrome({'target': browserUrl}, function (chrome) {
+                    Chrome({'target': browserUrl}, (chrome) => {
                         chrome.close(done);
-                    }).on('error', function () {
+                    }).on('error', () => {
                         assert(false);
                     });
                 });
             });
-            it('should succeed with custom target by id', function (done) {
-                Chrome.List(function (err, targets) {
+            it('should succeed with custom target by id', (done) => {
+                Chrome.List((err, targets) => {
                     assert.ifError(err);
-                    Chrome({'target': targets[0].id}, function (chrome) {
+                    Chrome({'target': targets[0].id}, (chrome) => {
                         chrome.close(done);
-                    }).on('error', function () {
+                    }).on('error', () => {
                         assert(false);
                     });
                 });
             });
         });
-        describe('with custom (wrong) parameters', function () {
-            it('should fail (wrong port)', function (done) {
-                Chrome({'port': 1}, function () {
+        describe('with custom (wrong) parameters', () => {
+            it('should fail (wrong port)', (done) => {
+                Chrome({'port': 1}, () => {
                     assert(false);
-                }).on('error', function (err) {
+                }).on('error', (err) => {
                     assert(err instanceof Error);
                     done();
                 });
             });
-            it('should fail (wrong host)', function (done) {
-                Chrome({'host': '255.255.255.255'}, function () {
+            it('should fail (wrong host)', (done) => {
+                Chrome({'host': '255.255.255.255'}, () => {
                     assert(false);
-                }).on('error', function (err) {
+                }).on('error', (err) => {
                     assert(err instanceof Error);
                     done();
                 });
             });
-            it('should fail (wrong target)', function (done) {
-                Chrome({'target': function () { return -1; }}, function () {
+            it('should fail (wrong target)', (done) => {
+                Chrome({'target': function () { return -1; }}, () => {
                     assert(false);
-                }).on('error', function (err) {
+                }).on('error', (err) => {
                     assert(err instanceof Error);
                     done();
                 });
             });
         });
     });
-    describe('without callback', function () {
-        describe('with default parameters', function () {
-            it('should succeed', function (done) {
-                Chrome().then(function (chrome) {
+    describe('without callback', () => {
+        describe('with default parameters', () => {
+            it('should succeed', (done) => {
+                Chrome().then((chrome) => {
                     chrome.close(done);
-                }).catch(function () {
+                }).catch(() => {
                     assert(false);
                 });
             });
         });
-        describe('with custom parameters', function () {
-            it('should succeed', function (done) {
-                Chrome({'host': 'localhost', 'port': 9222}).then(function (chrome) {
+        describe('with custom parameters', () => {
+            it('should succeed', (done) => {
+                Chrome({'host': 'localhost', 'port': 9222}).then((chrome) => {
                     chrome.close(done);
-                }).catch(function () {
+                }).catch(() => {
                     assert(false);
                 });
             });
-            it('should succeed with custom target by index', function (done) {
-                Chrome({'target': function () { return 0; }}).then(function (chrome) {
+            it('should succeed with custom target by index', (done) => {
+                Chrome({'target': function () { return 0; }}).then((chrome) => {
                     chrome.close(done);
-                }).catch(function () {
+                }).catch(() => {
                     assert(false);
                 });
             });
-            it('should succeed with custom target by index', function (done) {
-                Chrome({'target': function (targets) { return targets[0]; }}).then(function (chrome) {
+            it('should succeed with custom target by index', (done) => {
+                Chrome({'target': function (targets) { return targets[0]; }}).then((chrome) => {
                     chrome.close(done);
-                }).catch(function () {
+                }).catch(() => {
                     assert(false);
                 });
             });
-            it('should succeed with custom target by full URL', function (done) {
-                Chrome.Version(function (err, info) {
+            it('should succeed with custom target by full URL', (done) => {
+                Chrome.Version((err, info) => {
                     assert.ifError(err);
                     const browserUrl = info.webSocketDebuggerUrl || 'ws://localhost:9222/devtools/browser';
-                    Chrome({'target': browserUrl}).then(function (chrome) {
+                    Chrome({'target': browserUrl}).then((chrome) => {
                         chrome.close(done);
-                    }).catch(function () {
+                    }).catch(() => {
                         assert(false);
                     });
                 });
             });
-            it('should succeed with custom target by partial URL', function (done) {
-                Chrome.Version(function (err, info) {
+            it('should succeed with custom target by partial URL', (done) => {
+                Chrome.Version((err, info) => {
                     assert.ifError(err);
                     if (info.webSocketDebuggerUrl) {
                         info.webSocketDebuggerUrl = url.parse(info.webSocketDebuggerUrl).pathname;
                     }
                     const browserUrl = info.webSocketDebuggerUrl || '/devtools/browser';
-                    Chrome({'target': browserUrl}).then(function (chrome) {
+                    Chrome({'target': browserUrl}).then((chrome) => {
                         chrome.close(done);
-                    }).catch(function () {
+                    }).catch(() => {
                         assert(false);
                     });
                 });
             });
-            it('should succeed with custom target by id', function (done) {
-                Chrome.List(function (err, targets) {
+            it('should succeed with custom target by id', (done) => {
+                Chrome.List((err, targets) => {
                     assert.ifError(err);
-                    Chrome({'target': targets[0].id}).then(function (chrome) {
+                    Chrome({'target': targets[0].id}).then((chrome) => {
                         chrome.close(done);
-                    }).catch(function () {
+                    }).catch(() => {
                         assert(false);
                     });
                 });
             });
         });
-        describe('with custom (wrong) parameters', function () {
-            it('should fail (wrong port)', function (done) {
-                Chrome({'port': 1}).then(function () {
+        describe('with custom (wrong) parameters', () => {
+            it('should fail (wrong port)', (done) => {
+                Chrome({'port': 1}).then(() => {
                     done(new Error());
-                }).catch(function (err) {
+                }).catch((err) => {
                     assert(err instanceof Error);
                     done();
                 });
             });
-            it('should fail (wrong host)', function (done) {
-                Chrome({'host': '255.255.255.255'}).then(function () {
+            it('should fail (wrong host)', (done) => {
+                Chrome({'host': '255.255.255.255'}).then(() => {
                     done(new Error());
-                }).catch(function (err) {
+                }).catch((err) => {
                     assert(err instanceof Error);
                     done();
                 });
             });
-            it('should fail (wrong target)', function (done) {
-                Chrome({'target': function () { return -1; }}).then(function () {
+            it('should fail (wrong target)', (done) => {
+                Chrome({'target': function () { return -1; }}).then(() => {
                     done(new Error());
-                }).catch(function (err) {
+                }).catch((err) => {
                     assert(err instanceof Error);
                     done();
                 });

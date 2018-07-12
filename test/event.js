@@ -4,12 +4,12 @@ const assert = require('assert');
 
 const Chrome = require('../');
 
-describe('registering event', function () {
-    describe('with callback', function () {
-        describe('"event"', function () {
-            it('should give the raw message', function (done) {
-                Chrome(function (chrome) {
-                    chrome.once('event', function (message) {
+describe('registering event', () => {
+    describe('with callback', () => {
+        describe('"event"', () => {
+            it('should give the raw message', (done) => {
+                Chrome((chrome) => {
+                    chrome.once('event', (message) => {
                         assert(message.method);
                         chrome.close(done);
                     });
@@ -18,9 +18,9 @@ describe('registering event', function () {
                 });
             });
         });
-        it('should give the payload only', function (done) {
-            Chrome(function (chrome) {
-                chrome.once('Network.requestWillBeSent', function (message) {
+        it('should give the payload only', (done) => {
+            Chrome((chrome) => {
+                chrome.once('Network.requestWillBeSent', (message) => {
                     assert(!message.method);
                     chrome.close(done);
                 });
@@ -28,9 +28,9 @@ describe('registering event', function () {
                 chrome.send('Page.navigate', {'url': 'chrome://newtab/'});
             });
         });
-        it('should give the payload only (alternate syntax)', function (done) {
-            Chrome(function (chrome) {
-                chrome.Network.requestWillBeSent(function (message) {
+        it('should give the payload only (alternate syntax)', (done) => {
+            Chrome((chrome) => {
+                chrome.Network.requestWillBeSent((message) => {
                     assert(!message.method);
                     chrome.close(done);
                     // avoid to call `done()` more than once
@@ -41,10 +41,10 @@ describe('registering event', function () {
             });
         });
     });
-    describe('without callback', function () {
-        it('should give the payload only', function (done) {
-            Chrome(function (chrome) {
-                chrome.Network.requestWillBeSent().then(function (message) {
+    describe('without callback', () => {
+        it('should give the payload only', (done) => {
+            Chrome((chrome) => {
+                chrome.Network.requestWillBeSent().then((message) => {
                     try {
                         assert(!message.method);
                         chrome.close(done);

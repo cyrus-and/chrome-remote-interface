@@ -27,6 +27,7 @@
         "node": ">=4"
     },
     "dependencies": {
+        "babel-plugin-transform-async-to-generator": "^6.24.1",
         "commander": "2.11.x",
         "ws": "^3.3.3"
     },

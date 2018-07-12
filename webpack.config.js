@@ -3,7 +3,7 @@
 const webpack = require('webpack');
 
 function criWrapper(_, options, callback) {
-    window.criRequest(options, callback);
+    window.criRequest(options, callback); // eslint-disable-line no-undef
 }
 
 const webpackConfig = {

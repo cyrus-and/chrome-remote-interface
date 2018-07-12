@@ -2,56 +2,29 @@
     "env": {
         "es6": true,
         "node": true,
-        "browser": true,
         "mocha": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 8
     },
     "extends": "eslint:recommended",
     "rules": {
-        "indent": [
-            "error",
-            4,
-            {
-                "ArrayExpression": "first"
-            }
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-            "error"
-        ],
-        "comma-spacing": [
-            "error"
-        ],
-        "space-before-function-paren": [
-            "error",
-            {
-                "anonymous": "always",
-                "named": "never"
-            }
-        ],
-        "space-before-blocks": [
-            "error"
-        ],
-        "key-spacing": [
-            "error"
-        ],
-        "no-unused-vars": [
-            "error",
-            {
-                "args": "none"
-            }
-        ],
-        "eqeqeq": [
-            "error",
-            "always"
-        ],
-        "no-var": "error",
-        "no-console": 0
+        "comma-spacing":               ["error"],
+        "eqeqeq":                      ["error", "always"],
+        "indent":                      ["error", 4],
+        "key-spacing":                 ["error"],
+        "keyword-spacing":             ["error"],
+        "linebreak-style":             ["error", "unix"],
+        "no-multi-spaces":             ["error"],
+        "no-unused-vars":              ["error", {"args": "none"}],
+        "no-var":                      ["error"],
+        "no-console":                  ["off"],
+        "prefer-const":                ["error"],
+        "prefer-arrow-callback":       ["error"],
+        "quotes":                      ["error", "single"],
+        "semi":                        ["error"],
+        "strict":                      ["error", "global"],
+        "space-before-blocks":         ["error"],
+        "space-before-function-paren": ["error", {"anonymous": "always", "named": "never"}]
     }
 }

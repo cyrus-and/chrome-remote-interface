@@ -4,35 +4,35 @@ const assert = require('assert');
 
 const Chrome = require('../');
 
-describe('closing a connection', function () {
-    describe('with callback', function () {
-        it('should allow a subsequent new connection', function (done) {
-            Chrome(function (chrome) {
-                chrome.close(function () {
-                    Chrome(function (chrome) {
+describe('closing a connection', () => {
+    describe('with callback', () => {
+        it('should allow a subsequent new connection', (done) => {
+            Chrome((chrome) => {
+                chrome.close(() => {
+                    Chrome((chrome) => {
                         chrome.close(done);
-                    }).on('error', function () {
+                    }).on('error', () => {
                         assert(false);
                     });
                 });
-            }).on('error', function () {
+            }).on('error', () => {
                 assert(false);
             });
         });
     });
-    describe('without callback', function () {
-        it('should allow a subsequent new connection', function (done) {
-            Chrome(function (chrome) {
-                chrome.close().then(function () {
-                    Chrome(function (chrome) {
+    describe('without callback', () => {
+        it('should allow a subsequent new connection', (done) => {
+            Chrome((chrome) => {
+                chrome.close().then(() => {
+                    Chrome((chrome) => {
                         chrome.close(done);
-                    }).on('error', function () {
+                    }).on('error', () => {
                         assert(false);
                     });
-                }).catch(function () {
+                }).catch(() => {
                     assert(false);
                 });
-            }).on('error', function () {
+            }).on('error', () => {
                 assert(false);
             });
         });

@@ -14,8 +14,8 @@ const packageInfo = require('../package.json');
 
 function display(object) {
     return util.inspect(object, {
-        'colors': process.stdout.isTTY,
-        'depth': null
+        colors: process.stdout.isTTY,
+        depth: null
     });
 }
 
@@ -24,7 +24,7 @@ function toJSON(object) {
 }
 
 function inheritProperties(from, to) {
-    Object.keys(from).forEach(function (property) {
+    Object.keys(from).forEach((property) => {
         to[property] = from[property];
     });
 }
@@ -40,8 +40,8 @@ function inspect(target, args, options) {
             options.target = target;
         } else {
             // by target id
-            options.target = function (targets) {
-                return targets.findIndex(function (_target) {
+            options.target = (targets) => {
+                return targets.findIndex((_target) => {
                     return _target.id === target;
                 });
             };
@@ -52,14 +52,14 @@ function inspect(target, args, options) {
         options.protocol = JSON.parse(fs.readFileSync(args.protocol));
     }
 
-    CDP(options, function (client) {
+    CDP(options, (client) => {
         // keep track of registered events
         const registeredEvents = {};
 
         const cdpRepl = repl.start({
-            'prompt': '\x1b[32m>>>\x1b[0m ',
-            'ignoreUndefined': true,
-            'writer': display
+            prompt: '\x1b[32m>>>\x1b[0m ',
+            ignoreUndefined: true,
+            writer: display
         });
 
         const homePath = process.env.HOME || process.env.USERPROFILE;
@@ -77,11 +77,11 @@ function inspect(target, args, options) {
             // populate the REPL history
             fs.readFileSync(fd, 'utf8')
                 .split('\n')
-                .filter(function (entry) {
+                .filter((entry) => {
                     return entry.trim();
                 })
                 .reverse() // to be compatible with repl.history files
-                .forEach(function (entry) {
+                .forEach((entry) => {
                     cdpRepl.history.push(entry);
                 });
         }
@@ -99,7 +99,7 @@ function inspect(target, args, options) {
         }
 
         function overrideCommand(command) {
-            const override = function (params, callback) {
+            const override = (params, callback) => {
                 if (typeof callback === 'function') {
                     // if a callback is provided the use it as is
                     command(params, callback);
@@ -107,12 +107,13 @@ function inspect(target, args, options) {
                 } else {
                     const promise = command(params);
                     // use a custom inspect to display the outcome
-                    promise.inspect = function () {
-                        this.then((result) => {
+                    promise.inspect = async () => {
+                        try {
+                            const result = await this;
                             overridePrompt(display(result));
-                        }).catch((err) => {
+                        } catch (err) {
                             overridePrompt(display(err));
-                        });
+                        }
                         // temporary placeholder
                         return '...';
                     };
@@ -128,7 +129,7 @@ function inspect(target, args, options) {
             const event = client[domainName][itemName];
             const eventName = domainName + '.' + itemName;
             // hard code a callback to display the event data
-            const override = function (callback) {
+            const override = (callback) => {
                 // remove all the listeners (just one actually) anyway
                 client.removeAllListeners(eventName);
                 const status = {};
@@ -147,7 +148,7 @@ function inspect(target, args, options) {
                         return undefined;
                     } else {
                         // the default implementation just shows the params
-                        event(function (params) {
+                        event((params) => {
                             const repr = {};
                             repr[eventName] = params;
                             overridePrompt(display(repr));
@@ -164,9 +165,9 @@ function inspect(target, args, options) {
         // utility custom command
         cdpRepl.defineCommand('target', {
             help: 'Display the current target',
-            action: function () {
+            action: () => {
                 console.log(client.webSocketUrl);
-                this.displayPrompt();
+                cdpRepl.displayPrompt();
             }
         });
 
@@ -174,25 +175,25 @@ function inspect(target, args, options) {
         loadHistory();
 
         // disconnect on exit
-        cdpRepl.on('exit', function () {
+        cdpRepl.on('exit', () => {
             console.log();
             client.close();
             saveHistory();
         });
 
         // exit on disconnection
-        client.on('disconnect', function () {
+        client.on('disconnect', () => {
             console.error('Disconnected.');
             saveHistory();
             process.exit(1);
         });
 
         // add protocol API
-        client.protocol.domains.forEach(function (domainObject) {
+        client.protocol.domains.forEach((domainObject) => {
             // walk the domain names
             const domainName = domainObject.domain;
             cdpRepl.context[domainName] = {};
-            Object.keys(client[domainName]).forEach(function (itemName) {
+            Object.keys(client[domainName]).forEach((itemName) => {
                 // walk the items in the domain and override commands and events
                 let item = client[domainName][itemName];
                 switch (item.category) {
@@ -206,13 +207,13 @@ function inspect(target, args, options) {
                 cdpRepl.context[domainName][itemName] = item;
             });
         });
-    }).on('error', function (err) {
+    }).on('error', (err) => {
         console.error('Cannot connect to remote endpoint:', err.toString());
     });
 }
 
 function list(options) {
-    CDP.List(options, function (err, targets) {
+    CDP.List(options, (err, targets) => {
         if (err) {
             console.error(err.toString());
             process.exit(1);
@@ -223,7 +224,7 @@ function list(options) {
 
 function _new(url, options) {
     options.url = url;
-    CDP.New(options, function (err, target) {
+    CDP.New(options, (err, target) => {
         if (err) {
             console.error(err.toString());
             process.exit(1);
@@ -234,7 +235,7 @@ function _new(url, options) {
 
 function activate(args, options) {
     options.id = args;
-    CDP.Activate(options, function (err) {
+    CDP.Activate(options, (err) => {
         if (err) {
             console.error(err.toString());
             process.exit(1);
@@ -244,7 +245,7 @@ function activate(args, options) {
 
 function close(args, options) {
     options.id = args;
-    CDP.Close(options, function (err) {
+    CDP.Close(options, (err) => {
         if (err) {
             console.error(err.toString());
             process.exit(1);
@@ -253,7 +254,7 @@ function close(args, options) {
 }
 
 function version(options) {
-    CDP.Version(options, function (err, info) {
+    CDP.Version(options, (err, info) => {
         if (err) {
             console.error(err.toString());
             process.exit(1);
@@ -264,7 +265,7 @@ function version(options) {
 
 function protocol(args, options) {
     options.local = args.local;
-    CDP.Protocol(options, function (err, protocol) {
+    CDP.Protocol(options, (err, protocol) => {
         if (err) {
             console.error(err.toString());
             process.exit(1);
@@ -289,42 +290,42 @@ program
     .option('-w, --web-socket', 'interpret <target> as a WebSocket URL instead of a target id')
     .option('-j, --protocol <file.json>', 'Chrome Debugging Protocol descriptor (overrides `--local`)')
     .option('-l, --local', 'Use the local protocol descriptor')
-    .action(function (target, args) {
+    .action((target, args) => {
         action = inspect.bind(null, target, args);
     });
 
 program
     .command('list')
     .description('list all the available targets/tabs')
-    .action(function () {
+    .action(() => {
         action = list;
     });
 
 program
     .command('new [<url>]')
     .description('create a new target/tab')
-    .action(function (url) {
+    .action((url) => {
         action = _new.bind(null, url);
     });
 
 program
     .command('activate <id>')
     .description('activate a target/tab by id')
-    .action(function (id) {
+    .action((id) => {
         action = activate.bind(null, id);
     });
 
 program
     .command('close <id>')
     .description('close a target/tab by id')
-    .action(function (id) {
+    .action((id) => {
         action = close.bind(null, id);
     });
 
 program
     .command('version')
     .description('show the browser version')
-    .action(function () {
+    .action(() => {
         action = version;
     });
 
@@ -332,7 +333,7 @@ program
     .command('protocol')
     .description('show the currently available protocol descriptor')
     .option('-l, --local', 'Return the local protocol descriptor')
-    .action(function (args) {
+    .action((args) => {
         action = protocol.bind(null, args);
     });
 
@@ -340,9 +341,9 @@ program.parse(process.argv);
 
 // common options
 const options = {
-    'host': program.host,
-    'port': program.port,
-    'secure': program.secure
+    host: program.host,
+    port: program.port,
+    secure: program.secure
 };
 
 if (action) {
