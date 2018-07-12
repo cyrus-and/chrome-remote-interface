@@ -54,6 +54,6 @@
     "scripts": {
         "test": "./scripts/run-tests.sh",
         "webpack": "webpack",
-        "prepublish": "webpack"
+        "prepare": "webpack"
     }
 }
