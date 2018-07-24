@@ -23,8 +23,8 @@
     "bugs": {
         "url": "http://github.com/cyrus-and/chrome-remote-interface/issues"
     },
-    "engines": {
-        "node": ">=4"
+    "engine-strict": {
+        "node": ">=8"
     },
     "dependencies": {
         "babel-plugin-transform-async-to-generator": "^6.24.1",
