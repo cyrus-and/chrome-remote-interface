@@ -43,9 +43,9 @@
     "browser": "chrome-remote-interface.js",
     "devDependencies": {
         "babel-core": "^6.26.3",
-        "babel-loader": "^6.2.8",
-        "babel-plugin-transform-async-to-generator": "^6.24.1",
-        "babel-preset-es2015": "^6.18.0",
+        "babel-loader": "6.x.x",
+        "babel-polyfill": "^6.26.0",
+        "babel-preset-env": "^1.7.0",
         "eslint": "^3.19.0",
         "json-loader": "^0.5.4",
         "mocha": "5.x.x",

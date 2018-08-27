@@ -32,7 +32,7 @@ const webpackConfig = {
     },
     plugins: [
     ],
-    entry: './index.js',
+    entry: ['babel-polyfill', './index.js'],
     output: {
         libraryTarget: process.env.TARGET || 'commonjs2',
         library: 'CDP',
