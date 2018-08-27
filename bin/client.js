@@ -282,7 +282,8 @@ program
     .option('-v, --v', 'Show this module version')
     .option('-t, --host <host>', 'HTTP frontend host')
     .option('-p, --port <port>', 'HTTP frontend port')
-    .option('-s, --secure', 'HTTPS/WSS frontend');
+    .option('-s, --secure', 'HTTPS/WSS frontend')
+    .option('-n, --use-host-name', 'Do not perform a DNS lookup of the host');
 
 program
     .command('inspect [<target>]')
@@ -343,7 +344,8 @@ program.parse(process.argv);
 const options = {
     host: program.host,
     port: program.port,
-    secure: program.secure
+    secure: program.secure,
+    useHostName: program.useHostName
 };
 
 if (action) {
