@@ -19,9 +19,10 @@ The following snippet loads `https://github.com` and dumps every request made:
 const CDP = require('chrome-remote-interface');
 
 async function example() {
+    let client;
     try {
         // connect to endpoint
-        let client = await CDP();
+        client = await CDP();
         // extract domains
         const {Network, Page} = client;
         // setup handlers
