@@ -28,7 +28,7 @@
     },
     "dependencies": {
         "commander": "2.11.x",
-        "ws": "^3.3.3"
+        "ws": "^6.1.0"
     },
     "files": [
         "lib",
