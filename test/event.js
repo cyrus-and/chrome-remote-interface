@@ -18,6 +18,29 @@ describe('registering event', () => {
                 });
             });
         });
+        it('should return an unsubscribe function', (done) => {
+            Chrome((chrome) => {
+                let firstTime = true;
+                const unsubscribe = chrome.Network.requestWillBeSent((message) => {
+                    if (!firstTime) {
+                        try {
+                            // just once
+                            assert(false);
+                        } catch (err) {
+                            done(err);
+                        }
+                    }
+                    firstTime = false;
+                    unsubscribe();
+                    // allows to receive and ignore other events
+                    setTimeout(() => {
+                        chrome.close(done);
+                    }, 1000);
+                });
+                chrome.send('Network.enable');
+                chrome.send('Page.navigate', {'url': 'http://localhost:9222'});
+            });
+        });
         it('should give the payload only', (done) => {
             Chrome((chrome) => {
                 chrome.once('Network.requestWillBeSent', (message) => {

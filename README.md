@@ -808,13 +808,20 @@ Just a shorthand for:
 client.on('<domain>.<event>', callback);
 ```
 
-The only difference is that when `callback` is omitted the event is registered
-only once and a `Promise` object is returned.
+When `callback` is omitted the event is registered only once and a `Promise`
+object is returned.
+
+When `callback` is provided, it returns a function that can be used to
+unsubscribe `callback` from the event, it can be useful when anonymous functions
+are used as callbacks.
 
 For example:
 
 ```javascript
-client.Network.requestWillBeSent(console.log);
+const unsubscribe = client.Network.requestWillBeSent((params) => {
+    console.log(params.request.url);
+});
+unsubscribe();
 ```
 
 #### client.close([callback])
