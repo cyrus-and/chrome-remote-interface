@@ -50,7 +50,8 @@
         "eslint": "^3.19.0",
         "json-loader": "^0.5.4",
         "mocha": "5.x.x",
-        "webpack": "^1.13.3"
+        "webpack": "^1.13.3",
+        "lodash": ">=4.17.11"
     },
     "scripts": {
         "test": "./scripts/run-tests.sh",
