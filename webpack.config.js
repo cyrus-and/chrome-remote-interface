@@ -1,12 +1,11 @@
 'use strict';
 
-const webpack = require('webpack');
-
 function criWrapper(_, options, callback) {
     window.criRequest(options, callback); // eslint-disable-line no-undef
 }
 
-const webpackConfig = {
+module.exports = {
+    mode: 'production',
     resolve: {
         alias: {
             'ws': './websocket-wrapper.js'
@@ -17,39 +16,11 @@ const webpackConfig = {
             './external-request.js': `var (${criWrapper})`
         }
     ],
-    module: {
-        loaders: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                loader: 'babel-loader'
-            },
-            {
-                test: /\.json$/,
-                loader: 'json-loader'
-            }
-        ]
-    },
-    plugins: [
-    ],
     entry: ['babel-polyfill', './index.js'],
     output: {
+        path: __dirname,
+        filename: 'chrome-remote-interface.js',
         libraryTarget: process.env.TARGET || 'commonjs2',
-        library: 'CDP',
-        filename: 'chrome-remote-interface.js'
+        library: 'CDP'
     }
 };
-
-if (process.env.DEBUG !== 'true') {
-    webpackConfig.plugins.push(new webpack.optimize.UglifyJsPlugin({
-        mangle: true,
-        compress: {
-            warnings: false
-        },
-        output: {
-            comments: false
-        }
-    }));
-}
-
-module.exports = webpackConfig;

@@ -376,10 +376,6 @@ It just works, simply require this module:
 const CDP = require('chrome-remote-interface');
 ```
 
-To use a non-minified version manually run webpack with:
-
-    DEBUG=true npm run webpack
-
 ### Using *vanilla* JavaScript
 
 To generate a JavaScript file that can be used with a `<script>` element:
@@ -389,7 +385,6 @@ To generate a JavaScript file that can be used with a `<script>` element:
 2. manually run webpack with:
 
         TARGET=var npm run webpack
-        TARGET=var DEBUG=true npm run webpack
 
 3. use as:
 
