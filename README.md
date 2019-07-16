@@ -1,5 +1,7 @@
-chrome-remote-interface    [![Build Status](https://travis-ci.org/cyrus-and/chrome-remote-interface.svg?branch=master)](https://travis-ci.org/cyrus-and/chrome-remote-interface)
-=======================
+# chrome-remote-interface [![Build Status][]][travis]
+
+[Build Status]: https://travis-ci.org/cyrus-and/chrome-remote-interface.svg?branch=master
+[travis]: https://travis-ci.org/cyrus-and/chrome-remote-interface
 
 [Chrome Debugging Protocol] interface that helps to instrument Chrome (or any
 other suitable [implementation](#implementations)) by providing a simple
@@ -10,8 +12,7 @@ This module is one of the many [third-party protocol clients][3rd-party].
 
 [3rd-party]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
 
-Sample API usage
-----------------
+## Sample API usage
 
 The following snippet loads `https://github.com` and dumps every request made:
 
@@ -52,15 +53,13 @@ Find more examples in the [wiki]. You may also want to take a look at the [FAQ].
 [async-await-example]: https://github.com/cyrus-and/chrome-remote-interface/wiki/Async-await-example
 [FAQ]: https://github.com/cyrus-and/chrome-remote-interface#faq
 
-Installation
-------------
+## Installation
 
     npm install chrome-remote-interface
 
 Install globally (`-g`) to just use the [bundled client](#bundled-client).
 
-Implementations
----------------
+## Implementations
 
 This module should work with every application implementing the
 [Chrome Debugging Protocol]. In particular, it has been tested against the
@@ -106,8 +105,7 @@ The meaning of *target* varies according to the implementation, for example,
 each Chrome tab represents a target whereas for Node.js a target is the
 currently inspected script.
 
-Setup
------
+## Setup
 
 An instance of either Chrome itself or another implementation needs to be
 running on a known port in order to use this module (defaults to
@@ -179,8 +177,7 @@ Please find more information [here][edge-devtools].
 
 [edge-devtools]: https://docs.microsoft.com/en-us/microsoft-edge/devtools-protocol/
 
-Bundled client
---------------
+## Bundled client
 
 This module comes with a bundled client application that can be used to
 interactively control a remote instance.
@@ -243,8 +240,7 @@ $ chrome-remote-interface inspect
 { result: { type: 'string', value: 'https://github.com/' } }
 ```
 
-Embedded documentation
-----------------------
+## Embedded documentation
 
 In both the REPL and the regular API every object of the protocol is *decorated*
 with the meta information found within the descriptor. In addition The
@@ -329,8 +325,7 @@ are named in upper camel case) type:
         description: 'Priority of the resource request at the time request is sent.' } } }
 ```
 
-Chrome Debugging Protocol versions
-----------------------------------
+## Chrome Debugging Protocol versions
 
 By default `chrome-remote-interface` *asks* the remote instance to provide its
 own protocol.
@@ -351,8 +346,7 @@ To further override the above behavior there are basically two options:
 
 [local version]: lib/protocol.json
 
-Browser usage
--------------
+## Browser usage
 
 This module is able to run within a web context, with obvious limitations
 though, namely external HTTP requests
@@ -395,8 +389,7 @@ To generate a JavaScript file that can be used with a `<script>` element:
     <script src="chrome-remote-interface.js"></script>
     ```
 
-API
----
+## API
 
 The API consists of three parts:
 
@@ -827,8 +820,7 @@ Close the connection to the remote instance.
 
 When `callback` is omitted a `Promise` object is returned.
 
-FAQ
----
+## FAQ
 
 ### Invoking `Domain.method` I obtain `Domain.method is not a function`
 
@@ -903,14 +895,12 @@ See [#240] for a more thorough discussion.
 [Puppeteer]: https://github.com/GoogleChrome/puppeteer
 [#240]: https://github.com/cyrus-and/chrome-remote-interface/issues/240
 
-Contributors
-------------
+## Contributors
 
 - [Andrey Sidorov](https://github.com/sidorares)
 - [Greg Cochard](https://github.com/gcochard)
 
-Resources
----------
+## Resources
 
 - [Chrome Debugging Protocol]
 - [Chrome Debugging Protocol Google group](https://groups.google.com/forum/#!forum/chrome-debugging-protocol)
