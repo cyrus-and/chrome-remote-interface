@@ -190,7 +190,7 @@ run with `--help` to display the list of available options.
 
 Here are some examples:
 
-```javascript
+```js
 $ chrome-remote-interface new 'http://example.com'
 {
     "description": "",
@@ -217,7 +217,7 @@ Remember that the REPL interface provides completion.
 
 Here is a sample session:
 
-```javascript
+```js
 $ chrome-remote-interface inspect
 >>> Runtime.evaluate({expression: 'window.location.toString()'})
 ...
@@ -249,7 +249,7 @@ with the meta information found within the descriptor. In addition The
 
 For example to learn how to call `Page.navigate`:
 
-```javascript
+```js
 >>> Page.navigate
 { [Function]
   category: 'command',
@@ -265,7 +265,7 @@ For example to learn how to call `Page.navigate`:
 
 To learn about the parameters returned by the `Network.requestWillBeSent` event:
 
-```javascript
+```js
 >>> Network.requestWillBeSent
 { [Function]
   category: 'event',
@@ -301,7 +301,7 @@ To learn about the parameters returned by the `Network.requestWillBeSent` event:
 To inspect the `Network.Request` (note that unlike commands and events, types
 are named in upper camel case) type:
 
-```javascript
+```js
 >>> Network.Request
 { category: 'type',
   id: 'Request',
@@ -444,7 +444,7 @@ The `EventEmitter` supports the following events:
 
 #### Event: 'connect'
 
-```javascript
+```js
 function (client) {}
 ```
 
@@ -454,7 +454,7 @@ Emitted when the connection to the WebSocket is established.
 
 #### Event: 'error'
 
-```javascript
+```js
 function (err) {}
 ```
 
@@ -486,7 +486,7 @@ When `callback` is omitted a `Promise` object is returned.
 
 For example:
 
-```javascript
+```js
 const CDP = require('chrome-remote-interface');
 CDP.Protocol((err, protocol) => {
     if (!err) {
@@ -517,7 +517,7 @@ When `callback` is omitted a `Promise` object is returned.
 
 For example:
 
-```javascript
+```js
 const CDP = require('chrome-remote-interface');
 CDP.List((err, targets) => {
     if (!err) {
@@ -549,7 +549,7 @@ When `callback` is omitted a `Promise` object is returned.
 
 For example:
 
-```javascript
+```js
 const CDP = require('chrome-remote-interface');
 CDP.New((err, target) => {
     if (!err) {
@@ -579,7 +579,7 @@ When `callback` is omitted a `Promise` object is returned.
 
 For example:
 
-```javascript
+```js
 const CDP = require('chrome-remote-interface');
 CDP.Activate({id: 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, (err) => {
     if (!err) {
@@ -609,7 +609,7 @@ When `callback` is omitted a `Promise` object is returned.
 
 For example:
 
-```javascript
+```js
 const CDP = require('chrome-remote-interface');
 CDP.Close({id: 'CC46FBFA-3BDA-493B-B2E4-2BE6EB0D97EC'}, (err) => {
     if (!err) {
@@ -643,7 +643,7 @@ When `callback` is omitted a `Promise` object is returned.
 
 For example:
 
-```javascript
+```js
 const CDP = require('chrome-remote-interface');
 CDP.Version((err, info) => {
     if (!err) {
@@ -656,7 +656,7 @@ CDP.Version((err, info) => {
 
 #### Event: 'event'
 
-```javascript
+```js
 function (message) {}
 ```
 
@@ -672,7 +672,7 @@ Refer to the [Chrome Debugging Protocol] specification for more information.
 
 For example:
 
-```javascript
+```js
 client.on('event', (message) => {
     if (message.method === 'Network.requestWillBeSent') {
         console.log(message.params);
@@ -682,7 +682,7 @@ client.on('event', (message) => {
 
 #### Event: '`<domain>`.`<method>`'
 
-```javascript
+```js
 function (params) {}
 ```
 
@@ -694,13 +694,13 @@ through the WebSocket.
 This is just a utility event which allows to easily listen for specific
 notifications (see [`'event'`](#event-event)), for example:
 
-```javascript
+```js
 client.on('Network.requestWillBeSent', console.log);
 ```
 
 #### Event: 'ready'
 
-```javascript
+```js
 function () {}
 ```
 
@@ -717,7 +717,7 @@ prefer the promises API when dealing with complex asynchronous program flows.
 For example to load a URL only after having enabled the notifications of both
 `Network` and `Page` domains:
 
-```javascript
+```js
 client.Network.enable();
 client.Page.enable();
 client.once('ready', () => {
@@ -732,7 +732,7 @@ client.
 
 #### Event: 'disconnect'
 
-```javascript
+```js
 function () {}
 ```
 
@@ -770,7 +770,7 @@ specification is managed internally and it is not exposed to the user.
 
 For example:
 
-```javascript
+```js
 client.send('Page.navigate', {url: 'https://github.com'}, console.log);
 ```
 
@@ -778,13 +778,13 @@ client.send('Page.navigate', {url: 'https://github.com'}, console.log);
 
 Just a shorthand for:
 
-```javascript
+```js
 client.send('<domain>.<method>', params, callback);
 ```
 
 For example:
 
-```javascript
+```js
 client.Page.navigate({url: 'https://github.com'}, console.log);
 ```
 
@@ -792,7 +792,7 @@ client.Page.navigate({url: 'https://github.com'}, console.log);
 
 Just a shorthand for:
 
-```javascript
+```js
 client.on('<domain>.<event>', callback);
 ```
 
@@ -805,7 +805,7 @@ are used as callbacks.
 
 For example:
 
-```javascript
+```js
 const unsubscribe = client.Network.requestWillBeSent((params) => {
     console.log(params.request.url);
 });
