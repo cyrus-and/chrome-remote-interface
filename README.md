@@ -503,8 +503,8 @@ Request the list of the available open targets/tabs of the remote instance.
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
-- `secure`: HTTPS/WSS frontend. Defaults to `false`.
-- `useHostName`: do not perform a DNS lookup of the host. Defaults to `false`;
+- `secure`: HTTPS/WSS frontend. Defaults to `false`;
+- `useHostName`: do not perform a DNS lookup of the host. Defaults to `false`.
 
 `callback` is executed when the list is correctly received, it gets the
 following arguments:
@@ -629,8 +629,8 @@ Request version information from the remote instance.
 
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
-- `secure`: HTTPS/WSS frontend. Defaults to `false`.
-- `useHostName`: do not perform a DNS lookup of the host. Defaults to `false`;
+- `secure`: HTTPS/WSS frontend. Defaults to `false`;
+- `useHostName`: do not perform a DNS lookup of the host. Defaults to `false`.
 
 `callback` is executed when the version information is correctly received, it
 gets the following arguments:
