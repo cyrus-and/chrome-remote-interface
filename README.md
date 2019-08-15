@@ -411,6 +411,8 @@ Connects to a remote instance using the [Chrome Debugging Protocol].
 - `port`: HTTP frontend port. Defaults to `9222`;
 - `secure`: HTTPS/WSS frontend. Defaults to `false`;
 - `useHostName`: do not perform a DNS lookup of the host. Defaults to `false`;
+- `alterPath`: a `function` taking and returning the path fragment of a URL
+  before that a request happens. Defaults to the identity function;
 - `target`: determines which target this client should attach to. The behavior
   changes according to the type:
 
@@ -473,6 +475,8 @@ Fetch the [Chrome Debugging Protocol] descriptor.
 - `port`: HTTP frontend port. Defaults to `9222`;
 - `secure`: HTTPS/WSS frontend. Defaults to `false`;
 - `useHostName`: do not perform a DNS lookup of the host. Defaults to `false`;
+- `alterPath`: a `function` taking and returning the path fragment of a URL
+  before that a request happens. Defaults to the identity function;
 - `local`: a boolean indicating whether the protocol must be fetched *remotely*
   or if the local version must be returned. Defaults to `false`.
 
@@ -504,7 +508,9 @@ Request the list of the available open targets/tabs of the remote instance.
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
 - `secure`: HTTPS/WSS frontend. Defaults to `false`;
-- `useHostName`: do not perform a DNS lookup of the host. Defaults to `false`.
+- `useHostName`: do not perform a DNS lookup of the host. Defaults to `false`;
+- `alterPath`: a `function` taking and returning the path fragment of a URL
+  before that a request happens. Defaults to the identity function.
 
 `callback` is executed when the list is correctly received, it gets the
 following arguments:
@@ -536,6 +542,8 @@ Create a new target/tab in the remote instance.
 - `port`: HTTP frontend port. Defaults to `9222`;
 - `secure`: HTTPS/WSS frontend. Defaults to `false`;
 - `useHostName`: do not perform a DNS lookup of the host. Defaults to `false`;
+- `alterPath`: a `function` taking and returning the path fragment of a URL
+  before that a request happens. Defaults to the identity function;
 - `url`: URL to load in the new target/tab. Defaults to `about:blank`.
 
 `callback` is executed when the target is created, it gets the following
@@ -568,6 +576,8 @@ Activate an open target/tab of the remote instance.
 - `port`: HTTP frontend port. Defaults to `9222`;
 - `secure`: HTTPS/WSS frontend. Defaults to `false`;
 - `useHostName`: do not perform a DNS lookup of the host. Defaults to `false`;
+- `alterPath`: a `function` taking and returning the path fragment of a URL
+  before that a request happens. Defaults to the identity function;
 - `id`: Target id. Required, no default.
 
 `callback` is executed when the response to the activation request is
@@ -598,6 +608,8 @@ Close an open target/tab of the remote instance.
 - `port`: HTTP frontend port. Defaults to `9222`;
 - `secure`: HTTPS/WSS frontend. Defaults to `false`;
 - `useHostName`: do not perform a DNS lookup of the host. Defaults to `false`;
+- `alterPath`: a `function` taking and returning the path fragment of a URL
+  before that a request happens. Defaults to the identity function;
 - `id`: Target id. Required, no default.
 
 `callback` is executed when the response to the close request is received. It
@@ -630,7 +642,9 @@ Request version information from the remote instance.
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
 - `secure`: HTTPS/WSS frontend. Defaults to `false`;
-- `useHostName`: do not perform a DNS lookup of the host. Defaults to `false`.
+- `useHostName`: do not perform a DNS lookup of the host. Defaults to `false`;
+- `alterPath`: a `function` taking and returning the path fragment of a URL
+  before that a request happens. Defaults to the identity function.
 
 `callback` is executed when the version information is correctly received, it
 gets the following arguments:
