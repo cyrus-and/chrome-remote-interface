@@ -72,6 +72,7 @@ Implementation             | Protocol version   | [Protocol] | [List] | [New] | 
 [Node.js][3.1] ([v6.3.0]+) | [node][3.2]        | yes        | no     | no    | no         | no      | yes
 [Safari (iOS)][4.1]        | [*partial*][4.2]   | no         | yes    | no    | no         | no      | no
 [Microsoft Edge][5.1]      | [*partial*][5.2]   | yes        | yes    | no    | no         | no      | yes
+[Mozilla Firefox][6.1]     | [*partial*][6.2]   | yes        | yes    | no    | yes        | yes     | yes
 
 ¹ Not available on [Chrome for Android][chrome-mobile-protocol].
 
@@ -91,6 +92,9 @@ Implementation             | Protocol version   | [Protocol] | [List] | [New] | 
 
 [5.1]: #edge
 [5.2]: https://docs.microsoft.com/en-us/microsoft-edge/devtools-protocol/0.1/domains/
+
+[6.1]: #firefox
+[6.2]: https://firefox-source-docs.mozilla.org/remote/index.html
 
 [v6.3.0]: https://nodejs.org/en/blog/release/v6.3.0/
 
@@ -176,6 +180,14 @@ Start Edge with the `--devtools-server-port` option, for example:
 Please find more information [here][edge-devtools].
 
 [edge-devtools]: https://docs.microsoft.com/en-us/microsoft-edge/devtools-protocol/
+
+### Firefox
+
+Start Firefox with the `--remote-debugger` option, for example:
+
+    firefox --remote-debugger
+
+Just make sure to set the `remote.enabled` preference to `true`.
 
 ## Bundled client
 
