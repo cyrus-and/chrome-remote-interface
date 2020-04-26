@@ -110,6 +110,15 @@ function inspect(target, args, options) {
             }
         });
 
+        // utility to purge all the event handlers
+        cdpRepl.defineCommand('reset', {
+            help: 'Remove all the registered event handlers',
+            action: () => {
+                client.removeAllListeners();
+                cdpRepl.displayPrompt();
+            }
+        });
+
         // enable history
         loadHistory();
 
