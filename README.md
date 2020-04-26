@@ -240,6 +240,15 @@ $ chrome-remote-interface inspect
 { result: { type: 'string', value: 'https://github.com/' } }
 ```
 
+Additionally there are some custom commands available:
+
+```js
+>>> .help
+[...]
+.reset    Remove all the registered event handlers
+.target   Display the current target
+```
+
 ## Embedded documentation
 
 In both the REPL and the regular API every object of the protocol is *decorated*
