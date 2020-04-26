@@ -23,12 +23,6 @@ function toJSON(object) {
     return JSON.stringify(object, null, 4);
 }
 
-function inheritProperties(from, to) {
-    Object.keys(from).forEach((property) => {
-        to[property] = from[property];
-    });
-}
-
 ///
 
 function inspect(target, args, options) {
@@ -53,14 +47,29 @@ function inspect(target, args, options) {
     }
 
     CDP(options, (client) => {
-        // keep track of registered events
-        const registeredEvents = {};
-
         const cdpRepl = repl.start({
             prompt: '\x1b[32m>>>\x1b[0m ',
             ignoreUndefined: true,
             writer: display
         });
+
+        // XXX always await promises on the REPL
+        const defaultEval = cdpRepl.eval;
+        cdpRepl.eval = (cmd, context, filename, callback) => {
+            defaultEval(cmd, context, filename, async (err, result) => {
+                if (err) {
+                    // propagate errors from the eval
+                    callback(err);
+                } else {
+                    // awaits the promise and either return result or error
+                    try {
+                        callback(null, await Promise.resolve(result));
+                    } catch (err) {
+                        callback(err);
+                    }
+                }
+            });
+        };
 
         const homePath = process.env.HOME || process.env.USERPROFILE;
         const historyFile = path.join(homePath, '.cri_history');
@@ -92,76 +101,6 @@ function inspect(target, args, options) {
             fs.writeFileSync(historyFile, entries + '\n');
         }
 
-        function overridePrompt(string) {
-            // hack to get rid of the prompt (clean line and reposition cursor)
-            console.log('\x1b[2K\x1b[G%s', string);
-            cdpRepl.displayPrompt(true);
-        }
-
-        function overrideCommand(command) {
-            const override = (params, callback) => {
-                if (typeof callback === 'function') {
-                    // if a callback is provided the use it as is
-                    command(params, callback);
-                    return undefined;
-                } else {
-                    const promise = command(params);
-                    // use a custom inspect to display the outcome
-                    promise.inspect = async () => {
-                        try {
-                            const result = await this;
-                            overridePrompt(display(result));
-                        } catch (err) {
-                            overridePrompt(display(err));
-                        }
-                        // temporary placeholder
-                        return '...';
-                    };
-                    return promise;
-                }
-            };
-            // inherit the doc decorations
-            inheritProperties(command, override);
-            return override;
-        }
-
-        function overrideEvent(client, domainName, itemName) {
-            const event = client[domainName][itemName];
-            const eventName = domainName + '.' + itemName;
-            // hard code a callback to display the event data
-            const override = (callback) => {
-                // remove all the listeners (just one actually) anyway
-                client.removeAllListeners(eventName);
-                const status = {};
-                // a callback will always enable/update the listener
-                if (!callback && registeredEvents[eventName]) {
-                    delete registeredEvents[eventName];
-                    status[eventName] = false;
-                    return status;
-                } else {
-                    // use the callback (or true) as a status token
-                    const statusToken = (callback ? '<custom>' : true);
-                    status[eventName] = registeredEvents[eventName] = statusToken;
-                    if (typeof callback === 'function') {
-                        // if a callback is provided the use it as is
-                        event(callback);
-                        return undefined;
-                    } else {
-                        // the default implementation just shows the params
-                        event((params) => {
-                            const repr = {};
-                            repr[eventName] = params;
-                            overridePrompt(display(repr));
-                        });
-                        return status;
-                    }
-                }
-            };
-            // inherit the doc decorations
-            inheritProperties(event, override);
-            return override;
-        }
-
         // utility custom command
         cdpRepl.defineCommand('target', {
             help: 'Display the current target',
@@ -189,24 +128,17 @@ function inspect(target, args, options) {
         });
 
         // add protocol API
-        client.protocol.domains.forEach((domainObject) => {
+        for (const domainObject of client.protocol.domains) {
             // walk the domain names
             const domainName = domainObject.domain;
             cdpRepl.context[domainName] = {};
-            Object.keys(client[domainName]).forEach((itemName) => {
-                // walk the items in the domain and override commands and events
-                let item = client[domainName][itemName];
-                switch (item.category) {
-                case 'command':
-                    item = overrideCommand(item);
-                    break;
-                case 'event':
-                    item = overrideEvent(client, domainName, itemName);
-                    break;
-                }
-                cdpRepl.context[domainName][itemName] = item;
-            });
-        });
+            // walk the items in the domain
+            for (const itemName in client[domainName]) {
+                // add CDP object to the REPL context
+                const cdpObject = client[domainName][itemName];
+                cdpRepl.context[domainName][itemName] = cdpObject;
+            }
+        }
     }).on('error', (err) => {
         console.error('Cannot connect to remote endpoint:', err.toString());
     });

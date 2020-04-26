@@ -219,36 +219,24 @@ $ chrome-remote-interface close 'b049bb56-de7d-424c-a331-6ae44cf7ae01'
 
 ### Inspection
 
-Using the `inspect` subcommand it is possible to
-perform [command execution](#clientdomainmethodparams-callback)
-and [event binding](#clientdomaineventcallback) in a REPL fashion. But unlike
-the regular API, events never return a promise, if the callback is omitted a
-default implementation is provided which allows to toggle the handler.
-
-Remember that the REPL interface provides completion.
+Using the `inspect` subcommand it is possible to perform [command execution](#clientdomainmethodparams-callback)
+and [event binding](#clientdomaineventcallback) in a REPL fashion that provides completion.
 
 Here is a sample session:
 
 ```js
 $ chrome-remote-interface inspect
 >>> Runtime.evaluate({expression: 'window.location.toString()'})
-...
 { result: { type: 'string', value: 'about:blank' } }
 >>> Page.enable()
-...
 {}
->>> Page.loadEventFired() // registered
-{ 'Page.loadEventFired': true }
->>> Page.loadEventFired() // unregistered
-{ 'Page.loadEventFired': false }
->>> Page.loadEventFired() // registered
-{ 'Page.loadEventFired': true }
+>>> Page.loadEventFired(console.log)
+[Function]
 >>> Page.navigate({url: 'https://github.com'})
-...
-{ frameId: '15174.1' }
-{ 'Page.loadEventFired': { timestamp: 46427.780513 } }
+{ frameId: 'E1657E22F06E6E0BE13DFA8130C20298',
+  loaderId: '439236ADE39978F98C20E8939A32D3A5' }
+>>> { timestamp: 7454.721299 } // from Page.loadEventFired
 >>> Runtime.evaluate({expression: 'window.location.toString()'})
-...
 { result: { type: 'string', value: 'https://github.com/' } }
 ```
 
