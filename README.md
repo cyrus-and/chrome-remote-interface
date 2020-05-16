@@ -189,6 +189,8 @@ Start Firefox with the `--remote-debugger` option, for example:
 
 Just make sure to set the `remote.enabled` preference to `true`.
 
+**Note:** It might be broken in recent versions of Firefox, see #68.
+
 ## Bundled client
 
 This module comes with a bundled client application that can be used to
