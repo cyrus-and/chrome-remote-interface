@@ -187,6 +187,8 @@ Start Firefox with the `--remote-debugging-port` option, for example:
 
     firefox --remote-debugging-port 9222
 
+Bear in mind that this is an experimental feature of Firefox.
+
 ## Bundled client
 
 This module comes with a bundled client application that can be used to
