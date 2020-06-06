@@ -181,15 +181,11 @@ Please find more information [here][edge-devtools].
 
 [edge-devtools]: https://docs.microsoft.com/en-us/microsoft-edge/devtools-protocol/
 
-### Firefox
+### Firefox (Nightly)
 
-Start Firefox with the `--remote-debugger` option, for example:
+Start Firefox with the `--remote-debugging-port` option, for example:
 
-    firefox --remote-debugger
-
-Just make sure to set the `remote.enabled` preference to `true`.
-
-**Note:** It might be broken in recent versions of Firefox, see #68.
+    firefox --remote-debugging-port 9222
 
 ## Bundled client
 
