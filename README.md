@@ -93,7 +93,7 @@ Implementation             | Protocol version   | [Protocol] | [List] | [New] | 
 [5.1]: #edge
 [5.2]: https://docs.microsoft.com/en-us/microsoft-edge/devtools-protocol/0.1/domains/
 
-[6.1]: #firefox
+[6.1]: #firefox-nightly
 [6.2]: https://firefox-source-docs.mozilla.org/remote/index.html
 
 [v6.3.0]: https://nodejs.org/en/blog/release/v6.3.0/
