@@ -16,7 +16,7 @@ module.exports = {
             './external-request.js': `var (${criWrapper})`
         }
     ],
-    entry: ['babel-polyfill', './index.js'],
+    entry: ['idempotent-babel-polyfill', './index.js'],
     output: {
         path: __dirname,
         filename: 'chrome-remote-interface.js',
