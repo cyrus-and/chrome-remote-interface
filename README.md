@@ -797,6 +797,30 @@ For example:
 client.send('Page.navigate', {url: 'https://github.com'}, console.log);
 ```
 
+#### client.sendRaw(message, [callback])
+
+Issue a raw message to the remote instance.
+
+`message` is a raw message object according to the Chrome DevTools protocol.
+`message.id` does not need to be set, if it is not passed, a unique ID will
+be generated.
+
+`sendRaw` can be useful when you need lower-level control, like if you need to
+pass a `sessionId` with your command to scope it to a specific target.
+
+A `callback` can be passed. If omitted, a `Promise` is returned. See
+`client.send` for more information.
+
+For example:
+
+```js
+client.sendRaw({
+  method: 'Page.navigate',
+  params: { url: 'https://github.com' },
+  sessionId: 'some session ID',
+}, console.log);
+```
+
 #### client.`<domain>`.`<method>`([params], [callback])
 
 Just a shorthand for:

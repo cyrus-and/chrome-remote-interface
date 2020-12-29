@@ -140,4 +140,17 @@ describe('sending a command', () => {
             });
         });
     });
+    describe('using sendRaw', () => {
+        it('should succeed', (done) => {
+            Chrome((chrome) => {
+                chrome.sendRaw({
+                    method: 'Network.setCacheDisabled',
+                    params: {'cacheDisabled': true}
+                }, (error, response) => {
+                    assert(!error);
+                    chrome.close(done);
+                });
+            });
+        });
+    });
 });
