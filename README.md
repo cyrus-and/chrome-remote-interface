@@ -721,6 +721,12 @@ notifications (see [`'event'`](#event-event)), for example:
 client.on('Network.requestWillBeSent', console.log);
 ```
 
+Additionally, the equivalent `<domain>.on('<method>', ...)` syntax is available, for example:
+
+```js
+client.Network.on('requestWillBeSent', console.log);
+```
+
 #### Event: 'ready'
 
 ```js

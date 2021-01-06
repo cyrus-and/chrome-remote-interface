@@ -18,6 +18,18 @@ describe('registering event', () => {
                 });
             });
         });
+        describe('sub-domain event syntax', () => {
+            it('should behave as the regular syntax', (done) => {
+                Chrome((chrome) => {
+                    chrome.Network.on('requestWillBeSent', (message) => {
+                        assert(!message.method);
+                        chrome.close(done);
+                    });
+                    chrome.send('Network.enable');
+                    chrome.send('Page.navigate', {'url': 'chrome://newtab/'});
+                });
+            });
+        });
         it('should return an unsubscribe function', (done) => {
             Chrome((chrome) => {
                 let firstTime = true;
