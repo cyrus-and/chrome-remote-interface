@@ -48,7 +48,7 @@ function inspect(target, args, options) {
 
     CDP(options, (client) => {
         const cdpRepl = repl.start({
-            prompt: '\x1b[32m>>>\x1b[0m ',
+            prompt: process.stdin.isTTY ? '\x1b[32m>>>\x1b[0m ' : '',
             ignoreUndefined: true,
             writer: display
         });
@@ -76,6 +76,10 @@ function inspect(target, args, options) {
         const historySize = 10000;
 
         function loadHistory() {
+            // only if run from a terminal
+            if (!process.stdin.isTTY) {
+                return;
+            }
             // attempt to open the history file
             let fd;
             try {
@@ -96,6 +100,10 @@ function inspect(target, args, options) {
         }
 
         function saveHistory() {
+            // only if run from a terminal
+            if (!process.stdin.isTTY) {
+                return;
+            }
             // only store the last chunk
             const entries = cdpRepl.history.slice(0, historySize).reverse().join('\n');
             fs.writeFileSync(historyFile, entries + '\n');
@@ -124,7 +132,9 @@ function inspect(target, args, options) {
 
         // disconnect on exit
         cdpRepl.on('exit', () => {
-            console.log();
+            if (process.stdin.isTTY) {
+                console.log();
+            }
             client.close();
             saveHistory();
         });
