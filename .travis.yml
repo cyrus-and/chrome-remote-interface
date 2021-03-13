@@ -1,10 +1,10 @@
+os: linux
 language: node_js
-matrix:
+jobs:
   include:
     - node_js: "node"
     - node_js: "12"
     - node_js: "14"
-sudo: false
 cache:
   directories:
     - node_modules
