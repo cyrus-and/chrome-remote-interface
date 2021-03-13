@@ -770,13 +770,15 @@ Emitted when the instance closes the WebSocket connection.
 This may happen for example when the user opens DevTools or when the tab is
 closed.
 
-#### client.send(method, [params], [callback])
+#### client.send(method, [params], [sessionId], [callback])
 
 Issue a command to the remote instance.
 
 `method` is a string describing the command.
 
 `params` is an object containing the payload.
+
+`sessionId` is a string representing the session identifier.
 
 `callback` is executed when the remote instance sends a response to this
 command, it gets the following arguments:
@@ -803,12 +805,12 @@ For example:
 client.send('Page.navigate', {url: 'https://github.com'}, console.log);
 ```
 
-#### client.`<domain>`.`<method>`([params], [callback])
+#### client.`<domain>`.`<method>`([params], [sessionId], [callback])
 
 Just a shorthand for:
 
 ```js
-client.send('<domain>.<method>', params, callback);
+client.send('<domain>.<method>', params, sessionId, callback);
 ```
 
 For example:
