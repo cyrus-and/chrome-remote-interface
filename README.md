@@ -689,7 +689,8 @@ Emitted when the remote instance sends any notification through the WebSocket.
 
 - `method`: a string describing the notification (e.g.,
   `'Network.requestWillBeSent'`);
-- `params`: an object containing the payload.
+- `params`: an object containing the payload;
+- `sessionId`: an optional string representing the session identifier.
 
 Refer to the [Chrome Debugging Protocol] specification for more information.
 
@@ -706,13 +707,15 @@ client.on('event', (message) => {
 #### Event: '`<domain>`.`<method>`'
 
 ```js
-function (params) {}
+function (params, sessionId) {}
 ```
 
 Emitted when the remote instance sends a notification for `<domain>.<method>`
 through the WebSocket.
 
 `params` is an object containing the payload.
+
+`sessionId` is an optional string representing the session identifier.
 
 This is just a utility event which allows to easily listen for specific
 notifications (see [`'event'`](#event-event)), for example:
@@ -725,6 +728,18 @@ Additionally, the equivalent `<domain>.on('<method>', ...)` syntax is available,
 
 ```js
 client.Network.on('requestWillBeSent', console.log);
+```
+
+#### Event: '`<domain>`.`<method>`.`<sessionId>`'
+
+```js
+function (params, sessionId) {}
+```
+
+Equivalent to the following but only for those events belonging to the given `session`:
+
+```js
+client.on('<domain>.<event>', callback);
 ```
 
 #### Event: 'ready'
@@ -819,16 +834,16 @@ For example:
 client.Page.navigate({url: 'https://github.com'}, console.log);
 ```
 
-#### client.`<domain>`.`<event>`([callback])
+#### client.`<domain>`.`<event>`([sessionId], [callback])
 
 Just a shorthand for:
 
 ```js
-client.on('<domain>.<event>', callback);
+client.on('<domain>.<event>[.<sessionId>]', callback);
 ```
 
 When `callback` is omitted the event is registered only once and a `Promise`
-object is returned.
+object is returned. Notice though that in this case the optional `sessionId` usually passed to `callback` is not returned.
 
 When `callback` is provided, it returns a function that can be used to
 unsubscribe `callback` from the event, it can be useful when anonymous functions
@@ -837,7 +852,7 @@ are used as callbacks.
 For example:
 
 ```js
-const unsubscribe = client.Network.requestWillBeSent((params) => {
+const unsubscribe = client.Network.requestWillBeSent((params, sessionId) => {
     console.log(params.request.url);
 });
 unsubscribe();
