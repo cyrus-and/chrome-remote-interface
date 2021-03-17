@@ -9,6 +9,13 @@ module.exports = {
     resolve: {
         alias: {
             'ws': './websocket-wrapper.js'
+        },
+        fallback: {
+            'buffer': require.resolve('buffer/'),
+            'util': require.resolve('util/'),
+            'url': require.resolve('url/'),
+            'http': require.resolve('stream-http'),
+            'https': require.resolve('https-browserify')
         }
     },
     externals: [

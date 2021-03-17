@@ -27,8 +27,8 @@
         "node": ">=8"
     },
     "dependencies": {
-        "commander": "2.11.x",
-        "ws": "^7.2.0"
+        "commander": "7.1.x",
+        "ws": "^7.4.4"
     },
     "files": [
         "lib",
@@ -44,14 +44,19 @@
     "browser": "chrome-remote-interface.js",
     "devDependencies": {
         "babel-core": "^6.26.3",
-        "babel-loader": "6.x.x",
+        "babel-loader": "8.x.x",
         "babel-polyfill": "^6.26.0",
         "babel-preset-env": "^1.7.0",
-        "eslint": "^4.19.1",
-        "json-loader": "^0.5.4",
-        "mocha": "^5.2.0",
-        "webpack": "^4.35.3",
-        "webpack-cli": "^3.3.6"
+        "buffer": "^6.0.3",
+        "eslint": "^7.22.0",
+        "https-browserify": "^1.0.0",
+        "json-loader": "^0.5.7",
+        "mocha": "^8.3.2",
+        "stream-http": "^3.1.1",
+        "url": "^0.11.0",
+        "util": "^0.12.3",
+        "webpack": "^5.26.2",
+        "webpack-cli": "^4.5.0"
     },
     "scripts": {
         "test": "./scripts/run-tests.sh",
