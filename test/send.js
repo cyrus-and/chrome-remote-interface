@@ -140,4 +140,26 @@ describe('sending a command', () => {
             });
         });
     });
+    describe('passing a sessionId', () => {
+        it('should interact with the correct target', async () => {
+            // fetch and connect to the browser target
+            const version = await Chrome.Version();
+            const chrome = await Chrome({
+                target: version.webSocketDebuggerUrl
+            });
+            // attach to the target
+            const {targetInfos} = await chrome.Target.getTargets();
+            const {sessionId} = await chrome.Target.attachToTarget({
+                targetId: targetInfos[0].targetId,
+                flatten: true
+            });
+            // send a command using the sessionId
+            const info = await chrome.Target.getTargetInfo(sessionId);
+            assert(info);
+            assert(info.targetInfo);
+            assert.equal(info.targetInfo.type, 'page');
+            assert.equal(info.targetInfo.attached, true);
+            return chrome.close();
+        });
+    });
 });

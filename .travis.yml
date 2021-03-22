@@ -1,15 +1,18 @@
+os: linux
 language: node_js
-matrix:
+jobs:
   include:
     - node_js: "node"
-    - node_js: "10"
     - node_js: "12"
-sudo: false
+    - node_js: "14"
 cache:
   directories:
     - node_modules
 dist: trusty
 addons:
+  apt:
+    packages:
+      - dpkg
   chrome: stable
 before_script:
   # dump the current versions
