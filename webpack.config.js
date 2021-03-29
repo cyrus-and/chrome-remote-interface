@@ -1,5 +1,7 @@
 'use strict';
 
+const webpack = require('webpack');
+
 function criWrapper(_, options, callback) {
     window.criRequest(options, callback); // eslint-disable-line no-undef
 }
@@ -22,6 +24,11 @@ module.exports = {
         {
             './external-request.js': `var (${criWrapper})`
         }
+    ],
+    plugins: [
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+        }),
     ],
     entry: ['babel-polyfill', './index.js'],
     output: {
