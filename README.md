@@ -891,7 +891,7 @@ See [here](#chrome-debugging-protocol-versions) for more information.
 
 ### Headless Chrome problems?
 
-Bear in mind that `--headless` Chrome is relatively new and there are kinks (in
+Bear in mind that there are kinks (in
 Chrome) that are being worked out. If you believe you have encountered a bug,
 take a look at the open issues, especially [external issues].
 
