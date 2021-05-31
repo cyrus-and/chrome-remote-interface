@@ -889,14 +889,6 @@ $ chrome-remote-interface inspect
 
 See [here](#chrome-debugging-protocol-versions) for more information.
 
-### Headless Chrome problems?
-
-Bear in mind that there are kinks (in
-Chrome) that are being worked out. If you believe you have encountered a bug,
-take a look at the open issues, especially [external issues].
-
-[external issues]: https://github.com/cyrus-and/chrome-remote-interface/issues?q=label%3A%22external+issue%22
-
 ### Why my program stalls or behave unexpectedly if I run Chrome in a Docker container?
 
 This happens because the size of `/dev/shm` is set to 64MB by default in Docker
