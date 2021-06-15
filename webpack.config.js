@@ -1,5 +1,8 @@
 'use strict';
 
+const TerserPlugin = require('terser-webpack-plugin');
+const webpack = require('webpack');
+
 function criWrapper(_, options, callback) {
     window.criRequest(options, callback); // eslint-disable-line no-undef
 }
@@ -7,6 +10,12 @@ function criWrapper(_, options, callback) {
 module.exports = {
     mode: 'production',
     resolve: {
+        fallback: {
+            'util': require.resolve('util/'),
+            'url': require.resolve('url/'),
+            'http': false,
+            'https': false
+        },
         alias: {
             'ws': './websocket-wrapper.js'
         }
@@ -16,6 +25,18 @@ module.exports = {
             './external-request.js': `var (${criWrapper})`
         }
     ],
+    plugins: [
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+        }),
+    ],
+    optimization: {
+        minimizer: [
+            new TerserPlugin({
+                extractComments: false,
+            })
+        ],
+    },
     entry: ['babel-polyfill', './index.js'],
     output: {
         path: __dirname,
