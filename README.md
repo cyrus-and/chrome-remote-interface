@@ -866,6 +866,16 @@ Close the connection to the remote instance.
 
 When `callback` is omitted a `Promise` object is returned.
 
+#### client['`<domain>`.`<name>`']
+
+Just a shorthand for:
+
+```js
+client.<domain>.<name>
+```
+
+Where `<name>` can be a command, an event, or a type.
+
 ## FAQ
 
 ### Invoking `Domain.method` I obtain `Domain.method is not a function`
