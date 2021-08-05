@@ -397,6 +397,17 @@ To generate a JavaScript file that can be used with a `<script>` element:
     </script>
     <script src="chrome-remote-interface.js"></script>
     ```
+## TypeScript Support
+
+[TypeScript][] definitions are kindly provided by [Seth Westphal][], and can be installed from [DefinitelyTyped][]:
+
+```
+npm install --save-dev @types/chrome-remote-interface
+```
+
+[TypeScript]: https://www.typescriptlang.org/
+[Seth Westphal]: https://github.com/westy92
+[DefinitelyTyped]: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 ## API
 
