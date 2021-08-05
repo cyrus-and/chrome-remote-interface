@@ -399,15 +399,16 @@ To generate a JavaScript file that can be used with a `<script>` element:
     ```
 ## TypeScript Support
 
-[TypeScript][] definitions are kindly provided by [Seth Westphal][], and can be installed from [DefinitelyTyped][]:
+[TypeScript][] definitions are kindly provided by [Khairul Azhar Kasmiran][] and [Seth Westphal][], and can be installed from [DefinitelyTyped][]:
 
 ```
 npm install --save-dev @types/chrome-remote-interface
 ```
 
 [TypeScript]: https://www.typescriptlang.org/
+[Khairul Azhar Kasmiran]: https://github.com/kazarmy
 [Seth Westphal]: https://github.com/westy92
-[DefinitelyTyped]: https://github.com/DefinitelyTyped/DefinitelyTyped
+[DefinitelyTyped]: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/chrome-remote-interface
 
 ## API
 
