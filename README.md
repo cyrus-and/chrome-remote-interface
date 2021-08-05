@@ -23,7 +23,7 @@ async function example() {
     let client;
     try {
         // connect to endpoint
-        client = await CDP()
+        client = await CDP();
         // extract domains
         const {Network, Page} = client;
         // setup handlers
@@ -46,54 +46,6 @@ async function example() {
 
 example();
 ```
-
-## TypeScript Support
-
-TypeScript definitions can be installed from DefinitelyTyped via `npm i @types/chrome-remote-interface`
-
-### tsconfig.json
-
-Extending from @tsconfig will get you up and running.
-```
-{
-  "extends": "@tsconfig/node[NODE_MAJOR_VERSION]/tsconfig.json"
-}
-```
-
-## Same API Example with TypeScript
-
-The following snippet loads `https://github.com` and dumps every request made:
-
-```ts
-import CDP from 'chrome-remote-interface';
-
-async function example() {
-    // connect to endpoint
-    const client = await CDP().catch(console.error) as CDP.Client;
-    try {
-        // extract domains
-        const {Network, Page} = client;
-        // setup handlers
-        Network.on("requestWillBeSent", (params) => {
-            console.log(params.request.url);
-        });
-        // enable events then start!
-        await Network.enable({});
-        await Page.enable();
-        await Page.navigate({url: 'https://github.com'});
-        await new Promise((res) => Page.on("loadEventFired", res));
-    } catch (err) {
-        console.error(err);
-    } finally {
-        if (client) {
-            await client.close();
-        }
-    }
-}
-
-example();
-```
-
 
 Find more examples in the [wiki]. You may also want to take a look at the [FAQ].
 
@@ -445,6 +397,17 @@ To generate a JavaScript file that can be used with a `<script>` element:
     </script>
     <script src="chrome-remote-interface.js"></script>
     ```
+## TypeScript Support
+
+[TypeScript][] definitions are kindly provided by [Seth Westphal][], and can be installed from [DefinitelyTyped][]:
+
+```
+npm install --save-dev @types/chrome-remote-interface
+```
+
+[TypeScript]: https://www.typescriptlang.org/
+[Seth Westphal]: https://github.com/westy92
+[DefinitelyTyped]: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 ## API
 
