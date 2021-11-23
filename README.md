@@ -1,7 +1,7 @@
 # chrome-remote-interface [![Build Status][]][travis]
 
-[Build Status]: https://travis-ci.com/cyrus-and/chrome-remote-interface.svg?branch=master
-[travis]: https://travis-ci.com/cyrus-and/chrome-remote-interface
+[Build Status]: https://app.travis-ci.com/cyrus-and/chrome-remote-interface.svg?branch=master
+[travis]: https://app.travis-ci.com/cyrus-and/chrome-remote-interface
 
 [Chrome Debugging Protocol] interface that helps to instrument Chrome (or any
 other suitable [implementation](#implementations)) by providing a simple
