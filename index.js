@@ -10,7 +10,9 @@ const Chrome = require('./lib/chrome.js');
 // (https://github.com/nodejs/node/pull/39987) to prefer IPv4. since
 // implementations alway bind on 127.0.0.1 this solution should be fairly safe
 // (see #467)
-dns.setDefaultResultOrder('ipv4first');
+if (dns.setDefaultResultOrder) {
+    dns.setDefaultResultOrder('ipv4first');
+}
 
 function CDP(options, callback) {
     if (typeof options === 'function') {

@@ -14,7 +14,8 @@ module.exports = {
             'util': require.resolve('util/'),
             'url': require.resolve('url/'),
             'http': false,
-            'https': false
+            'https': false,
+            'dns': false
         },
         alias: {
             'ws': './websocket-wrapper.js'
