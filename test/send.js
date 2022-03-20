@@ -5,7 +5,7 @@ const assert = require('assert');
 const Chrome = require('../');
 
 describe('sending a command', () => {
-    describe('without checking the result and without specifyng parameters', () => {
+    describe('without checking the result and without specifying parameters', () => {
         it('should succeed', (done) => {
             Chrome((chrome) => {
                 chrome.once('Network.requestWillBeSent', () => {
@@ -16,7 +16,7 @@ describe('sending a command', () => {
             });
         });
     });
-    describe('checking the result and without specifyng parameters', () => {
+    describe('checking the result and without specifying parameters', () => {
         it('should succeed', (done) => {
             Chrome((chrome) => {
                 chrome.send('Page.enable', (error, response) => {
@@ -26,7 +26,7 @@ describe('sending a command', () => {
             });
         });
     });
-    describe('checking the result and specifyng parameters', () => {
+    describe('checking the result and specifying parameters', () => {
         it('should succeed', (done) => {
             Chrome((chrome) => {
                 chrome.send('Network.setCacheDisabled', {'cacheDisabled': true}, (error, response) => {
@@ -36,7 +36,7 @@ describe('sending a command', () => {
             });
         });
     });
-    describe('without checking the result and without specifyng parameters (shorthand)', () => {
+    describe('without checking the result and without specifying parameters (shorthand)', () => {
         it('should succeed', (done) => {
             Chrome((chrome) => {
                 chrome.once('Network.requestWillBeSent', () => {
@@ -47,7 +47,7 @@ describe('sending a command', () => {
             });
         });
     });
-    describe('checking the result and without specifyng parameters (shorthand)', () => {
+    describe('checking the result and without specifying parameters (shorthand)', () => {
         it('should succeed', (done) => {
             Chrome((chrome) => {
                 chrome.Page.enable((error, response) => {
@@ -57,7 +57,7 @@ describe('sending a command', () => {
             });
         });
     });
-    describe('checking the result and specifyng parameters (shorthand)', () => {
+    describe('checking the result and specifying parameters (shorthand)', () => {
         it('should succeed', (done) => {
             Chrome((chrome) => {
                 chrome.Network.setCacheDisabled({'cacheDisabled': true}, (error, response) => {
