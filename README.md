@@ -893,16 +893,25 @@ Where `<name>` can be a command, an event, or a type.
 
 ## FAQ
 
-### Invoking `Domain.method` I obtain `Domain.method is not a function`
+### Invoking `Domain.methodOrEvent` I obtain `Domain.methodOrEvent is not a function`
 
-This means that the Chrome version that you are using does not support
-`Domain.method`. The solution is to update to a newer version.
+This means that you are trying to use a method or an event that are not present
+in the protocol descriptor that you are using.
+
+If the protocol is fetched from Chrome directly, then it means that this version
+of Chrome does not support that feature. The solution is to update it.
+
+If you are using a local or custom version of the protocol, then it means that
+the version is obsolete. The solution is to provide an up-to-date one, or if you
+are using the protocol embedded in chrome-remote-interface, make sure to be
+running the latest version of this module. In case the embedded protocol is
+obsolete, please [file an issue](https://github.com/cyrus-and/chrome-remote-interface/issues/new).
 
 See [here](#chrome-debugging-protocol-versions) for more information.
 
 ### Invoking `Domain.method` I obtain `Domain.method wasn't found`
 
-This means that you are providing a custom protocol descriptor
+This means that you are providing a custom or local protocol descriptor
 (`CDP({protocol: customProtocol})`) which declares `Domain.method` while the
 Chrome version that you are using does not support it.
 
