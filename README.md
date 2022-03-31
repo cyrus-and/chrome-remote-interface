@@ -74,7 +74,7 @@ Implementation             | Protocol version   | [Protocol] | [List] | [New] | 
 [Edge][5.1]                | [*partial*][5.2]   | yes        | yes    | no    | no         | no      | yes
 [Firefox (Nightly)][6.1]   | [*partial*][6.2]   | yes        | yes    | no    | yes        | yes     | yes
 
-¹ Not available on [Chrome for Android][chrome-mobile-protocol].
+¹ Not available on [Chrome for Android][chrome-mobile-protocol], hence a local version of the protocol must be used.
 
 [chrome-mobile-protocol]: https://bugs.chromium.org/p/chromium/issues/detail?id=824626#c4
 
@@ -134,6 +134,9 @@ Since version 59, additionally use the `--headless` option, for example:
 Plug the device and enable the [port forwarding][adb], for example:
 
     adb forward tcp:9222 localabstract:chrome_devtools_remote
+
+Note that in Android, Chrome does not have its own protocol available, a local
+version must be used. See [here](#chrome-debugging-protocol-versions) for more information.
 
 [adb]: https://developer.chrome.com/devtools/docs/remote-debugging-legacy
 
