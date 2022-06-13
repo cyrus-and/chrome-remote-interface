@@ -2,9 +2,9 @@ os: linux
 language: node_js
 jobs:
   include:
-    - node_js: "node"
     - node_js: "12"
     - node_js: "14"
+    - node_js: "16"
 cache:
   directories:
     - node_modules

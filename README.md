@@ -1,7 +1,7 @@
 # chrome-remote-interface [![Build Status][]][travis]
 
-[Build Status]: https://travis-ci.org/cyrus-and/chrome-remote-interface.svg?branch=master
-[travis]: https://travis-ci.org/cyrus-and/chrome-remote-interface
+[Build Status]: https://app.travis-ci.com/cyrus-and/chrome-remote-interface.svg?branch=master
+[travis]: https://app.travis-ci.com/cyrus-and/chrome-remote-interface
 
 [Chrome Debugging Protocol] interface that helps to instrument Chrome (or any
 other suitable [implementation](#implementations)) by providing a simple
@@ -74,7 +74,7 @@ Implementation             | Protocol version   | [Protocol] | [List] | [New] | 
 [Edge][5.1]                | [*partial*][5.2]   | yes        | yes    | no    | no         | no      | yes
 [Firefox (Nightly)][6.1]   | [*partial*][6.2]   | yes        | yes    | no    | yes        | yes     | yes
 
-¹ Not available on [Chrome for Android][chrome-mobile-protocol].
+¹ Not available on [Chrome for Android][chrome-mobile-protocol], hence a local version of the protocol must be used.
 
 [chrome-mobile-protocol]: https://bugs.chromium.org/p/chromium/issues/detail?id=824626#c4
 
@@ -134,6 +134,9 @@ Since version 59, additionally use the `--headless` option, for example:
 Plug the device and enable the [port forwarding][adb], for example:
 
     adb forward tcp:9222 localabstract:chrome_devtools_remote
+
+Note that in Android, Chrome does not have its own protocol available, a local
+version must be used. See [here](#chrome-debugging-protocol-versions) for more information.
 
 [adb]: https://developer.chrome.com/devtools/docs/remote-debugging-legacy
 
@@ -397,6 +400,18 @@ To generate a JavaScript file that can be used with a `<script>` element:
     </script>
     <script src="chrome-remote-interface.js"></script>
     ```
+## TypeScript Support
+
+[TypeScript][] definitions are kindly provided by [Khairul Azhar Kasmiran][] and [Seth Westphal][], and can be installed from [DefinitelyTyped][]:
+
+```
+npm install --save-dev @types/chrome-remote-interface
+```
+
+[TypeScript]: https://www.typescriptlang.org/
+[Khairul Azhar Kasmiran]: https://github.com/kazarmy
+[Seth Westphal]: https://github.com/westy92
+[DefinitelyTyped]: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/chrome-remote-interface
 
 ## API
 
@@ -866,18 +881,37 @@ Close the connection to the remote instance.
 
 When `callback` is omitted a `Promise` object is returned.
 
+#### client['`<domain>`.`<name>`']
+
+Just a shorthand for:
+
+```js
+client.<domain>.<name>
+```
+
+Where `<name>` can be a command, an event, or a type.
+
 ## FAQ
 
-### Invoking `Domain.method` I obtain `Domain.method is not a function`
+### Invoking `Domain.methodOrEvent` I obtain `Domain.methodOrEvent is not a function`
 
-This means that the Chrome version that you are using does not support
-`Domain.method`. The solution is to update to a newer version.
+This means that you are trying to use a method or an event that are not present
+in the protocol descriptor that you are using.
+
+If the protocol is fetched from Chrome directly, then it means that this version
+of Chrome does not support that feature. The solution is to update it.
+
+If you are using a local or custom version of the protocol, then it means that
+the version is obsolete. The solution is to provide an up-to-date one, or if you
+are using the protocol embedded in chrome-remote-interface, make sure to be
+running the latest version of this module. In case the embedded protocol is
+obsolete, please [file an issue](https://github.com/cyrus-and/chrome-remote-interface/issues/new).
 
 See [here](#chrome-debugging-protocol-versions) for more information.
 
 ### Invoking `Domain.method` I obtain `Domain.method wasn't found`
 
-This means that you are providing a custom protocol descriptor
+This means that you are providing a custom or local protocol descriptor
 (`CDP({protocol: customProtocol})`) which declares `Domain.method` while the
 Chrome version that you are using does not support it.
 
@@ -888,14 +922,6 @@ $ chrome-remote-interface inspect
 ```
 
 See [here](#chrome-debugging-protocol-versions) for more information.
-
-### Headless Chrome problems?
-
-Bear in mind that `--headless` Chrome is relatively new and there are kinks (in
-Chrome) that are being worked out. If you believe you have encountered a bug,
-take a look at the open issues, especially [external issues].
-
-[external issues]: https://github.com/cyrus-and/chrome-remote-interface/issues?q=label%3A%22external+issue%22
 
 ### Why my program stalls or behave unexpectedly if I run Chrome in a Docker container?
 

@@ -1,22 +1,43 @@
 <!--
+
 Please make sure to have searched for existing issues before opening new ones:
+
     https://github.com/cyrus-and/chrome-remote-interface/issues?q=
 
-You may also want to check the FAQ section of the README:
+Also check the FAQ section of the README:
+
     https://github.com/cyrus-and/chrome-remote-interface#faq
 
-Alright then, please provide the following information along with a detailed
-description of what went wrong.
-
-If appropriate, attach a MINIMAL STANDALONE SCRIPT to help to reproduce your
-issue. (Use fenced blocks to display JavaScript code like this: ```js)
 -->
+
+## Environment
+
+<!-- OMITTING THE FOLLOWING MIGHT CAUSE THIS ISSUE TO BE CLOSED WITHOUT NOTICE. -->
 
 | Component | Version
 |-|-
-| Operating system	  	 	| WRITE HERE
-| Node.js					| WRITE HERE
-| Chrome/Chromium/...		| WRITE HERE
-| chrome-remote-interface	| WRITE HERE
+| Node.js						| ???
+| Client (Chrome/Chromium/...)	| ???
+| OS running Node.js			| ???
+| OS running the client			| ???
+| chrome-remote-interface		| ???
 
-Is Chrome running in a container? YES / NO
+Is the client running in a container? YES / NO
+
+## Description
+
+<!-- Provide a DETAILED description of your problem. -->
+
+## Example
+
+<!-- Attach a minimal standalone script that reproduces your issue. -->
+
+```js
+const CDP = require('chrome-remote-interface');
+
+async function example() {
+    // YOUR CODE HERE
+}
+
+example();
+```
