@@ -44,7 +44,7 @@
     "browser": "chrome-remote-interface.js",
     "devDependencies": {
         "babel-core": "^6.26.3",
-        "babel-loader": "6.x.x",
+        "babel-loader": "8.x.x",
         "babel-polyfill": "^6.26.0",
         "babel-preset-env": "^1.7.0",
         "eslint": "^8.8.0",
