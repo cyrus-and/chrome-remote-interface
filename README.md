@@ -12,6 +12,48 @@ This module is one of the many [third-party protocol clients][3rd-party].
 
 [3rd-party]: https://developer.chrome.com/devtools/docs/debugging-clients#chrome-remote-interface
 
+Contents:
+
+- [Sample API usage](#sample-api-usage)
+- [Installation](#installation)
+- [Implementations](#implementations)
+- [Setup](#setup)
+  - [Chrome/Chromium](#chromechromium)
+  - [Opera](#opera)
+  - [Node.js](#nodejs)
+  - [Safari (iOS)](#safari-ios)
+  - [Edge](#edge)
+  - [Firefox (Nightly)](#firefox-nightly)
+- [Bundled client](#bundled-client)
+  - [Target management](#target-management)
+  - [Inspection](#inspection)
+- [Embedded documentation](#embedded-documentation)
+- [Chrome Debugging Protocol versions](#chrome-debugging-protocol-versions)
+- [Browser usage](#browser-usage)
+  - [Using webpack](#using-webpack)
+  - [Using *vanilla* JavaScript](#using-vanilla-javascript)
+- [TypeScript Support](#typescript-support)
+- [API](#api)
+  - [CDP([options], [callback])](#cdpoptions-callback)
+  - [CDP.Protocol([options], [callback])](#cdpprotocoloptions-callback)
+  - [CDP.List([options], [callback])](#cdplistoptions-callback)
+  - [CDP.New([options], [callback])](#cdpnewoptions-callback)
+  - [CDP.Activate([options], [callback])](#cdpactivateoptions-callback)
+  - [CDP.Close([options], [callback])](#cdpcloseoptions-callback)
+  - [CDP.Version([options], [callback])](#cdpversionoptions-callback)
+  - [Class: CDP](#class-cdp)
+- [FAQ](#faq)
+  - [Invoking `Domain.methodOrEvent` I obtain `Domain.methodOrEvent is not a function`](#invoking-domainmethodorevent-i-obtain-domainmethodorevent-is-not-a-function)
+  - [Invoking `Domain.method` I obtain `Domain.method wasn't found`](#invoking-domainmethod-i-obtain-domainmethod-wasnt-found)
+  - [Why my program stalls or behave unexpectedly if I run Chrome in a Docker container?](#why-my-program-stalls-or-behave-unexpectedly-if-i-run-chrome-in-a-docker-container)
+  - [Using `Runtime.evaluate` with `awaitPromise: true` I sometimes obtain `Error: Promise was collected`](#using-runtimeevaluate-with-awaitpromise-true-i-sometimes-obtain-error-promise-was-collected)
+  - [How does this compare to Puppeteer?](#how-does-this-compare-to-puppeteer)
+- [Contributors](#contributors)
+- [Resources](#resources)
+
+
+-----------------
+
 ## Sample API usage
 
 The following snippet loads `https://github.com` and dumps every request made:
