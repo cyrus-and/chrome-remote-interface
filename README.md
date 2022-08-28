@@ -408,6 +408,30 @@ To generate a JavaScript file that can be used with a `<script>` element:
 npm install --save-dev @types/chrome-remote-interface
 ```
 
+Note that the TypeScript definitions are automatically generated from the latest DevTools API, and therefore do not support the shorthand syntax available in this package for events. Also, methods without explicit parameters still require passing an empty object (`{}`).
+
+So for example, instead of:
+
+```js
+const {Network} = client;
+
+Network.requestWillBeSent((params) => {
+  console.log(params.request.url);
+});
+
+await Network.enable();
+```
+
+Use the following for TypeScript:
+
+```js
+client['Network.requestWillBeSent']((params) => {
+  console.log(params.request.url);
+});
+
+await Network.enable({});
+```
+
 [TypeScript]: https://www.typescriptlang.org/
 [Khairul Azhar Kasmiran]: https://github.com/kazarmy
 [Seth Westphal]: https://github.com/westy92
