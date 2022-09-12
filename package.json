@@ -1,64 +1,68 @@
 {
-    "name": "chrome-remote-interface",
-    "author": "Andrea Cardaci <cyrus.and@gmail.com>",
-    "license": "MIT",
-    "contributors": [
-        "Andrey Sidorov <sidoares@yandex.ru>",
-        "Greg Cochard <greg@gregcochard.com>"
-    ],
-    "description": "Chrome Debugging Protocol interface",
-    "keywords": [
-        "chrome",
-        "debug",
-        "protocol",
-        "remote",
-        "interface"
-    ],
-    "homepage": "https://github.com/cyrus-and/chrome-remote-interface",
-    "version": "0.31.2",
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/cyrus-and/chrome-remote-interface.git"
-    },
-    "bugs": {
-        "url": "http://github.com/cyrus-and/chrome-remote-interface/issues"
-    },
-    "engine-strict": {
-        "node": ">=8"
-    },
-    "dependencies": {
-        "commander": "2.11.x",
-        "ws": "^7.2.0"
-    },
-    "files": [
-        "lib",
-        "bin",
-        "index.js",
-        "chrome-remote-interface.js",
-        "webpack.config.js"
-    ],
-    "bin": {
-        "chrome-remote-interface": "bin/client.js"
-    },
-    "main": "index.js",
-    "browser": "chrome-remote-interface.js",
-    "devDependencies": {
-        "babel-core": "^6.26.3",
-        "babel-loader": "6.x.x",
-        "babel-polyfill": "^6.26.0",
-        "babel-preset-env": "^1.7.0",
-        "eslint": "^8.8.0",
-        "json-loader": "^0.5.4",
-        "mocha": "^9.2.0",
-        "process": "^0.11.10",
-        "url": "^0.11.0",
-        "util": "^0.12.4",
-        "webpack": "^5.39.0",
-        "webpack-cli": "^4.7.2"
-    },
-    "scripts": {
-        "test": "./scripts/run-tests.sh",
-        "webpack": "webpack",
-        "prepare": "webpack"
-    }
+  "name": "@luminati-io/chrome-remote-interface",
+  "author": "Andrea Cardaci <cyrus.and@gmail.com>",
+  "license": "MIT",
+  "contributors": [
+    "Andrey Sidorov <sidoares@yandex.ru>",
+    "Greg Cochard <greg@gregcochard.com>"
+  ],
+  "description": "Chrome Debugging Protocol interface",
+  "keywords": [
+    "chrome",
+    "debug",
+    "protocol",
+    "remote",
+    "interface"
+  ],
+  "homepage": "https://github.com/cyrus-and/chrome-remote-interface",
+  "version": "0.31.2-lum.6",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cyrus-and/chrome-remote-interface.git"
+  },
+  "bugs": {
+    "url": "http://github.com/cyrus-and/chrome-remote-interface/issues"
+  },
+  "engine-strict": {
+    "node": ">=8"
+  },
+  "dependencies": {
+    "commander": "2.11.x",
+    "ws": "^7.2.0"
+  },
+  "files": [
+    "lib",
+    "bin",
+    "index.js",
+    "chrome-remote-interface.js",
+    "webpack.config.js"
+  ],
+  "bin": {
+    "chrome-remote-interface": "bin/client.js"
+  },
+  "main": "index.js",
+  "browser": "chrome-remote-interface.js",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "6.x.x",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^8.8.0",
+    "json-loader": "^0.5.4",
+    "mocha": "^9.2.0",
+    "process": "^0.11.10",
+    "url": "^0.11.0",
+    "util": "^0.12.4",
+    "webpack": "^5.39.0",
+    "webpack-cli": "^4.7.2"
+  },
+  "scripts": {
+    "test": "./scripts/run-tests.sh",
+    "webpack": "webpack",
+    "prepare": "webpack"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  }
 }
