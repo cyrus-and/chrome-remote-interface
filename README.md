@@ -408,28 +408,37 @@ To generate a JavaScript file that can be used with a `<script>` element:
 npm install --save-dev @types/chrome-remote-interface
 ```
 
-Note that the TypeScript definitions are automatically generated from the latest DevTools API, and therefore do not support the shorthand syntax available in this package for events. Also, methods without explicit parameters still require passing an empty object (`{}`).
+Note that the TypeScript definitions are automatically generated from the npm package `devtools-protocol@0.0.927104`, and therefore do not support out-of-the-box the shorthand syntax available in this package for events. Also, methods without explicit parameters still require passing an empty object (`{}`).
 
-So for example, instead of:
+For example, the following are not supported directly:
 
-```js
-const {Network} = client;
+```ts
+const {Network, Page} = client;
 
 Network.requestWillBeSent((params) => {
   console.log(params.request.url);
 });
 
 await Network.enable();
+await Page.loadEventFired();
 ```
 
-Use the following for TypeScript:
+There are 2 ways to resolve this:
 
-```js
+1. Use [augmented typings](https://github.com/kazarmy/devtools-protocol/tree/master/types) covering the above. They can be installed as follows:
+   1. Install patch-package using [the instructions given](https://github.com/ds300/patch-package#set-up).
+   2. Copy the contents of https://github.com/kazarmy/devtools-protocol/tree/master/types into `node_modules/devtools-protocol/types`.
+   3. Run `npx patch-package devtools-protocol` so that the changes persist across an `npm install`.
+
+2. Use the following alternative syntax:
+
+```ts
 client['Network.requestWillBeSent']((params) => {
   console.log(params.request.url);
 });
 
 await Network.enable({});
+await client['Page.loadEventFired']();
 ```
 
 [TypeScript]: https://www.typescriptlang.org/
