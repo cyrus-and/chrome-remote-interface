@@ -408,7 +408,7 @@ To generate a JavaScript file that can be used with a `<script>` element:
 npm install --save-dev @types/chrome-remote-interface
 ```
 
-Note that the TypeScript definitions are automatically generated from the npm package `devtools-protocol@0.0.927104`, and therefore do not support out-of-the-box the shorthand syntax available in this package for events. Also, methods without explicit parameters still require passing an empty object (`{}`).
+Note that the TypeScript definitions are automatically generated from the npm package `devtools-protocol@0.0.927104`, and therefore do not support out-of-the-box the shorthand syntax available in this package for events.
 
 For example, the following are not supported directly:
 
@@ -419,7 +419,6 @@ Network.requestWillBeSent((params) => {
   console.log(params.request.url);
 });
 
-await Network.enable();
 await Page.loadEventFired();
 ```
 
@@ -437,7 +436,6 @@ client['Network.requestWillBeSent']((params) => {
   console.log(params.request.url);
 });
 
-await Network.enable({});
 await client['Page.loadEventFired']();
 ```
 
