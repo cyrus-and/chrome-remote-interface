@@ -8,15 +8,13 @@ jobs:
 cache:
   directories:
     - node_modules
-dist: trusty
+dist: xenial
 addons:
   apt:
     packages:
       - dpkg # XXX needed apparently...
   chrome: stable
 before_script:
-  # fix Chrome dependencies error
-  - apt install --fix-broken
   # dump the current versions
   - google-chrome-stable --version
   # start a fresh new Chrome instance
