@@ -8,7 +8,7 @@ jobs:
 cache:
   directories:
     - node_modules
-dist: xenial
+dist: bionic
 addons:
   apt:
     packages:
