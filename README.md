@@ -400,6 +400,7 @@ To generate a JavaScript file that can be used with a `<script>` element:
     </script>
     <script src="chrome-remote-interface.js"></script>
     ```
+
 ## TypeScript Support
 
 [TypeScript][] definitions are kindly provided by [Khairul Azhar Kasmiran][] and [Seth Westphal][], and can be installed from [DefinitelyTyped][]:
