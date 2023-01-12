@@ -10,6 +10,9 @@ cache:
     - node_modules
 dist: trusty
 addons:
+  apt:
+    packages:
+      - dpkg # XXX needed apparently...
   chrome: stable
 before_script:
   # dump the current versions
