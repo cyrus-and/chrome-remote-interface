@@ -461,8 +461,12 @@ Connects to a remote instance using the [Chrome Debugging Protocol].
 - `protocol`: [Chrome Debugging Protocol] descriptor object. Defaults to use the
   protocol chosen according to the `local` option;
 - `local`: a boolean indicating whether the protocol must be fetched *remotely*
-  or if the local version must be used. It has no effect if the `protocol`
-  option is set. Defaults to `false`.
+  or if the local version must be used. It has no effect if the `protocol` or
+  `process` option is set. Defaults to `false`.
+- `process`: a `ChildProcess` object that represents a Chrome instance launched
+  with `--remote-debugging-pipe`. If passed, websocket-related options will be
+  ignored and communications will occur over stdio instead. Note: the `protocol`
+  cannot be fetched remotely if a `process` is passed.
 
 These options are also valid properties of all the instances of the `CDP`
 class. In addition to that, the `webSocketUrl` field contains the currently used
