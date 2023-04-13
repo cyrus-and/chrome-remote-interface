@@ -1,4 +1,6 @@
-# chrome-remote-interface [![Build Status][]][travis]
+# chrome-remote-interface
+
+[![CI status](https://github.com/cyrus-and/chrome-remote-interface/actions/workflows/ci.yml/badge.svg)](https://github.com/cyrus-and/chrome-remote-interface/actions?query=workflow:CI)
 
 [Build Status]: https://app.travis-ci.com/cyrus-and/chrome-remote-interface.svg?branch=master
 [travis]: https://app.travis-ci.com/cyrus-and/chrome-remote-interface

@@ -1,0 +1,43 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+  Tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Dump Chrome version
+        run: |
+          "$CHROME_BIN" --version
+      - name: Dump Node.js version
+        run: |
+          node --version
+      - name: Dump NPM version
+        run: |
+          npm --version
+      - name: Install dependencies
+        run: |
+          npm install
+      - name: Start headless Chrome
+        run: |
+          $CHROME_BIN \
+              --disable-extensions \
+              --disable-gpu \
+              --headless \
+              --no-first-run \
+              --no-sandbox \
+              --remote-debugging-port=9222 \
+              --user-data-dir="$(mktemp -d)" \
+              about:blank &
+      - name: Wait for Chrome to start listening
+        run: |
+          while ! curl --silent --fail http://localhost:9222; do sleep 1; done
+      - name: Run tests
+        run: |
+          npm test
