@@ -81,15 +81,17 @@ describe('sending a command', () => {
     });
     it('should catch WebSocket errors after command send', (done) => {
         Chrome((chrome) => {
-            let result;
-            chrome.Page.enable((err, res)=>{
-                result = res;
-            });
-            chrome.close(()=>{
-                assert(result instanceof Error);
-                assert(result.message === 'WebSocket connection closed');
+            chrome.Runtime.evaluate({
+                expression: 'new Promise(_ => _)',
+                awaitPromise: true
+            }, (error, response) => {
+                assert(error instanceof Error);
+                assert(!error.request);
+                assert(!error.response);
+                assert(!response);
                 done();
             });
+            chrome.close();
         });
     });
     describe('without a callback', () => {
