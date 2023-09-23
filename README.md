@@ -2,9 +2,6 @@
 
 [![CI status](https://github.com/cyrus-and/chrome-remote-interface/actions/workflows/ci.yml/badge.svg)](https://github.com/cyrus-and/chrome-remote-interface/actions?query=workflow:CI)
 
-[Build Status]: https://app.travis-ci.com/cyrus-and/chrome-remote-interface.svg?branch=master
-[travis]: https://app.travis-ci.com/cyrus-and/chrome-remote-interface
-
 [Chrome Debugging Protocol] interface that helps to instrument Chrome (or any
 other suitable [implementation](#implementations)) by providing a simple
 abstraction of commands and notifications using a straightforward JavaScript
