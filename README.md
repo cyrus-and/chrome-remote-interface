@@ -440,6 +440,7 @@ Connects to a remote instance using the [Chrome Debugging Protocol].
 - `host`: HTTP frontend host. Defaults to `localhost`;
 - `port`: HTTP frontend port. Defaults to `9222`;
 - `secure`: HTTPS/WSS frontend. Defaults to `false`;
+- `debug`: logs over console every CDP message send and received;
 - `useHostName`: do not perform a DNS lookup of the host. Defaults to `false`;
 - `alterPath`: a `function` taking and returning the path fragment of a URL
   before that a request happens. Defaults to the identity function;
