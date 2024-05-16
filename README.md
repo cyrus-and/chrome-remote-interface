@@ -130,14 +130,14 @@ Since version 59, additionally use the `--headless` option, for example:
 
 #### Android
 
-Plug the device and enable the [port forwarding][adb], for example:
+Plug the device and make sure to authorize the connection from the device itself. Then
+enable the port forwarding, for example:
 
-    adb forward tcp:9222 localabstract:chrome_devtools_remote
+    adb -d forward tcp:9222 localabstract:chrome_devtools_remote
 
-Note that in Android, Chrome does not have its own protocol available, a local
-version must be used. See [here](#chrome-debugging-protocol-versions) for more information.
-
-[adb]: https://developer.chrome.com/devtools/docs/remote-debugging-legacy
+After that you should be able to use `http://127.0.0.1:9222` as usual, but note that in
+Android, Chrome does not have its own protocol available, so a local version must be used.
+See [here](#chrome-debugging-protocol-versions) for more information.
 
 ##### WebView
 
