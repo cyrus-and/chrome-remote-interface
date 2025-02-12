@@ -19,6 +19,20 @@ describe('closing a connection', () => {
                 assert(false);
             });
         });
+        it('should handle multiple close calls', (done) => {
+            Chrome((chrome) => {
+                let counter = 0;
+                chrome.close(() => ++counter);
+                chrome.close(() => {
+                    chrome.close(() => {
+                        assert(++counter === 2);
+                        done();
+                    });
+                });
+            }).on('error', () => {
+                assert(false);
+            });
+        });
     });
     describe('without callback', () => {
         it('should allow a subsequent new connection', (done) => {
@@ -35,6 +49,11 @@ describe('closing a connection', () => {
             }).on('error', () => {
                 assert(false);
             });
+        });
+        it('should handle multiple close calls', async () => {
+            const chrome = await Chrome();
+            await Promise.all([chrome.close(), chrome.close()]); // concurrent
+            await chrome.close(); // already closed
         });
     });
 });
