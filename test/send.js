@@ -162,6 +162,8 @@ describe('sending a command', () => {
             const chrome = await Chrome({
                 target: version.webSocketDebuggerUrl
             });
+            // create the target
+            await chrome.Target.createTarget({url: 'about:blank'});
             // attach to the target
             const {targetInfos} = await chrome.Target.getTargets();
             const {sessionId} = await chrome.Target.attachToTarget({

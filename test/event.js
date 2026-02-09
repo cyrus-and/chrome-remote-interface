@@ -99,7 +99,8 @@ describe('registering event', () => {
             const chrome = await Chrome({
                 target: version.webSocketDebuggerUrl
             });
-            // create another target
+            // create the targets
+            await chrome.Target.createTarget({url: 'about:blank'});
             await chrome.Target.createTarget({url: 'about:blank'});
             // fetch the targets (two pages) and attach to each of them
             const {targetInfos} = await chrome.Target.getTargets();
@@ -114,11 +115,8 @@ describe('registering event', () => {
             // enable the Page events in both of them
             await chrome.Page.enable(sessionId0);
             await chrome.Page.enable(sessionId1);
-            // trigger a reload in both of them
-            chrome.Page.reload(sessionId0);
-            chrome.Page.reload(sessionId1);
-            // awaits individual events
-            await Promise.all([
+            // set up awaiting individual events
+            const done = Promise.all([
                 chrome.Page.loadEventFired(sessionId0),
                 chrome.Page.loadEventFired(sessionId1),
                 new Promise((fulfill, reject) => {
@@ -130,6 +128,10 @@ describe('registering event', () => {
                     });
                 })
             ]);
+            // trigger a reload in both of them
+            chrome.Page.reload(sessionId0);
+            chrome.Page.reload(sessionId1);
+            await done;
             return chrome.close();
         });
     });
