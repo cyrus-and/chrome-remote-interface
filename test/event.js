@@ -100,16 +100,15 @@ describe('registering event', () => {
                 target: version.webSocketDebuggerUrl
             });
             // create the targets
-            await chrome.Target.createTarget({url: 'about:blank'});
-            await chrome.Target.createTarget({url: 'about:blank'});
-            // fetch the targets (two pages) and attach to each of them
-            const {targetInfos} = await chrome.Target.getTargets();
+            const {targetId: targetId0} = await chrome.Target.createTarget({url: 'about:blank'});
+            const {targetId: targetId1} = await chrome.Target.createTarget({url: 'about:blank'});
+            // attach to each target
             const {sessionId: sessionId0} = await chrome.Target.attachToTarget({
-                targetId: targetInfos[0].targetId,
+                targetId: targetId0,
                 flatten: true
             });
             const {sessionId: sessionId1} = await chrome.Target.attachToTarget({
-                targetId: targetInfos[1].targetId,
+                targetId: targetId1,
                 flatten: true
             });
             // enable the Page events in both of them
