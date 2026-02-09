@@ -822,11 +822,10 @@ command, it gets the following arguments:
   === true`).
 
 When `callback` is omitted a `Promise` object is returned instead, with the
-fulfilled/rejected states implemented according to the `error` parameter. The
-`Error` object returned contains two additional parameters: `request` and
-`response` which contain the raw massages, useful for debugging purposes. In
-case of low-level WebSocket errors, the `error` parameter contains the
-originating `Error` object and no `response` is returned.
+fulfilled/rejected states implemented according to the `error` parameter.  The
+`Error` object con be an instance of [`ProtocolError`](#cdpprotocolerror) for
+protocol invocation errors. Alternatively, in case of low-level WebSocket
+errors, the `error` parameter contains the originating `Error` object.
 
 Note that the field `id` mentioned in the [Chrome Debugging Protocol]
 specification is managed internally and it is not exposed to the user.
@@ -892,6 +891,13 @@ client.<domain>.<name>
 ```
 
 Where `<name>` can be a command, an event, or a type.
+
+### CDP.ProtocolError
+
+Error returned by the [`send`](#clientsendmethod-params-callback) method in case Chrome experienced issues in the protocol invocation. It exposes the following fields:
+
+- `request`: the raw request object containing the `method`, `params`, and `sessionId` fields;
+- `response`: the raw response from Chrome, usually containing the `code`, `message`, and `data` fields.
 
 ## FAQ
 

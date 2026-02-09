@@ -4,6 +4,7 @@ const EventEmitter = require('events');
 const dns = require('dns');
 
 const devtools = require('./lib/devtools.js');
+const errors = require('./lib/errors.js');
 const Chrome = require('./lib/chrome.js');
 
 // XXX reset the default that has been changed in
@@ -42,3 +43,4 @@ module.exports.New = devtools.New;
 module.exports.Activate = devtools.Activate;
 module.exports.Close = devtools.Close;
 module.exports.Version = devtools.Version;
+module.exports.ProtocolError = errors.ProtocolError;

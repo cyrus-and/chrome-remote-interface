@@ -109,7 +109,7 @@ describe('sending a command', () => {
                 chrome.send('Network.getResponseBody').then(() => {
                     done(new Error());
                 }).catch((error) => {
-                    assert(error instanceof Error);
+                    assert(error instanceof Chrome.ProtocolError);
                     assert(!!error.request);
                     assert(!!error.response.code);
                     chrome.close(done);
@@ -147,7 +147,7 @@ describe('sending a command', () => {
                 chrome.Network.getResponseBody().then(() => {
                     done(new Error());
                 }).catch((error) => {
-                    assert(error instanceof Error);
+                    assert(error instanceof Chrome.ProtocolError);
                     assert(!!error.request);
                     assert(!!error.response.code);
                     chrome.close(done);
