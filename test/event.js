@@ -91,6 +91,17 @@ describe('registering event', () => {
                 chrome.send('Page.navigate', {'url': 'chrome://newtab/'});
             });
         });
+        it('should handle client disconnection', (done) => {
+            Chrome((chrome) => {
+                let error;
+                chrome.Network.requestWillBeSent().catch((err) => error = err).finally(() => {
+                    assert(error instanceof Error);
+                    assert(error.message === 'client disconnected');
+                    done();
+                });
+                chrome.close();
+            });
+        });
     });
     describe('passing a sessionId', () => {
         it('should only listen for those events', async () => {
